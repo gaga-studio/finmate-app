@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'motion/react'
+import { useSearchParams } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import { MetricCarousel } from './carousel/MetricCarousel'
 import { ArtCardThumb } from './panels/ArtCardThumb'
 import { LinkedListPanel } from './panels/LinkedListPanel'
+import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import { PERIODS, PERIOD_LABEL, type Metric, type Period } from './myState'
@@ -18,6 +20,17 @@ const TINT: Record<Metric, string> = {
 export function MyPage() {
   const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
+  const [params, setParams] = useSearchParams()
+
+  const cardParam = params.get('card')
+  const openCard: Period | null = PERIODS.includes(cardParam as Period) ? (cardParam as Period) : null
+
+  const openWrapped = () => setParams({ card: period })
+  const closeWrapped = () => {
+    const next = new URLSearchParams(params)
+    next.delete('card')
+    setParams(next)
+  }
 
   // 활성 지표 액센트를 앱 전체(탭바 포함)에 전파
   useEffect(() => {
@@ -73,12 +86,18 @@ export function MyPage() {
 
       <section className="relative mt-4 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
         <div className="h-[248px]">
-          <ArtCardThumb period={period} metric={metric} onOpen={() => {}} />
+          {openCard === null && (
+            <ArtCardThumb period={period} metric={metric} onOpen={openWrapped} />
+          )}
         </div>
         <div className="h-[248px]">
           <LinkedListPanel metric={metric} period={period} />
         </div>
       </section>
+
+      <AnimatePresence>
+        {openCard !== null && <WrappedOverlay period={openCard} onClose={closeWrapped} />}
+      </AnimatePresence>
     </div>
   )
 }
