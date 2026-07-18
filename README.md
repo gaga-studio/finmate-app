@@ -1,32 +1,65 @@
-# React + TypeScript + Vite
+# finmate
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> 청년의 금융 생활을 해체분석하고, 작은 행동으로 연결하는 money mate
 
-Currently, two official plugins are available:
+청년은 금융의 중요성을 알지만 **자기 상황에서 뭘 먼저 해야 할지 몰라 행동을 미룬다**.
+finmate는 소비·저축·투자를 일간/주간/월간으로 해체해 보여주고(금융생활 해체분석),
+Spotify Wrapped식 공유 카드와 미션으로 행동을 이끌어내는(사회심리적 동기유발) 모바일 웹앱이다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+해커톤 제출용 프론트엔드 프로토타입 — 백엔드 없이 전 데이터가 시드 기반 목(mock)이며,
+**시연 영상 촬영 재현성**(고정된 오늘 날짜·고정 시드)을 최우선으로 설계했다.
 
-## React Compiler
+## 핵심 화면
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 마이 (홈)
+- **2축 지표 캐러셀** — 가로 스와이프로 지표 전환: 오늘의 예산(물잔 🥛) ↔ 저축 목표(링 게이지) ↔ 투자 현황(라인차트). 위로 밀거나 기간 칩을 탭하면 **일간/주간/월간 스택 전환** — 하단 패널까지 화면 전체가 해당 기간 데이터로 갈아입는다.
+- 커스텀 SVG 차트: 물잔은 사인파 2장의 수평 루프로 찰랑이고, 기간 전환 시 수위 스프링이 출렁인다.
+- 하단: Wrapped풍 AI 아트 카드 + 지표 연동 리스트(소비 탑5 / 위시리스트 / 투자 종목).
 
-## Expanding the Oxlint configuration
+### Wrapped 공유 카드 (아하모먼트)
+- 아트 카드를 탭하면 `layoutId` 공유 레이아웃 전환으로 **9:16 풀스크린 카드**로 확대.
+- `html-to-image`로 1080×1920 PNG 저장 / Web Share API 공유. 아래로 드래그해 닫기.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+### 소셜 / 성장 / 다이어리 (예정)
+- 소셜: 메이트·실친·그룹 피드, FOMO 배너, 공유된 Wrapped 카드
+- 성장: 오늘의 미션, 주간 스트릭, 금융렌즈 시뮬레이션("12만원 운동화 = 노트북 목표 11일 후퇴")
+- 다이어리: 월 캘린더 + 일별 내역 + AI 그림일기
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## 기술 스택
+
+| 영역 | 선택 |
+|---|---|
+| 빌드/UI | Vite · React 19 · TypeScript strict |
+| 스타일 | Tailwind CSS v4 (`@theme` 토큰, config 파일 없음) |
+| 모션 | Motion v12 (`motion/react`) — 스프링 프리셋 3종(`snappy/gentle/dramatic`)으로 톤 통일 |
+| 라우팅 | React Router 7 (Wrapped 오버레이는 라우트가 아닌 `?card=` searchParam) |
+| 차트 | 라이브러리 없음 — 커스텀 SVG + Motion (`pathLength`, spring) |
+| 데이터 | 정적 TS 모듈 + 순수 셀렉터. 서버·fetch·상태관리 라이브러리 없음 |
+| 캡처 | html-to-image (폰트 셀프호스팅 + iOS 2회 호출 워크어라운드) |
+
+## 실행
+
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+모바일 뷰포트(390×844) 기준으로 설계됐다. 데스크톱에서는 430px 폰 프레임으로 렌더된다.
+
+## 데이터 설계 (촬영 재현성)
+
+- `src/data/demo.ts` — 앱의 "오늘"은 항상 **2026-07-18(토)**. `new Date()` 직접 호출 금지.
+- `src/data/transactions.ts` — 시드 PRNG(mulberry32)로 거래 90일 생성 + 시연 대사에 등장하는 거래("12만원 운동화", "스타벅스 5,600원")는 수기로 고정.
+- `src/data/selectors.ts` — 일/주/월 집계는 전부 여기서 파생. 기간 간 숫자 불일치가 구조적으로 불가능.
+- `src/data/art-manifest.ts` — AI 아트 에셋 경로의 단일 매핑. 이미지가 없으면 지표 팔레트 그라디언트로 폴백(에셋 도착 시 경로만 채우면 전체 반영).
+
+## 마일스톤
+
+- [x] M0 — 앱 셸: 폰 프레임, 탭바, 디자인 토큰, Pretendard 셀프호스팅
+- [x] M1 — 목 데이터 레이어: 시드 거래 생성 + 기간별 셀렉터
+- [x] M2 — 마이 탭 코어: 2축 캐러셀 + SVG 차트 3종 + 하단 연동
+- [x] M3 — Wrapped 오버레이: layoutId 확대 + PNG 저장/공유
+- [ ] M4 — 온보딩: 입력 스텝 + 스크롤리텔링 분석 로딩 + 촬영용 오토플레이
+- [ ] M5 — 성장 탭: 미션 / 스트릭 / 금융렌즈 시뮬레이션 / O·X 퀴즈
+- [ ] M6 — 소셜 + 다이어리: 피드 / 프로필 공용 컴포넌트 / 캘린더
+- [ ] M7 — 폴리시 + 촬영 준비: `?demo=1&scene=` 장면 점프, 60fps 점검
