@@ -80,7 +80,7 @@ export function useInsightChat() {
     (targetId: string) => {
       const t = COMPARE_TARGETS.find((x) => x.id === targetId)
       if (!t) return
-      respond(compareDoneReplies(t.id, t.label, t.summary))
+      respond(compareDoneReplies(t.id))
     },
     [respond],
   )

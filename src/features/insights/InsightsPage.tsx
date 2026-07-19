@@ -15,7 +15,7 @@ export function InsightsPage() {
   const [draft, setDraft] = useState('')
   const [chipsOpen, setChipsOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
-  const [compareOpen, setCompareOpen] = useState(false)
+  const [compareOpen, setCompareOpen] = useState<{ filter?: 'mate' | 'group' } | null>(null)
   const [report, setReport] = useState<{ variant?: 'macbook' } | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
@@ -55,7 +55,7 @@ export function InsightsPage() {
         </button>
       </header>
 
-      <ChartPanel state={chat.chart} onCompareOpen={() => !viewing && setCompareOpen(true)} />
+      <ChartPanel state={chat.chart} onCompareOpen={() => !viewing && setCompareOpen({})} />
 
       {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
       <div className="flex items-center justify-between px-5 pb-1 pt-3">
@@ -98,7 +98,7 @@ export function InsightsPage() {
         onOption={chat.send}
         onSlider={chat.setSavingMonthly}
         onReport={(variant) => setReport({ variant })}
-        onComparePick={() => !viewing && setCompareOpen(true)}
+        onComparePick={(kind) => !viewing && setCompareOpen({ filter: kind })}
         readOnly={viewing}
       />
 
@@ -126,8 +126,9 @@ export function InsightsPage() {
         {compareOpen && (
           <ComparePickerSheet
             selectedId={chat.chart.kind === 'compare' ? chat.chart.targetId : null}
+            filter={compareOpen.filter}
             onSelect={(id) => (id ? chat.completeCompare(id) : chat.setCompare(null))}
-            onClose={() => setCompareOpen(false)}
+            onClose={() => setCompareOpen(null)}
           />
         )}
       </AnimatePresence>
