@@ -103,14 +103,14 @@ function rows(metric: Metric, period: Period, savingView: SavingView): Row[] {
         key: a.id,
         leading: rank(i),
         title: `${a.emoji} ${a.title}`,
-        trailing: formatKrwCompact(a.value),
+        trailing: <span className="text-saving">{formatKrwCompact(a.value)}</span>,
       }))
     }
     return WISHLIST.map((w) => ({
       key: w.id,
       leading: w.emoji,
       title: w.title,
-      trailing: formatKrwCompact(w.price),
+      trailing: <span className="text-saving">{formatKrwCompact(w.price)}</span>,
     }))
   }
   return HOLDINGS.map((h) => ({
