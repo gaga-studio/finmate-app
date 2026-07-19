@@ -112,10 +112,10 @@ export function MyPage() {
       <header className="relative flex items-center justify-between px-5 pb-2 pt-14">
         <PageTitle>마이</PageTitle>
         <div>
-          <p className="text-body font-semibold text-ink-soft">
+          <p className="text-caption font-semibold text-ink-faint">
             {DEMO_TODAY.getMonth() + 1}월 {DEMO_TODAY.getDate()}일 {WEEKDAY[DEMO_TODAY.getDay()]}요일
           </p>
-          <h1 className="mt-0.5 text-title font-extrabold text-ink">
+          <h1 className="mt-0.5 text-section font-bold text-ink-soft">
             안녕, {USER.nickname}
           </h1>
         </div>
