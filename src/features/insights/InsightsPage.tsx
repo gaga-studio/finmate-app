@@ -42,8 +42,8 @@ export function InsightsPage() {
   const viewing = chat.viewing !== null
 
   return (
-    // 탭 레이아웃의 하단 여백(6rem)을 넘어 입력바가 탭바(62px+안전영역) 바로 위에 붙는다
-    <div className="relative flex h-[calc(100%+6rem)] flex-col pb-[calc(62px+env(safe-area-inset-bottom,0px))]">
+    // 페이지는 고정(TabLayout이 overflow-hidden) — 입력바가 탭바(62px+안전영역) 바로 위에 붙는다
+    <div className="relative flex h-full flex-col pb-[calc(62px+env(safe-area-inset-bottom,0px))]">
       <header className="flex items-center justify-between px-5 pb-1 pt-14">
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
