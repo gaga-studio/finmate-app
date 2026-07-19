@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { WaterGlass } from '../../../shared/charts/WaterGlass'
 import { SpeedGauge } from '../../../shared/charts/SpeedGauge'
 import { MiniBars } from '../../../shared/charts/MiniBars'
@@ -38,15 +39,28 @@ const BUDGET_TITLE: Record<Period, string> = {
 
 export function BudgetCard({ period }: { period: Period }) {
   const b = getBudget(period)
+  const spentPct = Math.min(100, (b.spent / b.limit) * 100)
   return (
     <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
-      <WaterGlass pct={b.pct} width={132} height={148} />
+      <WaterGlass pct={b.pct} width={124} height={140} />
       <p className="mt-1 text-display font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
-      <p className="mt-1.5 text-body font-medium text-ink-soft">
-        {formatKrw(b.spent)} 씀 · <b className="text-ink">{formatKrw(b.remaining)}</b> 남음
-      </p>
+      {/* 사용량 스택 바 — 쓴 만큼 채워진다 */}
+      <div className="mt-2.5 w-[200px]">
+        <div className="h-2.5 overflow-hidden rounded-full bg-budget/15">
+          <motion.div
+            className="h-full rounded-full bg-budget"
+            initial={{ width: 0 }}
+            animate={{ width: `${spentPct}%` }}
+            transition={{ delay: 0.25, duration: 0.7, ease: [0.3, 0, 0.2, 1] }}
+          />
+        </div>
+        <div className="mt-1 flex justify-between text-caption font-semibold">
+          <span className="text-budget">씀 {formatKrw(b.spent)}</span>
+          <span className="text-ink-soft">남음 {formatKrw(b.remaining)}</span>
+        </div>
+      </div>
     </CardShell>
   )
 }
