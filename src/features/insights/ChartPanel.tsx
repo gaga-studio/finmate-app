@@ -180,8 +180,8 @@ function renderState(state: InsightChartState) {
 
   // 기본: 평소 습관 기반 미래 6개월 투영
   return {
-    title: `12월엔 ${formatKrwCompact(my.curve[my.curve.length - 1])}`,
-    caption: `지금 습관대로면 6개월 뒤 +${formatKrwCompact(my.totalGain)}`,
+    title: '총자산 시뮬레이션',
+    caption: `지금 습관대로면 12월엔 ${formatKrwCompact(my.curve[my.curve.length - 1])} (+${formatKrwCompact(my.totalGain)})`,
     metricClass: 'text-saving',
     chart: (
       <LineChart
