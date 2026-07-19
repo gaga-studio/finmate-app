@@ -1,6 +1,6 @@
-import type { Metric, Period, SavingView } from '../../data/types'
+import type { InvestView, Metric, Period, SavingView } from '../../data/types'
 
-export type { Metric, Period, SavingView }
+export type { InvestView, Metric, Period, SavingView }
 
 export const METRICS: Metric[] = ['budget', 'saving', 'invest']
 export const PERIODS: Period[] = ['daily', 'weekly', 'monthly']
@@ -31,6 +31,18 @@ export const SAVING_VIEW_LABEL: Record<SavingView, string> = {
 
 export function nextSavingView(v: SavingView): SavingView {
   return SAVING_VIEWS[(SAVING_VIEWS.indexOf(v) + 1) % SAVING_VIEWS.length]
+}
+
+export const INVEST_VIEWS: InvestView[] = ['status', 'portfolio', 'news']
+
+export const INVEST_VIEW_LABEL: Record<InvestView, string> = {
+  status: '현황',
+  portfolio: '포폴',
+  news: '뉴스',
+}
+
+export function nextInvestView(v: InvestView): InvestView {
+  return INVEST_VIEWS[(INVEST_VIEWS.indexOf(v) + 1) % INVEST_VIEWS.length]
 }
 
 /** 지표별 고유 색 클래스 — 카드가 활성이 아니어도 자기 색을 유지한다 */
