@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { motion } from 'motion/react'
 import { snappy } from '../motion/springs'
 
@@ -41,17 +42,42 @@ function layout(items: TreemapItem[], x: number, y: number, w: number, h: number
 /** 지표색 계열 명도 단계 — 비중이 클수록 진하다 */
 const CELL_L = [0.52, 0.6, 0.68, 0.76, 0.83]
 
-/** 보유 종목 트리맵 — 면적 = 비중. transform/opacity만 사용. */
+/** 대략적 텍스트 폭 추정 (10.5px 기준, 한글은 폭이 넓다) */
+function textWidth(label: string): number {
+  let w = 0
+  for (const ch of label) w += /[가-힣]/.test(ch) ? 10.5 : 6.3
+  return w
+}
+
+/** 보유 종목 트리맵 — 면적 = 비중. 라벨은 렉트 위 레이어 + 셀 클립으로 잘림 방지. */
 export function Treemap({ items, width = 216, height = 148 }: Props) {
+  const uid = useId()
   const sorted = [...items].sort((a, b) => b.value - a.value)
   const cells = layout(sorted, 0, 0, width, height, 0)
   const gap = 1.5
 
+  const labelColor = (light: number) => (light > 0.72 ? 'oklch(0.35 0.1 295)' : 'white')
+
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
+      <defs>
+        {cells.map((c) => (
+          <clipPath key={c.key} id={`${uid}-${c.rank}`}>
+            <rect
+              x={c.x + gap}
+              y={c.y + gap}
+              width={Math.max(c.w - gap * 2, 2)}
+              height={Math.max(c.h - gap * 2, 2)}
+              rx={7}
+            />
+          </clipPath>
+        ))}
+      </defs>
+
       {cells.map((c, i) => {
         const light = CELL_L[Math.min(c.rank, CELL_L.length - 1)]
-        const showLabel = c.weight >= 0.12 && c.w > 52 && c.h > 34
+        const showPct = c.h > 30 && c.w > 34
+        const showName = showPct && textWidth(c.label) <= c.w - 18
         return (
           <motion.g
             key={c.key}
@@ -68,29 +94,25 @@ export function Treemap({ items, width = 216, height = 148 }: Props) {
               rx={7}
               fill={`oklch(${light} 0.15 295)`}
             />
-            {showLabel && (
-              <>
-                <text
-                  x={c.x + 10}
-                  y={c.y + 20}
-                  fontSize={10.5}
-                  fontWeight={700}
-                  fill={light > 0.72 ? 'oklch(0.35 0.1 295)' : 'white'}
-                >
+            <g clipPath={`url(#${uid}-${c.rank})`}>
+              {showName && (
+                <text x={c.x + 9} y={c.y + 19} fontSize={10.5} fontWeight={700} fill={labelColor(light)}>
                   {c.label}
                 </text>
+              )}
+              {showPct && (
                 <text
-                  x={c.x + 10}
-                  y={c.y + 34}
+                  x={c.x + 9}
+                  y={c.y + (showName ? 33 : 21)}
                   fontSize={11}
                   fontWeight={800}
-                  fill={light > 0.72 ? 'oklch(0.35 0.1 295)' : 'white'}
+                  fill={labelColor(light)}
                   opacity={0.92}
                 >
                   {Math.round(c.weight * 100)}%
                 </text>
-              </>
-            )}
+              )}
+            </g>
           </motion.g>
         )
       })}
