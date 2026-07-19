@@ -15,7 +15,7 @@ interface Props {
 export function MissionList({ missions, quizDone, onQuizComplete }: Props) {
   return (
     <section className="mx-5 mt-3 rounded-card bg-elevated p-5 shadow-float">
-      <h2 className="text-section font-bold text-ink">진행 중인 미션</h2>
+      <h2 className="text-title font-extrabold text-ink">진행 중인 미션</h2>
       <AnimatePresence mode="popLayout" initial={false}>
         {missions.map((m) => (
           <motion.div

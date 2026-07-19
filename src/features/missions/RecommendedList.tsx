@@ -13,7 +13,7 @@ export function RecommendedList({ items, onAdopt }: Props) {
   return (
     <section className="mx-5 mt-3 rounded-card bg-elevated p-5 shadow-float">
       <div className="flex items-center gap-2">
-        <h2 className="text-section font-bold text-ink">추천 미션</h2>
+        <h2 className="text-title font-extrabold text-ink">추천 미션</h2>
         <span className="rounded-full bg-accent/10 px-2 py-0.5 text-caption font-bold text-accent">
           내 소비 분석 기반
         </span>
