@@ -15,6 +15,30 @@ export interface MateCategoryRow {
   band: string
 }
 
+/** 마이 탭 9뷰에 대응하는 필터링 데이터 — 전부 %·구간·상대값 */
+export interface MateViews {
+  budget: Record<'daily' | 'weekly' | 'monthly', { leftPct: number; band: string }>
+  saving: {
+    goalPct: number
+    goalLabel: string
+    /** 월 저축 페이스 구간 */
+    paceBand: string
+    /** 월별 저축 상대 막대(금액 비공개) — 마지막이 이번 달 */
+    monthlyBars: number[]
+    /** 총자산 구간 */
+    assetBand: string
+    /** 자산 추이 정규화 곡선 */
+    assetTrend: number[]
+  }
+  invest: {
+    returnPct: number
+    /** 평가액 추이 정규화 곡선 */
+    trend: number[]
+    /** 카테고리 비중 — 합 1 */
+    portfolio: { label: string; weight: number }[]
+  }
+}
+
 export interface MateProfile extends ProfileSummary {
   metrics: {
     /** 예산 남은 비율 % */
@@ -30,6 +54,8 @@ export interface MateProfile extends ProfileSummary {
   }
   /** 지표별 탑3 — 카테고리 + 구간만 */
   topCategories: Record<Metric, MateCategoryRow[]>
+  /** 마이 탭 9뷰 대응 데이터 */
+  views: MateViews
 }
 
 const SPEND_POOL: MateCategoryRow[] = [
@@ -66,26 +92,76 @@ function pick3(rng: () => number, pool: MateCategoryRow[]): MateCategoryRow[] {
   return shuffled.slice(0, 3)
 }
 
+const ASSET_BANDS = ['500만~1,000만', '1,000만~1,500만', '1,500만~2,000만', '2,000만 이상']
+
+function paceBandOf(goalPct: number): string {
+  return goalPct >= 70 ? '월 50만원 이상' : goalPct >= 45 ? '월 30~50만원' : '월 10~30만원'
+}
+
+/** 완만한 우상향 정규화 곡선(0~1) — 시드 기반 굴곡 */
+function trendOf(rng: () => number, points = 6): number[] {
+  const out: number[] = []
+  let v = 0.15 + rng() * 0.2
+  for (let i = 0; i < points; i++) {
+    out.push(Math.min(1, v))
+    v += 0.08 + rng() * 0.14
+  }
+  return out
+}
+
 /** id 시드 기반 제너릭 프로필 — 같은 메이트는 언제나 같은 수치(촬영 재현성) */
 function generate(author: ProfileSummary): MateProfile {
   let seed = 0
   for (const ch of author.id) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0
   const rng = mulberry32(seed)
   const budgetLeftPct = 15 + Math.round(rng() * 55)
+  const savingPct = 25 + Math.round(rng() * 55)
+  const savingGoal = SAVING_GOALS[Math.floor(rng() * SAVING_GOALS.length)]
+  const investReturnPct = Math.round((rng() * 25 - 5) * 10) / 10
+
+  const weights = [0.5, 0.3, 0.2]
+  const portfolio = pick3(rng, INVEST_POOL).map((row, i) => ({ label: row.label, weight: weights[i] }))
+
   return {
     ...author,
     similarity: author.similarity ?? 0.5 + Math.round(rng() * 40) / 100,
     metrics: {
       budgetLeftPct,
       budgetBand: budgetLeftPct > 40 ? '하루 1~2만원대' : '하루 2~3만원대',
-      savingPct: 25 + Math.round(rng() * 55),
-      savingGoal: SAVING_GOALS[Math.floor(rng() * SAVING_GOALS.length)],
-      investReturnPct: Math.round((rng() * 25 - 5) * 10) / 10,
+      savingPct,
+      savingGoal,
+      investReturnPct,
     },
     topCategories: {
       budget: pick3(rng, SPEND_POOL),
       saving: pick3(rng, SAVING_POOL),
       invest: pick3(rng, INVEST_POOL),
+    },
+    views: {
+      budget: {
+        daily: { leftPct: budgetLeftPct, band: budgetLeftPct > 40 ? '하루 1~2만원대' : '하루 2~3만원대' },
+        weekly: {
+          leftPct: Math.max(10, Math.min(75, budgetLeftPct + Math.round(rng() * 20 - 10))),
+          band: budgetLeftPct > 40 ? '주 7~10만원대' : '주 10~15만원대',
+        },
+        monthly: {
+          leftPct: Math.max(10, Math.min(75, budgetLeftPct + Math.round(rng() * 20 - 10))),
+          band: budgetLeftPct > 40 ? '월 40~60만원대' : '월 60~80만원대',
+        },
+      },
+      saving: {
+        goalPct: savingPct,
+        goalLabel: savingGoal,
+        paceBand: paceBandOf(savingPct),
+        monthlyBars: Array.from({ length: 5 }, () => 0.35 + rng() * 0.65),
+        assetBand: ASSET_BANDS[Math.floor(rng() * ASSET_BANDS.length)],
+        assetTrend: trendOf(rng),
+      },
+      invest: {
+        returnPct: investReturnPct,
+        trend: trendOf(rng),
+        portfolio,
+      },
     },
   }
 }
@@ -130,12 +206,31 @@ export const MATE_PROFILES: MateProfile[] = Object.values(AUTHORS).map((author) 
   const over = OVERRIDES[author.id]
   if (!over) return base
   const { similarity, topCategories, ...metrics } = over
-  return {
+  const merged: MateProfile = {
     ...base,
     similarity: similarity ?? base.similarity,
     metrics: { ...base.metrics, ...metrics },
     topCategories: { ...base.topCategories, ...topCategories },
   }
+  // 수기 오버라이드를 9뷰 데이터에도 동기화 — 비교/캐러셀 수치가 항상 일치
+  merged.views = {
+    ...base.views,
+    budget: {
+      ...base.views.budget,
+      daily: { leftPct: merged.metrics.budgetLeftPct, band: merged.metrics.budgetBand },
+    },
+    saving: {
+      ...base.views.saving,
+      goalPct: merged.metrics.savingPct,
+      goalLabel: merged.metrics.savingGoal,
+      paceBand: paceBandOf(merged.metrics.savingPct),
+    },
+    invest: {
+      ...base.views.invest,
+      returnPct: merged.metrics.investReturnPct,
+    },
+  }
+  return merged
 })
 
 export function getMateProfile(id: string): MateProfile | undefined {
