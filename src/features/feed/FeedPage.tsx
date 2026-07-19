@@ -4,10 +4,8 @@ import { Bell, Search } from 'lucide-react'
 import { GroupRow } from './GroupRow'
 import { StoryGrid } from './StoryGrid'
 import { StoryOverlay } from './StoryOverlay'
-import { ProfileSheet } from './ProfileSheet'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { STORIES } from '../../data/social'
-import type { ProfileSummary } from '../../data/types'
 
 type StorySort = 'popular' | 'recent'
 
@@ -15,7 +13,6 @@ export function FeedPage() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
   const [sort, setSort] = useState<StorySort>('popular')
   const [openStory, setOpenStory] = useState<string | null>(null)
-  const [profileOf, setProfileOf] = useState<ProfileSummary | null>(null)
 
   const stories = useMemo(() => {
     const filtered = selectedGroup
@@ -66,16 +63,8 @@ export function FeedPage() {
 
       <AnimatePresence>
         {openStory !== null && (
-          <StoryOverlay
-            story={STORIES.find((s) => s.id === openStory)!}
-            onClose={() => setOpenStory(null)}
-            onProfile={(s) => setProfileOf(s.author)}
-          />
+          <StoryOverlay story={STORIES.find((s) => s.id === openStory)!} onClose={() => setOpenStory(null)} />
         )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {profileOf !== null && <ProfileSheet profile={profileOf} onClose={() => setProfileOf(null)} />}
       </AnimatePresence>
     </div>
   )

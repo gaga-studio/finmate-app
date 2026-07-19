@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useNavigate } from 'react-router-dom'
 import { overlayTarget } from '../../shared/ui/overlayTarget'
-import { motion } from 'motion/react'
-import { Heart, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+import { Heart, UserRound, X } from 'lucide-react'
 import { TOP3_TITLE, WrappedCardView } from '../my/wrapped/WrappedCardView'
 import { WRAPPED } from '../../data/wrapped'
 import { ART } from '../../data/art-manifest'
@@ -13,15 +14,17 @@ import type { Story } from '../../data/types'
 interface Props {
   story: Story
   onClose: () => void
-  onProfile: (story: Story) => void
 }
 
 /**
  * 스토리 9:16 오버레이 — 그리드 썸네일과 layoutId를 공유해 확대.
- * 남의 카드라 저장/공유 대신 좋아요와 프로필 진입만 제공한다.
+ * 닉네임을 누르면 아래에 [프로필] [팔로우] 버튼이 펼쳐진다.
  */
-export function StoryOverlay({ story, onClose, onProfile }: Props) {
+export function StoryOverlay({ story, onClose }: Props) {
+  const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+  const [following, setFollowing] = useState(false)
 
   return createPortal(
     <div className="absolute inset-0 z-50">
@@ -71,8 +74,10 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
         >
           <button
             type="button"
-            onClick={() => onProfile(story)}
-            className="flex h-11 items-center gap-2 rounded-full bg-white/20 pl-2 pr-4 text-body font-bold text-white backdrop-blur-md"
+            onClick={() => setExpanded((v) => !v)}
+            className={`flex h-11 items-center gap-2 rounded-full pl-2 pr-4 text-body font-bold backdrop-blur-md ${
+              expanded ? 'bg-white text-ink' : 'bg-white/20 text-white'
+            }`}
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-body">
               {story.author.emoji}
@@ -99,6 +104,40 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
             <X size={18} />
           </button>
         </motion.div>
+
+        {/* 닉네임 탭 → 프로필/팔로우 인라인 버튼 */}
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              className="mt-2.5 flex items-center justify-center gap-2.5"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={dramatic}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  onClose()
+                  navigate(`/mate/${story.author.id}`)
+                }}
+                className="flex h-10 items-center gap-1.5 rounded-full bg-white px-4 text-body font-bold text-ink"
+              >
+                <UserRound size={15} />
+                프로필
+              </button>
+              <button
+                type="button"
+                onClick={() => setFollowing((v) => !v)}
+                className={`flex h-10 items-center rounded-full px-4 text-body font-bold backdrop-blur-md ${
+                  following ? 'bg-white/25 text-white' : 'bg-accent text-white'
+                }`}
+              >
+                {following ? '팔로잉 ✓' : '팔로우'}
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>,
     overlayTarget(),
