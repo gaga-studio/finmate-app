@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { Heart, X } from 'lucide-react'
-import { WrappedCardView } from '../my/wrapped/WrappedCardView'
+import { TOP3_TITLE, WrappedCardView } from '../my/wrapped/WrappedCardView'
 import { WRAPPED } from '../../data/wrapped'
 import { ART } from '../../data/art-manifest'
 import { getPeriodRange } from '../../data/dates'
@@ -54,6 +54,8 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
               subline: story.subline,
               metric: story.metric,
               artSrc: ART.wrapped[story.artKey],
+              top3: story.top3.map((r) => ({ key: r.label, ...r })),
+              top3Title: TOP3_TITLE[story.metric],
             }}
           />
         </motion.div>
