@@ -1,5 +1,9 @@
 import { motion } from 'motion/react'
 import { scaleLinear, type Pt } from './chart-utils'
+import { formatKrwCompact } from '../format/krw'
+
+const X_LABEL_H = 16
+const LEGEND_H = 14
 
 interface Props {
   /** 평가액 (실선) */
@@ -8,6 +12,8 @@ interface Props {
   principal: number[]
   width?: number
   height?: number
+  /** 하단 x축 라벨 (포인트 수와 동일 길이) */
+  xLabels?: string[]
 }
 
 function toLine(pts: Pt[]): string {
@@ -16,17 +22,19 @@ function toLine(pts: Pt[]): string {
 
 /**
  * 원금 vs 평가액 비교 차트 — 두 선이 벌어지는 틈이 곧 수익.
- * 월 단위 직선 폴리라인(꺾임 = 월별 변화), 공용 스케일.
+ * 월 단위 직선 폴리라인(꺾임 = 월별 변화), 공용 스케일 + 범례·축 라벨.
  */
-export function CompareChart({ value, principal, width = 216, height = 110 }: Props) {
+export function CompareChart({ value, principal, width = 216, height = 110, xLabels }: Props) {
   const pad = 8
+  const plotTop = LEGEND_H
+  const plotBottom = height - (xLabels ? X_LABEL_H : 0)
   const all = [...value, ...principal]
   const min = Math.min(...all)
   const max = Math.max(...all)
   const pts = (series: number[]): Pt[] =>
     series.map((v, i) => ({
       x: scaleLinear(i, [0, series.length - 1], [pad, width - pad]),
-      y: scaleLinear(v, [min, max], [height - pad, pad]),
+      y: scaleLinear(v, [min, max], [plotBottom - pad, plotTop + pad]),
     }))
 
   const valuePts = pts(value)
@@ -45,6 +53,27 @@ export function CompareChart({ value, principal, width = 216, height = 110 }: Pr
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
+      {/* 범례 */}
+      <g fontSize={9} fontWeight={600} fill="currentColor">
+        <line x1={0} y1={5} x2={16} y2={5} stroke="currentColor" strokeWidth={3} strokeLinecap="round" />
+        <text x={20} y={8}>평가액</text>
+        <line x1={58} y1={5} x2={74} y2={5} stroke="currentColor" strokeWidth={2.5} strokeOpacity={0.4} strokeDasharray="3 4" strokeLinecap="round" />
+        <text x={78} y={8} opacity={0.6}>원금</text>
+      </g>
+
+      {/* y축: 최소/최대 그리드 + 금액 라벨 (최대=좌상단, 최소=우하단 빈 공간) */}
+      {[
+        { y: plotTop + pad, v: max, x: 2, anchor: 'start' as const },
+        { y: plotBottom - pad, v: min, x: width - 2, anchor: 'end' as const },
+      ].map(({ y, v, x, anchor }) => (
+        <g key={v}>
+          <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.12} strokeWidth={1} strokeDasharray="3 4" />
+          <text x={x} y={y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.55}>
+            {formatKrwCompact(v)}
+          </text>
+        </g>
+      ))}
+
       <motion.path
         d={gapArea}
         fill="currentColor"
@@ -117,6 +146,22 @@ export function CompareChart({ value, principal, width = 216, height = 110 }: Pr
         animate={{ scale: 2.4, opacity: 0 }}
         transition={{ delay: 1, duration: 1.6, repeat: Infinity, repeatDelay: 1.2 }}
       />
+
+      {/* x축: 월 라벨 */}
+      {xLabels?.map((label, i) => (
+        <text
+          key={label}
+          x={valuePts[i]?.x ?? 0}
+          y={height - 3}
+          textAnchor="middle"
+          fontSize={9.5}
+          fontWeight={i === xLabels.length - 1 ? 800 : 600}
+          fill="currentColor"
+          opacity={i === xLabels.length - 1 ? 0.85 : 0.45}
+        >
+          {label}
+        </text>
+      ))}
     </svg>
   )
 }
