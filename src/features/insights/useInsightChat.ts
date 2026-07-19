@@ -9,7 +9,7 @@ const GAP_MS = 500
 
 export function useInsightChat() {
   const [messages, setMessages] = useState<InsightMsg[]>([])
-  const [chart, setChart] = useState<InsightChartState>({ kind: 'default' })
+  const [chart, setChart] = useState<InsightChartState>({ kind: 'projection' })
   const [typing, setTyping] = useState(false)
   const timers = useRef<number[]>([])
   const seq = useRef(0)
@@ -64,6 +64,11 @@ export function useInsightChat() {
     setChart({ kind: 'sim-saving', monthly })
   }, [])
 
+  /** 그래프 우상단 '비교' — 대상 선택/해제 (null이면 내 투영으로 복귀) */
+  const setCompare = useCallback((targetId: string | null) => {
+    setChart(targetId ? { kind: 'compare', targetId } : { kind: 'projection' })
+  }, [])
+
   /* ---- 저장·다시보기 ---- */
   const [sessions, setSessions] = useState<SavedSession[]>(PRESET_SESSIONS)
   const [viewing, setViewing] = useState<SavedSession | null>(null)
@@ -86,7 +91,7 @@ export function useInsightChat() {
 
   // 다시보기 중에는 저장된 대화·그 대화의 마지막 차트 상태를 보여준다
   const viewingChart: InsightChartState | null = viewing
-    ? ([...viewing.messages].reverse().find((m) => m.chart)?.chart ?? { kind: 'default' })
+    ? ([...viewing.messages].reverse().find((m) => m.chart)?.chart ?? { kind: 'projection' })
     : null
 
   return {
@@ -95,6 +100,7 @@ export function useInsightChat() {
     typing: viewing ? false : typing,
     send,
     setSavingMonthly,
+    setCompare,
     sessions,
     viewing,
     saveSession,

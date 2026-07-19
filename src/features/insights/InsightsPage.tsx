@@ -5,6 +5,8 @@ import { ChartPanel } from './ChartPanel'
 import { ChatThread } from './ChatThread'
 import { ChatInput } from './ChatInput'
 import { SavedChatsPanel } from './SavedChatsPanel'
+import { ComparePickerSheet } from './ComparePickerSheet'
+import { ReportOverlay } from './ReportOverlay'
 import { useInsightChat } from './useInsightChat'
 import { snappy } from '../../shared/motion/springs'
 
@@ -13,6 +15,8 @@ export function InsightsPage() {
   const [draft, setDraft] = useState('')
   const [chipsOpen, setChipsOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
+  const [compareOpen, setCompareOpen] = useState(false)
+  const [reportOpen, setReportOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
 
@@ -51,7 +55,7 @@ export function InsightsPage() {
         </button>
       </header>
 
-      <ChartPanel state={chat.chart} onTemplate={insertTemplate} />
+      <ChartPanel state={chat.chart} onCompareOpen={() => !viewing && setCompareOpen(true)} />
 
       {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
       <div className="flex items-center justify-between px-5 pb-1 pt-3">
@@ -91,7 +95,9 @@ export function InsightsPage() {
         messages={chat.messages}
         typing={chat.typing}
         onChip={insertTemplate}
+        onOption={chat.send}
         onSlider={chat.setSavingMonthly}
+        onReport={() => setReportOpen(true)}
         readOnly={viewing}
       />
 
@@ -108,6 +114,18 @@ export function InsightsPage() {
       <AnimatePresence>
         {panelOpen && (
           <SavedChatsPanel sessions={chat.sessions} onOpen={chat.openSession} onClose={() => setPanelOpen(false)} />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>{reportOpen && <ReportOverlay onClose={() => setReportOpen(false)} />}</AnimatePresence>
+
+      <AnimatePresence>
+        {compareOpen && (
+          <ComparePickerSheet
+            selectedId={chat.chart.kind === 'compare' ? chat.chart.targetId : null}
+            onSelect={chat.setCompare}
+            onClose={() => setCompareOpen(false)}
+          />
         )}
       </AnimatePresence>
 

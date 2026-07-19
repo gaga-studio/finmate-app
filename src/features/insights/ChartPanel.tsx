@@ -3,27 +3,27 @@ import { Users } from 'lucide-react'
 import { LineChart } from '../../shared/charts/LineChart'
 import { CompareChart } from '../../shared/charts/CompareChart'
 import { formatKrwCompact } from '../../shared/format/krw'
-import { getNetWorth } from '../../data/selectors'
 import { SIM_SCENARIO } from '../../data/domain'
 import {
-  MATE_COMPARE_TEMPLATE,
-  MATE_NET_WORTH_HISTORY,
+  COMPARE_TARGETS,
+  getHabitProjection,
   makeSavingProjection,
+  PROJECTION_MONTHS,
   type InsightChartState,
 } from '../../data/insights'
 import { snappy } from '../../shared/motion/springs'
 
-const MONTH_LABELS = ['2월', '3월', '4월', '5월', '6월', '7월']
 const CHART_W = 330
 
 interface Props {
   state: InsightChartState
-  /** 우상단 '메이트 비교' 칩 → 입력창 템플릿 삽입 (와이어프레임 ③) */
-  onTemplate: (text: string) => void
+  /** 우상단 '비교' 버튼 → 메이트/그룹 선택 시트 */
+  onCompareOpen: () => void
 }
 
-export function ChartPanel({ state, onTemplate }: Props) {
+export function ChartPanel({ state, onCompareOpen }: Props) {
   const { title, caption, metricClass, chart } = renderState(state)
+  const comparing = state.kind === 'compare'
 
   return (
     <div className="mx-5 mt-2 rounded-card bg-elevated px-4 pb-2.5 pt-3 shadow-float">
@@ -42,11 +42,13 @@ export function ChartPanel({ state, onTemplate }: Props) {
         </AnimatePresence>
         <button
           type="button"
-          onClick={() => onTemplate(MATE_COMPARE_TEMPLATE)}
-          className="flex items-center gap-1 rounded-full bg-accent/10 px-2.5 py-1 text-caption font-bold text-accent"
+          onClick={onCompareOpen}
+          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-caption font-bold ${
+            comparing ? 'bg-accent text-white' : 'bg-accent/10 text-accent'
+          }`}
         >
           <Users size={12} />
-          메이트 비교
+          비교
         </button>
       </div>
 
@@ -71,9 +73,9 @@ export function ChartPanel({ state, onTemplate }: Props) {
   )
 }
 
-/** 상태 전환 애니메이션 키 — 슬라이더 이동은 같은 키(내부 재드로잉만) */
+/** 상태 전환 애니메이션 키 — 슬라이더 이동은 같은 키(내부 재드로잉만), 비교는 대상별 재생 */
 function chartKey(state: InsightChartState): string {
-  return state.kind
+  return state.kind === 'compare' ? `compare-${state.targetId}` : state.kind
 }
 
 function renderState(state: InsightChartState) {
@@ -113,37 +115,40 @@ function renderState(state: InsightChartState) {
     }
   }
 
-  if (state.kind === 'mate') {
+  const my = getHabitProjection()
+
+  if (state.kind === 'compare') {
+    const target = COMPARE_TARGETS.find((t) => t.id === state.targetId) ?? COMPARE_TARGETS[0]
     return {
-      title: '나 vs 메이트 평균 · 총자산',
-      caption: '메이트 평균보다 +86만원',
+      title: `나 vs ${target.label}`,
+      caption: target.summary,
       metricClass: 'text-budget',
       chart: (
         <CompareChart
-          value={getNetWorth().points}
-          principal={MATE_NET_WORTH_HISTORY}
-          labels={['나', '메이트 평균']}
+          value={my.curve}
+          principal={target.curve}
+          labels={['나', target.label]}
           width={CHART_W}
           height={132}
-          xLabels={MONTH_LABELS}
+          xLabels={PROJECTION_MONTHS}
         />
       ),
     }
   }
 
-  const nw = getNetWorth()
+  // 기본: 평소 습관 기반 미래 6개월 투영
   return {
-    title: `총자산 ${formatKrwCompact(nw.total)}`,
-    caption: `6개월 동안 +${formatKrwCompact(nw.total - nw.points[0])}`,
+    title: `12월엔 ${formatKrwCompact(my.curve[my.curve.length - 1])}`,
+    caption: `지금 습관대로면 6개월 뒤 +${formatKrwCompact(my.totalGain)}`,
     metricClass: 'text-saving',
     chart: (
       <LineChart
-        points={nw.points}
+        points={my.curve}
         width={CHART_W}
         height={128}
-        drawKey="insight-networth"
+        drawKey="habit-projection"
         markers
-        xLabels={MONTH_LABELS}
+        xLabels={PROJECTION_MONTHS}
         yTicks
       />
     ),
