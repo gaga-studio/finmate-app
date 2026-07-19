@@ -7,6 +7,7 @@ import { FeedPage } from '../features/feed/FeedPage'
 import { InsightsPage } from '../features/insights/InsightsPage'
 import { MissionsPage } from '../features/missions/MissionsPage'
 import { DiaryPage } from '../features/diary/DiaryPage'
+import { MateProfilePage } from '../features/mate/MateProfilePage'
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
       { path: '/insights', element: <InsightsPage /> },
       { path: '/missions', element: <MissionsPage /> },
       { path: '/diary', element: <DiaryPage /> },
+      { path: '/mate/:id', element: <MateProfilePage /> },
     ],
   },
 ])
