@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import { ArtOrGradient } from '../../../shared/ui/ArtOrGradient'
+import { WrappedArt } from '../../../shared/ui/art/WrappedArt'
 import { ART } from '../../../data/art-manifest'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, WISHLIST } from '../../../data/domain'
@@ -27,7 +28,12 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
 
   return (
     <div ref={ref} className={`relative aspect-[9/16] w-full overflow-hidden ${className ?? ''}`}>
-      <ArtOrGradient src={ART.wrapped[w.artKey]} palette={metric} className="h-full w-full">
+      <ArtOrGradient
+        src={ART.wrapped[w.artKey]}
+        palette={metric}
+        placeholder={<WrappedArt metric={metric} period={period} />}
+        className="h-full w-full"
+      >
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/25" />
 
         <div className="absolute inset-0 flex flex-col p-6 text-white">
@@ -40,7 +46,7 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
 
           <div className="flex-1" />
 
-          <p className="whitespace-pre-line text-[24px] font-extrabold leading-snug">{w.headline}</p>
+          <p className="whitespace-pre-line break-keep text-[24px] font-extrabold leading-snug">{w.headline}</p>
           <p className="mt-2 text-[13px] font-medium text-white/85">{w.subline}</p>
 
           {/* 지표 요약 3종 */}
