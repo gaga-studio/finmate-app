@@ -125,7 +125,7 @@ export function DiaryPage() {
                           className="absolute inset-0 h-full w-full select-none object-cover"
                           style={{ objectPosition: '50% 18%' }}
                         />
-                        <span className="absolute left-2 top-2 rounded-full bg-black/55 px-3 py-1 text-section font-extrabold text-white backdrop-blur-sm">
+                        <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2.5 py-0.5 text-body font-bold text-white backdrop-blur-sm">
                           {d.day}일 · 오늘
                         </span>
                         <TileBadges income={d.income} spend={d.spend} />
@@ -139,7 +139,7 @@ export function DiaryPage() {
                           draggable={false}
                           className="absolute inset-0 h-full w-full select-none object-cover"
                         />
-                        <span className="absolute left-2 top-2 rounded-full bg-black/55 px-3 py-1 text-section font-extrabold text-white backdrop-blur-sm">
+                        <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2.5 py-0.5 text-body font-bold text-white backdrop-blur-sm">
                           {d.day}일
                         </span>
                         <TileBadges income={d.income} spend={d.spend} />

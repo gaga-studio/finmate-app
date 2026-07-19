@@ -83,8 +83,8 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         { y: plotBottom - pad, v: min, x: width - 2, anchor: 'end' as const },
       ].map(({ y, v, x, anchor }) => (
         <g key={v}>
-          <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.12} strokeWidth={1} strokeDasharray="3 4" />
-          <text x={x} y={y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.55}>
+          <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.18} strokeWidth={1} strokeDasharray="3 4" />
+          <text x={x} y={y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.8}>
             {formatKrwCompact(v)}
           </text>
         </g>
@@ -195,7 +195,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
             fontSize={9.5}
             fontWeight={i === xLabels.length - 1 ? 800 : 600}
             fill="currentColor"
-            opacity={i === xLabels.length - 1 ? 0.85 : 0.45}
+            opacity={i === xLabels.length - 1 ? 0.95 : 0.7}
           >
             {label}
           </text>
