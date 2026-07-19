@@ -36,7 +36,7 @@ export function RewardSheet({ points, onClose }: Props) {
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/15" />
         <div className="flex items-baseline justify-between">
           <h2 className="text-title font-extrabold text-ink">포인트 상점</h2>
-          <p className="text-body font-bold text-point">{points.toLocaleString('ko-KR')}P 보유</p>
+          <p className="text-body font-bold text-point-ink">{points.toLocaleString('ko-KR')}P 보유</p>
         </div>
         <div className="mt-3">
           {REWARD_ITEMS.map((item) => {
@@ -48,7 +48,7 @@ export function RewardSheet({ points, onClose }: Props) {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-body font-semibold text-ink">{item.title}</p>
-                  <p className="mt-0.5 text-caption font-bold text-point">
+                  <p className="mt-0.5 text-caption font-bold text-point-ink">
                     {item.cost.toLocaleString('ko-KR')}P
                   </p>
                 </div>
@@ -56,7 +56,7 @@ export function RewardSheet({ points, onClose }: Props) {
                   type="button"
                   disabled={!affordable}
                   className={`h-9 shrink-0 rounded-full px-4 text-body font-bold ${
-                    affordable ? 'bg-point text-white' : 'bg-ink/5 text-ink-faint'
+                    affordable ? 'bg-point text-point-ink' : 'bg-ink/5 text-ink-faint'
                   }`}
                 >
                   교환
