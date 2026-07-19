@@ -68,7 +68,7 @@ export const STORIES: Story[] = [
     author: A.squirrel,
     metric: 'budget',
     period: 'weekly',
-    headline: '장바구니엔 채소만,\n배달 앱은 잠갔다',
+    headline: '장바구니엔 채소만,\n배달 앱은 잠금!',
     subline: '이번 주 식비 4.2만원 · 배달 0건',
     top3: [
       { label: '🛒 마트 장보기', value: '3.1만원' },
@@ -85,7 +85,7 @@ export const STORIES: Story[] = [
     author: A.closet,
     metric: 'budget',
     period: 'weekly',
-    headline: '옷장을 정리하고,\n딱 한 벌만 들였다',
+    headline: '세 벌 팔고 한 벌만,\n옷장 다이어트 성공!',
     subline: '판 옷 3벌 +4.5만원 · 산 옷 1벌 -8.9만원',
     top3: [
       { label: '👗 원피스', value: '8.9만원' },
@@ -102,7 +102,7 @@ export const STORIES: Story[] = [
     author: A.singer,
     metric: 'budget',
     period: 'weekly',
-    headline: '콘서트 티켓값은\n한 번도 아깝지 않았다',
+    headline: '콘서트 티켓값,\n1도 안 아까움!',
     subline: '문화비 16.8만원 · 다른 지출 -32%로 방어',
     top3: [
       { label: '🎫 콘서트 티켓', value: '13.2만원' },
@@ -153,7 +153,7 @@ export const STORIES: Story[] = [
     author: A.paris,
     metric: 'saving',
     period: 'monthly',
-    headline: '여행 통장이 절반을\n넘보기 시작한 달',
+    headline: '파리 한 달 살기,\n목표까지 절반!',
     subline: '파리까지 61% · 이번 달 +42만원',
     top3: [
       { label: '✈️ 파리 항공권', value: '89만원' },
@@ -171,7 +171,7 @@ export const STORIES: Story[] = [
     author: A.keys,
     metric: 'saving',
     period: 'monthly',
-    headline: '5년을 모아,\n첫 집 열쇠를 받았다',
+    headline: '5년 적금 만기,\n드디어 내 집 열쇠!',
     subline: '적금 만기 + 청약 60회차 · 전세 입주 성공',
     top3: [
       { label: '🏦 5년 적금 만기', value: '4,800만원' },
@@ -189,7 +189,7 @@ export const STORIES: Story[] = [
     author: A.tuna,
     metric: 'saving',
     period: 'monthly',
-    headline: '전세 보증금까지 더하면,\n자산 1억을 넘겼다',
+    headline: '전세 보증금까지 합산,\n자산 1억 돌파!',
     subline: '총자산 1.1억 · 올해 +1,400만원',
     top3: [
       { label: '🏠 전세 보증금', value: '9,000만원' },
@@ -207,7 +207,7 @@ export const STORIES: Story[] = [
     author: A.bear,
     metric: 'invest',
     period: 'weekly',
-    headline: '바이오 ETF에\n첫 발을 디딘 주',
+    headline: '바이오 ETF,\n이번 주 첫 매수!',
     subline: '헬스케어 섹터 +10만원 · 주간 +2.8%',
     top3: [
       { label: '🧬 바이오 ETF', value: '+4.1%' },
@@ -224,7 +224,7 @@ export const STORIES: Story[] = [
     author: A.raccoon,
     metric: 'invest',
     period: 'monthly',
-    headline: '그린 에너지에\n월급의 10%를 심었다',
+    headline: '그린 에너지에\n월급의 10% 심기!',
     subline: '월 21만원 적립 · 누적 +8.4%',
     top3: [
       { label: '☀️ 태양광 ETF', value: '+9.2%' },
