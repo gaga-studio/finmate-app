@@ -23,7 +23,15 @@ export function useInsightChat() {
   const push = useCallback((reply: Reply) => {
     const id = `m${++seq.current}`
     setMessages((prev) => [...prev, { ...reply, id }])
-    if (reply.chart) setChart(reply.chart)
+    if (reply.chart) {
+      const next = reply.chart
+      // 맥북 시뮬은 비교 중이던 메이트 선을 유지한다 — 격차 변화가 시연 포인트
+      setChart((prev) =>
+        next.kind === 'sim-macbook' && prev.kind === 'compare'
+          ? { kind: 'sim-macbook', targetId: prev.targetId }
+          : next,
+      )
+    }
   }, [])
 
   /** AI 응답 시퀀스 — 타이핑 도트 후 버블이 순차 등장 */
