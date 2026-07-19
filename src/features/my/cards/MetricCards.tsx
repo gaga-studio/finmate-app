@@ -24,7 +24,7 @@ const SHORT_NAME: Record<string, string> = {
   'KODEX 200': 'KODEX 200',
   '005930': '삼성전자',
   'KODEX 미국나스닥': '나스닥',
-  'ACE 금현물': '금',
+  SPACEX: '스페이스X',
 }
 
 const BUDGET_TITLE: Record<Period, string> = {

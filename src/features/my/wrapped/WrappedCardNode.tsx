@@ -144,11 +144,14 @@ function investTop3(view: InvestView): { key: string; label: string; value: stri
       value: `${n.changePct >= 0 ? '+' : ''}${n.changePct.toFixed(1)}%`,
     }))
   }
-  return HOLDINGS.slice(0, 3).map((h) => ({
-    key: h.ticker,
-    label: `📈 ${h.name}`,
-    value: `${h.returnPct >= 0 ? '+' : ''}${h.returnPct.toFixed(1)}%`,
-  }))
+  return [...HOLDINGS]
+    .sort((a, b) => b.returnPct - a.returnPct)
+    .slice(0, 3)
+    .map((h) => ({
+      key: h.ticker,
+      label: `📈 ${h.name}`,
+      value: `${h.returnPct >= 0 ? '+' : ''}${h.returnPct.toFixed(1)}%`,
+    }))
 }
 
 function top3Rows(metric: Metric, w: WrappedSummary): { key: string; label: string; value: string }[] {
@@ -166,9 +169,12 @@ function top3Rows(metric: Metric, w: WrappedSummary): { key: string; label: stri
       value: formatKrwCompact(item.price),
     }))
   }
-  return HOLDINGS.slice(0, 3).map((h) => ({
-    key: h.ticker,
-    label: `📈 ${h.name}`,
-    value: `${h.returnPct >= 0 ? '+' : ''}${h.returnPct.toFixed(1)}%`,
-  }))
+  return [...HOLDINGS]
+    .sort((a, b) => b.returnPct - a.returnPct)
+    .slice(0, 3)
+    .map((h) => ({
+      key: h.ticker,
+      label: `📈 ${h.name}`,
+      value: `${h.returnPct >= 0 ? '+' : ''}${h.returnPct.toFixed(1)}%`,
+    }))
 }

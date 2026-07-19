@@ -37,14 +37,14 @@ export const SAVING_CARDS: Record<SavingView, ViewCardContent> = {
 export const INVEST_CARDS: Record<InvestView, ViewCardContent> = {
   status: {
     title: '7월의 투자',
-    headline: '수익률 +12.7%,\n로켓이 궤도에 올랐다',
+    headline: '스페이스X +34.5%,\n로켓이 수익률을 끌었다',
     subline: '원금 118만원 → 평가 133만원 (+12.7%)',
     artKey: 'invest-monthly',
   },
   portfolio: {
     title: '나의 포트폴리오',
-    headline: 'ETF가 절반 이상,\n분산은 순항 중',
-    subline: '5종목 · 평가 132.6만원',
+    headline: 'S&P500이 30%,\nETF가 중심을 잡는다',
+    subline: '5종목 · 평가 133만원',
     artKey: 'invest-portfolio',
   },
   news: {

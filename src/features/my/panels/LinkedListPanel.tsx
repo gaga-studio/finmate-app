@@ -150,16 +150,19 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
       ),
     }))
   }
-  return HOLDINGS.map((h) => ({
-    key: h.ticker,
-    leading: '📈',
-    title: h.name,
-    sub: formatKrwCompact(h.value),
-    trailing: (
-      <span className={h.returnPct >= 0 ? 'text-rise' : 'text-fall'}>
-        {h.returnPct >= 0 ? '+' : ''}
-        {h.returnPct.toFixed(1)}%
-      </span>
-    ),
-  }))
+  // 현황: 수익률 내림차순 — 1위 종목이 아트카드의 주인공이 된다
+  return [...HOLDINGS]
+    .sort((a, b) => b.returnPct - a.returnPct)
+    .map((h, i) => ({
+      key: h.ticker,
+      leading: rank(i),
+      title: h.name,
+      sub: formatKrwCompact(h.value),
+      trailing: (
+        <span className={h.returnPct >= 0 ? 'text-rise' : 'text-fall'}>
+          {h.returnPct >= 0 ? '+' : ''}
+          {h.returnPct.toFixed(1)}%
+        </span>
+      ),
+    }))
 }
