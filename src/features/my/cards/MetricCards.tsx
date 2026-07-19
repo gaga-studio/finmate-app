@@ -18,6 +18,9 @@ import {
 import { METRIC_TEXT, type InvestView, type SavingView } from '../myState'
 import type { Period } from '../../../data/types'
 
+/** 월별 추이 차트 공용 x축 라벨 (2~7월) */
+const MONTH_LABELS = ['2월', '3월', '4월', '5월', '6월', '7월']
+
 /** 트리맵 셀용 짧은 종목명 */
 const SHORT_NAME: Record<string, string> = {
   'TIGER S&P500': 'S&P500',
@@ -82,8 +85,16 @@ export function SavingCard({ view }: { view: SavingView }) {
   const nw = getNetWorth()
   return (
     <CardShell title="나의 자산" metricClass={METRIC_TEXT.saving}>
-      <div className="pt-3">
-        <LineChart points={nw.points} width={216} height={104} drawKey="saving-asset" markers />
+      <div className="pt-2">
+        <LineChart
+          points={nw.points}
+          width={216}
+          height={126}
+          drawKey="saving-asset"
+          markers
+          xLabels={MONTH_LABELS}
+          yTicks
+        />
       </div>
       <p className="mt-2 text-display font-extrabold leading-none">
         <AnimatedNumber value={nw.total} format={(v) => formatKrwCompact(Math.round(v))} />
@@ -100,8 +111,14 @@ export function InvestCard({ view }: { view: InvestView }) {
     const inv = getInvestStatus()
     return (
       <CardShell title="투자 현황" metricClass={METRIC_TEXT.invest}>
-        <div className="pt-3">
-          <CompareChart value={inv.value} principal={inv.principal} width={216} height={110} />
+        <div className="pt-2">
+          <CompareChart
+            value={inv.value}
+            principal={inv.principal}
+            width={216}
+            height={132}
+            xLabels={MONTH_LABELS}
+          />
         </div>
         <p className={`mt-2 text-display font-extrabold leading-none ${inv.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
           <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
