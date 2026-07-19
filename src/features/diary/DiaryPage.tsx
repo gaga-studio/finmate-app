@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Bell, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DayCardsOverlay } from './DayCardsOverlay'
-import { DIARY_TODAY, DOMINANT_ART } from '../../data/diary'
+import { DIARY_ART, DIARY_TODAY, DOMINANT_ART } from '../../data/diary'
 import { getDayDominant, getDiaryDays } from '../../data/selectors'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { formatKrwCompact } from '../../shared/format/krw'
@@ -130,6 +130,22 @@ export function DiaryPage() {
                           <TileAmounts income={d.income} spend={d.spend} onImage />
                         </div>
                       </motion.button>
+                    ) : DIARY_ART[d.day] ? (
+                      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl shadow-soft">
+                        <img
+                          src={DIARY_ART[d.day]}
+                          alt=""
+                          loading="lazy"
+                          draggable={false}
+                          className="absolute inset-0 h-full w-full select-none object-cover"
+                        />
+                        <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
+                          {d.day}일
+                        </span>
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5">
+                          <TileAmounts income={d.income} spend={d.spend} onImage />
+                        </div>
+                      </div>
                     ) : (
                       <div className="flex aspect-[3/4] w-full flex-col justify-between rounded-2xl bg-ink/4 p-2.5">
                         <span className="text-body font-extrabold text-ink-faint">{d.day}일</span>

@@ -21,3 +21,12 @@ export const DIARY_TODAY = {
   day: 23,
   dateKey: '2026-07-23',
 } as const
+
+/**
+ * 과거 날짜(1~22일)의 그림일기 — 각 날의 실제 거래·대표 활동에 맞춘 7가지 그림체.
+ * 팝아트(6·7·21) · 민트 포스터(2·5·9·16) · 리소그래프(4·8·14) · 종이 콜라주(1·13·17)
+ * · 자수(3·12·19) · 클레이 3D(11·15·18·22) · 로우폴리 3D(10·20)
+ */
+export const DIARY_ART: Record<number, string> = Object.fromEntries(
+  Array.from({ length: 22 }, (_, i) => [i + 1, `/art/diary/diary-${String(i + 1).padStart(2, '0')}.jpg`]),
+)
