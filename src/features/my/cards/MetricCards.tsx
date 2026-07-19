@@ -47,7 +47,7 @@ export function BudgetCard({ period }: { period: Period }) {
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
       {/* 사용량 스택 바 — 쓴 만큼 채워진다 */}
-      <div className="mt-2.5 w-[200px]">
+      <div className="mt-2.5 w-full min-w-[200px] max-w-[230px]">
         <div className="h-2.5 overflow-hidden rounded-full bg-budget/15">
           <motion.div
             className="h-full rounded-full bg-budget"

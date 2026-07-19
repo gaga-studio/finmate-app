@@ -48,7 +48,7 @@ export function MateProfilePage() {
     STORIES.find((s) => s.author.id === mate.id)
 
   return (
-    <div className="relative min-h-full pb-28">
+    <div className="relative min-h-full pb-8">
       <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
         <PageTitle>메이트</PageTitle>
         <button
@@ -141,8 +141,8 @@ export function MateProfilePage() {
         )}
       </AnimatePresence>
 
-      {/* 하단 중앙 버튼 — 프로필: 나와 비교하기 / 비교: 분석하기 */}
-      <div className="fixed inset-x-0 bottom-24 z-40 mx-auto w-fit">
+      {/* 하단 중앙 버튼 — 콘텐츠 흐름 안이라 리스트를 가리지 않는다 */}
+      <div className="mt-5 flex items-center justify-center gap-2.5 px-5">
         <motion.button
           type="button"
           layout
@@ -154,17 +154,16 @@ export function MateProfilePage() {
           {comparing ? <Sparkles size={16} /> : <Users size={16} />}
           {comparing ? '분석하기' : '나와 비교하기'}
         </motion.button>
+        {comparing && (
+          <button
+            type="button"
+            onClick={() => setComparing(false)}
+            className="flex h-12 items-center rounded-full bg-elevated px-4 text-body font-bold text-ink shadow-float"
+          >
+            프로필로
+          </button>
+        )}
       </div>
-
-      {comparing && (
-        <button
-          type="button"
-          onClick={() => setComparing(false)}
-          className="fixed bottom-24 right-5 z-40 flex h-12 items-center rounded-full bg-elevated px-4 text-body font-bold text-ink shadow-float"
-        >
-          프로필로
-        </button>
-      )}
 
       <AnimatePresence>
         {analysisOpen && <MateAnalysisOverlay mate={mate} onClose={() => setAnalysisOpen(false)} />}

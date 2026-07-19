@@ -42,7 +42,7 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                   className="aspect-[3/4] w-full"
                 >
                   <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-micro font-bold leading-tight text-white">
-                    {s.headline.split('\n')[0]}
+                    {s.headline.split('\n')[0].replace(/[,.]$/, '')}…
                   </p>
                 </ArtOrGradient>
               </motion.button>

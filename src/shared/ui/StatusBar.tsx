@@ -7,7 +7,7 @@ const TIME = `${DEMO_TODAY.getHours()}:${String(DEMO_TODAY.getMinutes()).padStar
 /** 폰 프레임 상단의 iOS풍 상태바 — 시간 · 셀룰러 · 와이파이 · 배터리 */
 export function StatusBar() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-50 flex h-12 items-center justify-between bg-surface/75 px-7 pt-2 backdrop-blur-md">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-50 flex h-12 items-center justify-between bg-gradient-to-b from-surface/95 via-surface/70 to-transparent px-7 pt-2 backdrop-blur-sm">
       <span className="text-[15px] font-semibold tracking-tight text-ink">{TIME}</span>
       <div className="flex items-center gap-1.5 text-ink">
         <Signal size={15} strokeWidth={2.6} />

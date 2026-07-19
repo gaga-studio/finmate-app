@@ -223,11 +223,11 @@ function CarouselSlot({
 }) {
   const scale = useTransform(x, (v) => {
     const d = Math.abs(-v / step - i)
-    return 1 - Math.min(d, 1) * 0.08
+    return 1 - Math.min(d, 1) * 0.1
   })
   const opacity = useTransform(x, (v) => {
     const d = Math.abs(-v / step - i)
-    return 1 - Math.min(d, 1) * 0.45
+    return 1 - Math.min(d, 1) * 0.75
   })
   return (
     <motion.div
