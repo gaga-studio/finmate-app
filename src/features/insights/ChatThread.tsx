@@ -36,7 +36,7 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
   return (
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto px-5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex-1 overflow-y-auto px-3.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <div className="flex flex-col gap-2.5">
         {messages.map((m, i) => (

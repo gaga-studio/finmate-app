@@ -16,7 +16,7 @@ interface Props {
 
 export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, onChip, disabled }: Props) {
   return (
-    <div className="border-t border-line bg-surface px-4 pb-2 pt-2">
+    <div className="border-t border-line/70 px-3 pb-3 pt-2">
       <AnimatePresence>
         {chipsOpen && (
           <motion.div
