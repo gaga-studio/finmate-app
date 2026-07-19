@@ -153,13 +153,6 @@ export interface Story {
   postedAt: string
 }
 
-export interface DiaryEntry {
-  date: string
-  caption: string
-  mood: 'good' | 'soso' | 'bad'
-  artKey: string
-}
-
 /** 아트 파일명과 1:1 대응하는 키 — art-manifest의 단일 키 체계 */
 export type WrappedArtKey = `${Metric}-${Period}`
 

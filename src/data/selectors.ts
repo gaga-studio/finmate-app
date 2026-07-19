@@ -192,6 +192,31 @@ export function getDayLedger(dateKey: string): Transaction[] {
   return TRANSACTIONS.filter((t) => t.date === dateKey)
 }
 
+export interface DiaryDay {
+  day: number
+  dateKey: string
+  income: number
+  spend: number
+}
+
+/** 다이어리 갤러리: 이번 달 1일~오늘을 최신순으로, 일별 수입/지출 (거래 파생) */
+export function getDiaryDays(): { days: DiaryDay[]; totalIncome: number; totalSpend: number } {
+  const activity = getMonthActivity()
+  const days = [...activity.entries()]
+    .map(([dateKey, a]) => ({
+      dateKey,
+      day: Number(dateKey.slice(-2)),
+      income: a.earned,
+      spend: a.spent,
+    }))
+    .sort((a, b) => b.day - a.day)
+  return {
+    days,
+    totalIncome: days.reduce((s, d) => s + d.income, 0),
+    totalSpend: days.reduce((s, d) => s + d.spend, 0),
+  }
+}
+
 /** 다이어리 캘린더용: 날짜별 순지출/수입 여부 */
 export function getMonthActivity(): Map<string, { spent: number; earned: number }> {
   const { startKey, endKey } = getPeriodRange('monthly')
