@@ -88,11 +88,11 @@ export interface StockNews {
   changePct: number
 }
 
-/** 뉴스 뷰 오른쪽 카드 — 내가 보유 중인 종목의 핫한 뉴스만 */
+/** 뉴스 뷰 오른쪽 카드 — 반도체(삼성·하이닉스)가 메인, 아트 이미지와 정합 */
 export const STOCK_NEWS: StockNews[] = [
-  { id: 'nw1', name: '스페이스X', summary: '스타십 상업 발사 성공에', changePct: 6.8 },
-  { id: 'nw2', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
-  { id: 'nw3', name: 'TIGER 미국S&P500', summary: '미국 증시 사상 최고치에', changePct: 0.9 },
+  { id: 'nw1', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
+  { id: 'nw2', name: 'SK하이닉스', summary: '반도체 슈퍼사이클 전망에', changePct: 5.2 },
+  { id: 'nw3', name: '스페이스X', summary: '스타십 상업 발사 성공에', changePct: 6.8 },
   { id: 'nw4', name: 'KODEX 200', summary: '외국인 차익 실현 매물에', changePct: -0.6 },
 ]
 
