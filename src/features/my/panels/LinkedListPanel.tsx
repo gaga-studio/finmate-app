@@ -17,7 +17,7 @@ const PANEL_TITLE: Record<Metric, string> = {
 export function LinkedListPanel({ metric, period }: { metric: Metric; period: Period }) {
   return (
     <div className="flex h-full flex-col rounded-card bg-elevated px-3.5 py-3 shadow-float">
-      <p className="mb-1 text-[14px] font-bold text-ink">{PANEL_TITLE[metric]}</p>
+      <p className="mb-1 text-section font-bold text-ink">{PANEL_TITLE[metric]}</p>
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={metric === 'saving' ? 'saving' : `${metric}-${period}`}
@@ -56,7 +56,7 @@ function rows(metric: Metric, period: Period): Row[] {
       const meta = CATEGORY_META[c.category]
       return {
         key: c.category,
-        leading: <span className="text-[13px] font-extrabold text-ink-soft">{i + 1}</span>,
+        leading: <span className="text-body font-extrabold text-ink-soft">{i + 1}</span>,
         title: `${meta.emoji} ${meta.label}`,
         sub: `${c.count}건`,
         trailing: formatKrwCompact(c.total),

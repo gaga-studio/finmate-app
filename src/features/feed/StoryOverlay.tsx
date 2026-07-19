@@ -71,9 +71,9 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
           <button
             type="button"
             onClick={() => onProfile(story)}
-            className="flex h-11 items-center gap-2 rounded-full bg-white/20 pl-2 pr-4 text-[13px] font-bold text-white backdrop-blur-md"
+            className="flex h-11 items-center gap-2 rounded-full bg-white/20 pl-2 pr-4 text-body font-bold text-white backdrop-blur-md"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-[13px]">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-body">
               {story.author.emoji}
             </span>
             {story.author.nickname}
@@ -82,7 +82,7 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
             type="button"
             onClick={() => setLiked((v) => !v)}
             whileTap={{ scale: 0.88 }}
-            className={`flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-bold backdrop-blur-md ${
+            className={`flex h-11 items-center gap-2 rounded-full px-4 text-body font-bold backdrop-blur-md ${
               liked ? 'bg-white text-danger' : 'bg-white/20 text-white'
             }`}
           >

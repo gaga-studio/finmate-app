@@ -41,20 +41,20 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                   palette={s.metric}
                   className="aspect-[3/4] w-full"
                 >
-                  <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-[10px] font-bold leading-tight text-white">
+                  <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-micro font-bold leading-tight text-white">
                     {s.headline.split('\n')[0]}
                   </p>
                 </ArtOrGradient>
               </motion.button>
             )}
             <div className="mt-1.5 flex items-center gap-1 px-0.5">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/5 text-[10px]">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/5 text-micro">
                 {s.author.emoji}
               </span>
-              <span className="min-w-0 flex-1 truncate text-[10.5px] font-semibold text-ink-soft">
+              <span className="min-w-0 flex-1 truncate text-micro font-semibold text-ink-soft">
                 {s.author.nickname}
               </span>
-              <span className="flex shrink-0 items-center gap-0.5 text-[10.5px] font-semibold text-ink-soft">
+              <span className="flex shrink-0 items-center gap-0.5 text-micro font-semibold text-ink-soft">
                 <Heart size={11} strokeWidth={2.4} />
                 {s.likes}
               </span>

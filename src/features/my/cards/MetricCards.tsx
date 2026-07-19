@@ -25,10 +25,10 @@ export function BudgetCard({ period }: { period: Period }) {
   return (
     <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
       <WaterGlass pct={b.pct} width={132} height={148} />
-      <p className="mt-1 text-[34px] font-extrabold leading-none">
+      <p className="mt-1 text-display font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
-      <p className="mt-1.5 text-[13px] font-medium text-ink-soft">
+      <p className="mt-1.5 text-body font-medium text-ink-soft">
         {formatKrw(b.spent)} 씀 · <b className="text-ink">{formatKrw(b.remaining)}</b> 남음
       </p>
     </CardShell>
@@ -42,10 +42,10 @@ export function SavingCard({ view }: { view: SavingView }) {
     return (
       <CardShell title="저축 목표" metricClass={METRIC_TEXT.saving}>
         <CoinJar pct={s.pct} width={172} height={150} />
-        <p className="mt-1 text-[34px] font-extrabold leading-none">
+        <p className="mt-1 text-display font-extrabold leading-none">
           <AnimatedNumber value={s.pct * 100} format={(v) => `${Math.round(v)}%`} />
         </p>
-        <p className="mt-1.5 text-[13px] font-medium text-ink-soft">
+        <p className="mt-1.5 text-body font-medium text-ink-soft">
           {s.title} · <b className="text-ink">{formatKrwCompact(s.current)}</b> / {formatKrwCompact(s.target)}
         </p>
       </CardShell>
@@ -58,10 +58,10 @@ export function SavingCard({ view }: { view: SavingView }) {
         <div className="pt-3">
           <WeekBars bars={getSavingWeekBars()} width={216} height={118} />
         </div>
-        <p className="mt-2 text-[30px] font-extrabold leading-none">
+        <p className="mt-2 text-display font-extrabold leading-none">
           <AnimatedNumber value={s.delta} format={(v) => formatKrwSigned(Math.round(v))} />
         </p>
-        <p className="mt-1.5 text-[13px] font-medium text-ink-soft">이번 달 저축</p>
+        <p className="mt-1.5 text-body font-medium text-ink-soft">이번 달 저축</p>
       </CardShell>
     )
   }
@@ -72,10 +72,10 @@ export function SavingCard({ view }: { view: SavingView }) {
       <div className="pt-3">
         <LineChart points={bal.points} width={216} height={104} drawKey="saving-asset" />
       </div>
-      <p className="mt-2 text-[30px] font-extrabold leading-none">
+      <p className="mt-2 text-display font-extrabold leading-none">
         <AnimatedNumber value={bal.current} format={(v) => formatKrwCompact(Math.round(v))} />
       </p>
-      <p className="mt-1.5 text-[13px] font-medium text-ink-soft">{s.title} 통장 잔액</p>
+      <p className="mt-1.5 text-body font-medium text-ink-soft">{s.title} 통장 잔액</p>
     </CardShell>
   )
 }
@@ -88,10 +88,10 @@ export function InvestCard({ period }: { period: Period }) {
       <div className="pt-3">
         <LineChart points={inv.points} width={216} height={104} drawKey={period} />
       </div>
-      <p className={`mt-2 text-[34px] font-extrabold leading-none ${positive ? '' : 'text-danger'}`}>
+      <p className={`mt-2 text-display font-extrabold leading-none ${positive ? '' : 'text-danger'}`}>
         <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
       </p>
-      <p className="mt-1.5 text-[13px] font-medium text-ink-soft">
+      <p className="mt-1.5 text-body font-medium text-ink-soft">
         총 자산 <b className="text-ink">{formatKrwCompact(inv.totalValue)}</b>
       </p>
     </CardShell>
@@ -109,7 +109,7 @@ function CardShell({
 }) {
   return (
     <div className={`flex h-full flex-col items-center rounded-card bg-elevated px-5 pb-5 pt-4 shadow-float ${metricClass}`}>
-      <p className="text-[14px] font-bold text-ink">{title}</p>
+      <p className="text-section font-bold text-ink">{title}</p>
       <div className="flex flex-1 flex-col items-center justify-center">{children}</div>
     </div>
   )
