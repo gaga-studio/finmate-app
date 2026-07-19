@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import { FEED_GROUPS } from '../../data/social'
+import { useMouseScroll } from '../../shared/ui/useMouseScroll'
 
 interface Props {
   selected: string | null
@@ -8,6 +9,7 @@ interface Props {
 
 /** "그룹 보기" 가로 카드 — 탭하면 선택 토글, 선택 시 스토리가 그 그룹 기준으로 필터된다 */
 export function GroupRow({ selected, onSelect }: Props) {
+  const scrollRef = useMouseScroll()
   return (
     <section className="mt-4">
       <div className="flex items-center justify-between px-5">
@@ -19,7 +21,10 @@ export function GroupRow({ selected, onSelect }: Props) {
       </div>
 
       {/* pt/pb — 스크롤 컨테이너가 선택 링(box-shadow)을 자르지 않게 여백 확보 */}
-      <div className="mt-1.5 flex gap-2.5 overflow-x-auto px-5 pb-1.5 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        ref={scrollRef}
+        className="mt-1.5 flex cursor-grab gap-2.5 overflow-x-auto px-5 pb-1.5 pt-1 [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+      >
         {FEED_GROUPS.map((g) => {
           const active = selected === g.id
           return (
