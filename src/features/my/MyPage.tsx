@@ -121,6 +121,20 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
+      {/* 지표 토글 — 캐러셀 스와이프와 동일한 전환 */}
+      <div className="relative flex justify-center pb-2">
+        <SegmentedControl
+          id="metric"
+          items={[
+            { value: 'budget' as Metric, label: '소비' },
+            { value: 'saving' as Metric, label: '저축' },
+            { value: 'invest' as Metric, label: '투자' },
+          ]}
+          value={metric}
+          onChange={setMetric}
+        />
+      </div>
+
       <MetricCarousel
         metric={metric}
         period={period}
