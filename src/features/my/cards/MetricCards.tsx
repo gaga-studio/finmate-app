@@ -138,25 +138,25 @@ export function InvestCard({ view }: { view: InvestView }) {
 
   return (
     <CardShell title="뉴스" metricClass={METRIC_TEXT.invest}>
-      <div className="flex w-full flex-col gap-3 px-1 py-2">
+      {/* 증시 전광판처럼 3열 배치 */}
+      <div className="grid w-full grid-cols-3 gap-1 py-2 text-center">
         {MARKET_INDICES.map((m) => {
           const rise = m.changePct >= 0
           return (
-            <div key={m.id} className="flex items-baseline justify-between">
-              <span className="text-body font-semibold text-ink-soft">{m.name}</span>
-              <span className="flex items-baseline gap-2">
-                <b className="text-title font-extrabold leading-none tracking-tight text-ink tabular-nums">
-                  {m.value}
-                </b>
-                <span className={`text-caption font-bold ${rise ? 'text-rise' : 'text-fall'}`}>
-                  {rise ? '▲' : '▼'}{m.changeAbs} ({rise ? '+' : '-'}{Math.abs(m.changePct).toFixed(2)}%)
-                </span>
+            <div key={m.id} className="flex flex-col items-center gap-1.5">
+              <span className="text-caption font-bold text-ink-soft">{m.name}</span>
+              <b className="text-section font-extrabold leading-none tracking-tight text-ink tabular-nums">
+                {m.value}
+              </b>
+              <span className={`text-micro font-bold leading-tight ${rise ? 'text-rise' : 'text-fall'}`}>
+                {rise ? '▲' : '▼'}{m.changeAbs}
+                <br />({rise ? '+' : '-'}{Math.abs(m.changePct).toFixed(2)}%)
               </span>
             </div>
           )
         })}
       </div>
-      <p className="mt-2 text-body font-medium text-ink-soft">2026. 7. 18. 장 마감 기준</p>
+      <p className="mt-3 text-body font-medium text-ink-soft">2026. 7. 18. 장 마감 기준</p>
     </CardShell>
   )
 }
