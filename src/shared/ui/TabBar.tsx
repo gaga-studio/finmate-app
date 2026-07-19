@@ -38,7 +38,7 @@ export function TabBar() {
                 className={active ? 'relative text-accent' : 'relative text-ink-faint'}
               />
               <span
-                className={`relative text-[11px] font-semibold ${active ? 'text-accent' : 'text-ink-faint'}`}
+                className={`relative text-caption font-semibold ${active ? 'text-accent' : 'text-ink-faint'}`}
               >
                 {label}
               </span>

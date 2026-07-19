@@ -90,7 +90,7 @@ export function WrappedOverlay({ metric, period, onClose }: Props) {
         <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute inset-x-0 bottom-10 mx-auto w-fit rounded-full bg-black/75 px-4 py-2 text-[13px] font-semibold text-white"
+          className="absolute inset-x-0 bottom-10 mx-auto w-fit rounded-full bg-black/75 px-4 py-2 text-body font-semibold text-white"
         >
           {toast}
         </motion.p>
@@ -118,7 +118,7 @@ function ActionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-11 items-center gap-2 rounded-full px-4 text-[13px] font-bold backdrop-blur-md ${
+      className={`flex h-11 items-center gap-2 rounded-full px-4 text-body font-bold backdrop-blur-md ${
         primary ? 'bg-white text-ink' : 'bg-white/20 text-white'
       } ${disabled ? 'opacity-60' : ''}`}
     >

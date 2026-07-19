@@ -41,7 +41,7 @@ export function ProfileSheet({ profile, onClose }: Props) {
         <button
           type="button"
           onClick={() => setFollowing((v) => !v)}
-          className={`mt-5 w-full rounded-full py-3 text-[14px] font-bold transition-colors ${
+          className={`mt-5 w-full rounded-full py-3 text-section font-bold transition-colors ${
             following ? 'bg-ink/5 text-ink-soft' : 'bg-accent text-white'
           }`}
         >

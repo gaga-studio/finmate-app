@@ -11,8 +11,8 @@ export function GroupRow({ selected, onSelect }: Props) {
   return (
     <section className="mt-4">
       <div className="flex items-center justify-between px-5">
-        <h2 className="text-[15px] font-bold text-ink">그룹 보기</h2>
-        <button type="button" className="flex items-center text-[12px] font-semibold text-ink-soft">
+        <h2 className="text-section font-bold text-ink">그룹 보기</h2>
+        <button type="button" className="flex items-center text-body font-semibold text-ink-soft">
           더보기
           <ChevronRight size={14} />
         </button>
@@ -38,9 +38,9 @@ export function GroupRow({ selected, onSelect }: Props) {
               >
                 {g.emoji}
               </span>
-              <p className="mt-2 text-[13px] font-bold leading-tight text-ink">{g.label}</p>
-              <p className="mt-0.5 truncate text-[10.5px] text-ink-soft">{g.desc}</p>
-              <p className="mt-1 text-[11px] font-semibold text-accent">
+              <p className="mt-2 text-body font-bold leading-tight text-ink">{g.label}</p>
+              <p className="mt-0.5 truncate text-micro text-ink-soft">{g.desc}</p>
+              <p className="mt-1 text-caption font-semibold text-accent">
                 {g.members.toLocaleString()}명
               </p>
             </button>

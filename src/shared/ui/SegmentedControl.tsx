@@ -20,7 +20,7 @@ export function SegmentedControl<T extends string>({ items, value, onChange, id,
             key={item.value}
             type="button"
             onClick={() => onChange(item.value)}
-            className="relative flex-1 rounded-full px-3.5 py-1.5 text-[13px] font-semibold"
+            className="relative flex-1 rounded-full px-3.5 py-1.5 text-body font-semibold"
           >
             {active && (
               <motion.span

@@ -77,10 +77,10 @@ export function MyPage() {
 
       <header className="relative flex items-center justify-between px-5 pb-2 pt-14">
         <div>
-          <p className="text-[13px] font-semibold text-ink-soft">
+          <p className="text-body font-semibold text-ink-soft">
             {DEMO_TODAY.getMonth() + 1}월 {DEMO_TODAY.getDate()}일 {WEEKDAY[DEMO_TODAY.getDay()]}요일
           </p>
-          <h1 className="mt-0.5 text-[22px] font-extrabold text-ink">
+          <h1 className="mt-0.5 text-title font-extrabold text-ink">
             안녕, {USER.nickname}
           </h1>
         </div>

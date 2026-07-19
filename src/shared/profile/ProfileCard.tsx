@@ -12,17 +12,17 @@ export function ProfileCard({ profile, className }: Props) {
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink/5 text-3xl">
         {profile.emoji}
       </div>
-      <p className="mt-2.5 text-[17px] font-extrabold text-ink">{profile.nickname}</p>
-      {profile.bio && <p className="mt-0.5 text-[12.5px] text-ink-soft">{profile.bio}</p>}
+      <p className="mt-2.5 text-title font-extrabold text-ink">{profile.nickname}</p>
+      {profile.bio && <p className="mt-0.5 text-body text-ink-soft">{profile.bio}</p>}
       {profile.similarity !== undefined && (
-        <p className="mt-1 text-[12px] font-bold text-accent">
+        <p className="mt-1 text-body font-bold text-accent">
           나와 소비 성향 {Math.round(profile.similarity * 100)}% 유사
         </p>
       )}
       {profile.badges.length > 0 && (
         <div className="mt-3 flex flex-wrap justify-center gap-1.5">
           {profile.badges.map((b) => (
-            <span key={b} className="rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-bold text-accent">
+            <span key={b} className="rounded-full bg-accent/10 px-2.5 py-1 text-caption font-bold text-accent">
               {b}
             </span>
           ))}

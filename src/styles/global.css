@@ -24,6 +24,20 @@
   --color-line: oklch(0.92 0.008 260);
   --color-danger: oklch(0.62 0.19 25);
 
+  /* 타이포 스케일 6단계 — 임의 px 금지, 전 화면이 이 토큰만 쓴다 */
+  --text-display: 32px; /* 카드 큰 숫자 (extrabold) */
+  --text-display--line-height: 1;
+  --text-title: 20px; /* 페이지 타이틀·헤드라인 (extrabold) */
+  --text-title--line-height: 1.3;
+  --text-section: 15px; /* 섹션·카드 타이틀 (bold) */
+  --text-section--line-height: 1.35;
+  --text-body: 13px; /* 리스트·본문·버튼 (semibold/medium) */
+  --text-body--line-height: 1.4;
+  --text-caption: 11px; /* 서브텍스트·뱃지·칩 */
+  --text-caption--line-height: 1.35;
+  --text-micro: 10.5px; /* 그리드 메타·순위 */
+  --text-micro--line-height: 1.3;
+
   --radius-card: 1.5rem;
   --radius-sheet: 2rem;
 
