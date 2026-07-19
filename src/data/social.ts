@@ -44,7 +44,7 @@ export const STORIES: Story[] = [
     artKey: 'story-coffee',
     likes: 71,
     groupIds: ['g-spend', 'g-region', 'g-follow'],
-    postedAt: '2026-07-19T13:05',
+    postedAt: '2026-07-23T13:05',
   },
   {
     id: 'st-brunch',
@@ -61,7 +61,7 @@ export const STORIES: Story[] = [
     artKey: 'story-brunch',
     likes: 96,
     groupIds: ['g-spend', 'g-region'],
-    postedAt: '2026-07-19T11:40',
+    postedAt: '2026-07-23T11:40',
   },
   {
     id: 'st-grocery',
@@ -78,7 +78,7 @@ export const STORIES: Story[] = [
     artKey: 'story-grocery',
     likes: 45,
     groupIds: ['g-spend', 'g-region'],
-    postedAt: '2026-07-19T09:55',
+    postedAt: '2026-07-23T09:55',
   },
   {
     id: 'st-shopping',
@@ -95,7 +95,7 @@ export const STORIES: Story[] = [
     artKey: 'story-shopping',
     likes: 62,
     groupIds: ['g-spend', 'g-follow'],
-    postedAt: '2026-07-18T20:15',
+    postedAt: '2026-07-22T20:15',
   },
   {
     id: 'st-concert',
@@ -112,7 +112,7 @@ export const STORIES: Story[] = [
     artKey: 'story-concert',
     likes: 118,
     groupIds: ['g-region', 'g-follow'],
-    postedAt: '2026-07-18T22:50',
+    postedAt: '2026-07-22T22:50',
   },
   {
     id: 'st-interior',
@@ -129,7 +129,7 @@ export const STORIES: Story[] = [
     artKey: 'story-interior',
     likes: 84,
     groupIds: ['g-income', 'g-spend'],
-    postedAt: '2026-07-19T08:10',
+    postedAt: '2026-07-23T08:10',
   },
   {
     id: 'st-workout',
@@ -146,7 +146,7 @@ export const STORIES: Story[] = [
     artKey: 'story-workout',
     likes: 39,
     groupIds: ['g-region', 'g-follow'],
-    postedAt: '2026-07-19T06:40',
+    postedAt: '2026-07-23T06:40',
   },
   {
     id: 'st-paris',
@@ -164,7 +164,7 @@ export const STORIES: Story[] = [
     artKey: 'story-paris',
     likes: 98,
     groupIds: ['g-income', 'g-follow'],
-    postedAt: '2026-07-19T09:20',
+    postedAt: '2026-07-23T09:20',
   },
   {
     id: 'st-housekey',
@@ -182,7 +182,7 @@ export const STORIES: Story[] = [
     artKey: 'story-housekey',
     likes: 156,
     groupIds: ['g-income', 'g-region'],
-    postedAt: '2026-07-18T19:30',
+    postedAt: '2026-07-22T19:30',
   },
   {
     id: 'st-jeonse',
@@ -200,7 +200,7 @@ export const STORIES: Story[] = [
     artKey: 'story-jeonse',
     likes: 87,
     groupIds: ['g-income', 'g-spend'],
-    postedAt: '2026-07-19T07:25',
+    postedAt: '2026-07-23T07:25',
   },
   {
     id: 'st-bio',
@@ -217,7 +217,7 @@ export const STORIES: Story[] = [
     artKey: 'story-bio',
     likes: 53,
     groupIds: ['g-income', 'g-spend'],
-    postedAt: '2026-07-19T12:15',
+    postedAt: '2026-07-23T12:15',
   },
   {
     id: 'st-green',
@@ -234,6 +234,6 @@ export const STORIES: Story[] = [
     artKey: 'story-green',
     likes: 64,
     groupIds: ['g-income', 'g-region', 'g-follow'],
-    postedAt: '2026-07-19T10:30',
+    postedAt: '2026-07-23T10:30',
   },
 ]

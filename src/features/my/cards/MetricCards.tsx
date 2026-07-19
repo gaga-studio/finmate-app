@@ -175,7 +175,7 @@ export function InvestCard({ view }: { view: InvestView }) {
           )
         })}
       </div>
-      <p className="mt-3 text-body font-medium text-ink-soft">2026. 7. 17. 장 마감 기준</p>
+      <p className="mt-3 text-body font-medium text-ink-soft">2026. 7. 22. 장 마감 기준</p>
     </CardShell>
   )
 }

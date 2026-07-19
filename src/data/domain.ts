@@ -74,7 +74,7 @@ export const INVEST_VALUE_HISTORY: number[] = [
 
 /**
  * 누적 투입 원금(2~7월, 단조 증가) — 최종 1,176,500이라 총 수익률이 정확히 +12.7%.
- * 7월 신규 투입 +80,000 = TIGER 5만(7/13) + KODEX 3만 거래와 정합.
+ * 7월 신규 투입 +80,000 = TIGER 5만(7/20) + KODEX 3만 거래와 정합.
  */
 export const INVEST_PRINCIPAL_HISTORY: number[] = [
   850_000, 900_000, 950_000, 1_030_000, 1_096_500, 1_176_500,
@@ -109,7 +109,7 @@ export interface StockNews {
 
 /** 뉴스 뷰 오른쪽 카드 — 2026-07-17 실제 시장 반영, 반도체(삼성·하이닉스)가 메인 */
 export const STOCK_NEWS: StockNews[] = [
-  { id: 'nw1', name: '삼성전자', summary: '급락장 직격, 7/23 실적 발표 대기', changePct: -7.8 },
+  { id: 'nw1', name: '삼성전자', summary: '오늘 2분기 실적 발표, HBM 주목', changePct: -7.8 },
   { id: 'nw2', name: 'SK하이닉스', summary: '나스닥 이중상장 뒤 차익 매물에', changePct: -6.4 },
   { id: 'nw3', name: '스페이스X', summary: '스타십 시험발사 중단 여파로', changePct: -3.2 },
   { id: 'nw4', name: 'TIGER 미국S&P500', summary: 'AI 고평가 논란에 미국도 조정', changePct: -1.2 },
@@ -155,7 +155,7 @@ export const MISSIONS: Mission[] = [
 
 /** 추천 미션 — 해체분석에서 나온 근거를 함께 보여준다 */
 export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
-  { id: 'r-cafe', emoji: '☕️', title: '일주일 카페 2회 이하', reason: '이번 주 카페 3회 · 14,200원', reward: 80 },
+  { id: 'r-cafe', emoji: '☕️', title: '일주일 카페 2회 이하', reason: '이번 달 카페 8회 · 34,400원', reward: 80 },
   { id: 'r-quiz', emoji: '📉', title: '물타기 전 투자 퀴즈', reason: '스페이스X -8.9% 보유 중', reward: 60 },
   { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
 ]
