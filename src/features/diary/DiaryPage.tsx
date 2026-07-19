@@ -81,8 +81,8 @@ export function DiaryPage() {
           >
             {/* 월 요약 */}
             <p className="mt-1 text-center text-caption font-semibold text-ink-soft">
-              기록 {days.length}일 · 수입 <b className="text-rise">+{formatKrwCompact(totalIncome)}</b> ·
-              지출 <b className="text-fall">-{formatKrwCompact(totalSpend)}</b>
+              기록 {days.length}일 · 수입 <b className="text-pink-500">+{formatKrwCompact(totalIncome)}</b> ·
+              지출 <b className="text-sky-500">-{formatKrwCompact(totalSpend)}</b>
             </p>
 
             {/* 정렬 토글 */}

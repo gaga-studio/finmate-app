@@ -12,7 +12,7 @@ interface Props {
 
 export function PointCard({ points, gain, onOpenShop }: Props) {
   return (
-    <div className="relative mx-5 flex items-center justify-between rounded-card bg-elevated p-5 shadow-float">
+    <div className="relative mx-5 mt-3 flex items-center justify-between rounded-card bg-elevated p-5 shadow-float">
       <div>
         <div className="flex items-center gap-1.5">
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-point-ink text-micro font-extrabold text-white">
