@@ -49,7 +49,7 @@ export const INVEST_CARDS: Record<InvestView, ViewCardContent> = {
   },
   news: {
     title: '오늘의 시장',
-    headline: '코스피는 오르고,\n내 종목은 더 올랐다',
+    headline: '반도체가 이끈 하루,\n삼성·하이닉스 강세',
     subline: '코스피 +0.85% · 코스닥 +1.77%',
     artKey: 'invest-news',
   },
