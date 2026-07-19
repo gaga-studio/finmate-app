@@ -10,8 +10,9 @@ interface Props {
   savingView: SavingView
   investView: InvestView
   onMetricChange: (m: Metric) => void
-  /** 위로 밀기 스택 전환 — 무엇을 순환할지(기간/뷰)는 MyPage가 결정 */
+  /** 스택 전환(위로 밀기·휠 다운 = 다음 / 아래로·휠 업 = 이전) — 순환 대상은 MyPage가 결정 */
   onStackNext: () => void
+  onStackPrev: () => void
 }
 
 const CARD_H = 316
@@ -25,7 +26,15 @@ const AXIS_LOCK = 12
  * 축을 잠근다(제스처 충돌 방지). 기간 칩이 항상 폴백으로 존재하므로
  * 제스처가 실패해도 같은 장면을 재현할 수 있다.
  */
-export function MetricCarousel({ metric, period, savingView, investView, onMetricChange, onStackNext }: Props) {
+export function MetricCarousel({
+  metric,
+  period,
+  savingView,
+  investView,
+  onMetricChange,
+  onStackNext,
+  onStackPrev,
+}: Props) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [vw, setVw] = useState(390)
 
@@ -60,32 +69,46 @@ export function MetricCarousel({ metric, period, savingView, investView, onMetri
     if (METRICS[clamped] !== metric) onMetricChange(METRICS[clamped])
   }
 
-  // 데스크톱 가로 휠(트랙패드 스와이프)로도 지표 전환 — 최신 idx/snapTo는 ref로 참조
-  const wheelRef = useRef({ idx, snapTo })
-  wheelRef.current = { idx, snapTo }
+  // 데스크톱 휠 지원 — 가로 휠 = 지표 전환, 세로 휠 = 스택(기간/뷰) 전환.
+  // 최신 idx/콜백은 ref로 참조한다.
+  const wheelRef = useRef({ idx, snapTo, onStackNext, onStackPrev })
+  wheelRef.current = { idx, snapTo, onStackNext, onStackPrev }
   useLayoutEffect(() => {
     const el = viewportRef.current
     if (!el) return
-    let accum = 0
+    let accumX = 0
+    let accumY = 0
     let cooling = false
     let idleTimer: number | undefined
+    const fire = (action: () => void) => {
+      accumX = 0
+      accumY = 0
+      cooling = true
+      window.setTimeout(() => {
+        cooling = false
+      }, 450)
+      action()
+    }
     const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
       e.preventDefault()
       if (cooling) return
-      accum += e.deltaX
       window.clearTimeout(idleTimer)
       idleTimer = window.setTimeout(() => {
-        accum = 0
+        accumX = 0
+        accumY = 0
       }, 200)
-      if (Math.abs(accum) > 60) {
-        const dir = accum > 0 ? 1 : -1
-        accum = 0
-        cooling = true
-        window.setTimeout(() => {
-          cooling = false
-        }, 450)
-        wheelRef.current.snapTo(wheelRef.current.idx + dir)
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        accumX += e.deltaX
+        if (Math.abs(accumX) > 60) {
+          const dir = accumX > 0 ? 1 : -1
+          fire(() => wheelRef.current.snapTo(wheelRef.current.idx + dir))
+        }
+      } else {
+        accumY += e.deltaY
+        if (Math.abs(accumY) > 60) {
+          const forward = accumY > 0
+          fire(() => (forward ? wheelRef.current.onStackNext() : wheelRef.current.onStackPrev()))
+        }
       }
     }
     el.addEventListener('wheel', onWheel, { passive: false })
@@ -115,7 +138,7 @@ export function MetricCarousel({ metric, period, savingView, investView, onMetri
         onPan={(_, info) => {
           if (axisRef.current === null) {
             if (Math.abs(info.offset.x) > AXIS_LOCK) axisRef.current = 'x'
-            else if (info.offset.y < -AXIS_LOCK) axisRef.current = 'y'
+            else if (Math.abs(info.offset.y) > AXIS_LOCK) axisRef.current = 'y'
           }
           if (axisRef.current === 'x') {
             const raw = baseXRef.current + info.offset.x
@@ -124,7 +147,8 @@ export function MetricCarousel({ metric, period, savingView, investView, onMetri
             const over = raw > 0 ? raw : raw < min ? raw - min : 0
             x.set(over ? raw - over * 0.65 : raw)
           } else if (axisRef.current === 'y') {
-            lift.set(Math.max(0, Math.min(LIFT_MAX, -info.offset.y)))
+            // 위로 = 양수(다음), 아래로 = 음수(이전)
+            lift.set(Math.max(-LIFT_MAX, Math.min(LIFT_MAX, -info.offset.y)))
           }
         }}
         onPanEnd={(_, info) => {
@@ -134,6 +158,7 @@ export function MetricCarousel({ metric, period, savingView, investView, onMetri
             snapTo(Math.round(current + boost))
           } else if (axisRef.current === 'y') {
             if (lift.get() > LIFT_THRESHOLD) onStackNext()
+            else if (lift.get() < -LIFT_THRESHOLD) onStackPrev()
             animate(lift, 0, snappy)
           }
           axisRef.current = null
