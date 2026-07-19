@@ -8,12 +8,14 @@ import { COMPARE_TARGETS } from '../../data/insights'
 interface Props {
   /** 현재 그래프에 겹쳐진 대상 (없으면 null) */
   selectedId: string | null
+  /** 채팅 선택지에서 진입 시 해당 종류만 노출 — 없으면 전체 */
+  filter?: 'mate' | 'group'
   onSelect: (targetId: string | null) => void
   onClose: () => void
 }
 
-/** 그래프 우상단 '비교' — 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
-export function ComparePickerSheet({ selectedId, onSelect, onClose }: Props) {
+/** 비교 시트 — 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
+export function ComparePickerSheet({ selectedId, filter, onSelect, onClose }: Props) {
   const mates = COMPARE_TARGETS.filter((t) => t.kind === 'mate')
   const groups = COMPARE_TARGETS.filter((t) => t.kind === 'group')
 
@@ -45,13 +47,15 @@ export function ComparePickerSheet({ selectedId, onSelect, onClose }: Props) {
         }}
       >
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/15" />
-        <h2 className="text-title font-extrabold text-ink">그래프 비교</h2>
+        <h2 className="text-title font-extrabold text-ink">
+          {filter === 'mate' ? '메이트 고르기' : filter === 'group' ? '그룹 고르기' : '그래프 비교'}
+        </h2>
         <p className="mt-0.5 text-caption font-medium text-ink-soft">
-          메이트나 그룹을 고르면 내 그래프 위에 선으로 겹쳐져요 · 다시 누르면 해제
+          고르면 내 그래프 위에 선으로 겹쳐져요 · 다시 누르면 해제
         </p>
 
-        <Section title="메이트" items={mates} selectedId={selectedId} onPick={pick} />
-        <Section title="그룹 평균" items={groups} selectedId={selectedId} onPick={pick} />
+        {filter !== 'group' && <Section title="메이트" items={mates} selectedId={selectedId} onPick={pick} />}
+        {filter !== 'mate' && <Section title="그룹 평균" items={groups} selectedId={selectedId} onPick={pick} />}
       </motion.div>
     </div>,
     overlayTarget(),

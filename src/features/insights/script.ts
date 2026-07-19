@@ -14,21 +14,16 @@ export const INITIAL_REPLIES: Reply[] = [
     text: '뭐부터 볼까요?',
     widget: {
       type: 'options',
-      options: ['메이트/그룹 비교', '200만원 맥북 사기', '리포트 생성'],
+      options: ['메이트/그룹 비교'],
     },
   },
 ]
 
 /** 비교 시트에서 대상을 고르면 발화하는 완성 멘트 — useInsightChat.completeCompare가 사용 */
-export function compareDoneReplies(targetId: string, label: string, summary: string): Reply[] {
+export function compareDoneReplies(targetId: string): Reply[] {
   return [
     { role: 'ai', text: '시뮬레이션이 완성되었어요! ✨', chart: { kind: 'compare', targetId } },
-    { role: 'ai', text: `나 vs ${label} — ${summary}` },
-    {
-      role: 'ai',
-      text: '이 위에 소비 계획도 얹어볼까요?',
-      widget: { type: 'chips', chips: ['나 이번달에 맥북 M5 프로 살거야'] },
-    },
+    { role: 'ai', text: '혹시 소비나 저축 계획이 있으신가요?\n말해주시면 그래프에 바로 얹어볼게요' },
   ]
 }
 

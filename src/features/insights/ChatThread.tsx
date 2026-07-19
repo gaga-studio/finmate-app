@@ -19,8 +19,8 @@ interface Props {
   onSlider: (monthly: number) => void
   /** 리포트 생성 버튼 → 리포트 오버레이 */
   onReport: (variant?: 'macbook') => void
-  /** 메이트/그룹 선택지 → 비교 바텀시트 열기 */
-  onComparePick: () => void
+  /** 메이트/그룹 선택지 → 해당 종류만 담긴 비교 바텀시트 열기 */
+  onComparePick: (kind: 'mate' | 'group') => void
   /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
   readOnly?: boolean
 }
@@ -74,7 +74,7 @@ function Bubble({
   onOption: (text: string) => void
   onSlider: (monthly: number) => void
   onReport: (variant?: 'macbook') => void
-  onComparePick: () => void
+  onComparePick: (kind: 'mate' | 'group') => void
   readOnly?: boolean
 }) {
   if (msg.role === 'user') {
@@ -163,7 +163,7 @@ function Widget({
   onOption: (text: string) => void
   onSlider: (monthly: number) => void
   onReport: (variant?: 'macbook') => void
-  onComparePick: () => void
+  onComparePick: (kind: 'mate' | 'group') => void
   readOnly?: boolean
 }) {
   if (widget.type === 'summary') return <SummaryCard />
@@ -225,16 +225,26 @@ function OptionsWidget({
   )
 }
 
-/** 메이트/그룹 선택지 — 어느 쪽이든 비교 바텀시트를 연다 */
-function ComparePickerWidget({ onComparePick, readOnly }: { onComparePick: () => void; readOnly?: boolean }) {
+/** 메이트/그룹 선택지 — 고른 종류만 담긴 비교 바텀시트를 연다 */
+function ComparePickerWidget({
+  onComparePick,
+  readOnly,
+}: {
+  onComparePick: (kind: 'mate' | 'group') => void
+  readOnly?: boolean
+}) {
+  const items = [
+    { kind: 'mate' as const, label: '🤝 메이트 고르기' },
+    { kind: 'group' as const, label: '👥 그룹 고르기' },
+  ]
   return (
     <div className="flex flex-wrap gap-1.5" data-testid="compare-picker">
-      {['🤝 메이트 고르기', '👥 그룹 고르기'].map((label) => (
+      {items.map(({ kind, label }) => (
         <button
-          key={label}
+          key={kind}
           type="button"
           disabled={readOnly}
-          onClick={onComparePick}
+          onClick={() => onComparePick(kind)}
           className="rounded-full border border-accent/35 bg-elevated px-3.5 py-2 text-body font-bold text-accent shadow-soft"
         >
           {label}
