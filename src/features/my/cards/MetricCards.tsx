@@ -1,15 +1,15 @@
 import { WaterGlass } from '../../../shared/charts/WaterGlass'
 import { SpeedGauge } from '../../../shared/charts/SpeedGauge'
-import { WeekBars } from '../../../shared/charts/WeekBars'
+import { MiniBars } from '../../../shared/charts/MiniBars'
 import { LineChart } from '../../../shared/charts/LineChart'
 import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
 import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/format/krw'
 import {
   getBudget,
   getInvestSeries,
-  getSavingBalanceSeries,
+  getSavingJourney,
+  getSavingMonthBars,
   getSavingProgress,
-  getSavingWeekBars,
 } from '../../../data/selectors'
 import { METRIC_TEXT, type SavingView } from '../myState'
 import type { Period } from '../../../data/types'
@@ -56,7 +56,7 @@ export function SavingCard({ view }: { view: SavingView }) {
     return (
       <CardShell title="월간 저축" metricClass={METRIC_TEXT.saving}>
         <div className="pt-3">
-          <WeekBars bars={getSavingWeekBars()} width={216} height={118} />
+          <MiniBars bars={getSavingMonthBars()} width={216} height={118} />
         </div>
         <p className="mt-2 text-display font-extrabold leading-none">
           <AnimatedNumber value={s.delta} format={(v) => formatKrwSigned(Math.round(v))} />
@@ -66,16 +66,18 @@ export function SavingCard({ view }: { view: SavingView }) {
     )
   }
 
-  const bal = getSavingBalanceSeries()
+  const journey = getSavingJourney()
   return (
     <CardShell title="저축 자산" metricClass={METRIC_TEXT.saving}>
       <div className="pt-3">
-        <LineChart points={bal.points} width={216} height={104} drawKey="saving-asset" />
+        <LineChart points={journey.points} width={216} height={104} drawKey="saving-asset" />
       </div>
       <p className="mt-2 text-display font-extrabold leading-none">
-        <AnimatedNumber value={bal.current} format={(v) => formatKrwCompact(Math.round(v))} />
+        <AnimatedNumber value={journey.current} format={(v) => formatKrwCompact(Math.round(v))} />
       </p>
-      <p className="mt-1.5 text-body font-medium text-ink-soft">{s.title} 통장 잔액</p>
+      <p className="mt-1.5 text-body font-medium text-ink-soft">
+        3월부터 <b className="text-ink">+{formatKrwCompact(journey.gained)}</b> 모음
+      </p>
     </CardShell>
   )
 }

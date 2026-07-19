@@ -1,17 +1,22 @@
 import { motion } from 'motion/react'
 import { snappy } from '../motion/springs'
-import type { SavingWeekBar } from '../../data/selectors'
+
+export interface MiniBar {
+  label: string
+  amount: number
+  isCurrent: boolean
+}
 
 interface Props {
-  bars: SavingWeekBar[]
+  bars: MiniBar[]
   width?: number
   height?: number
 }
 
 const LABEL_H = 18
 
-/** 이번 달 주차별 저축 막대 — scaleY 드로잉, 현재 주차 강조 */
-export function WeekBars({ bars, width = 216, height = 120 }: Props) {
+/** 라벨 있는 미니 막대 차트 — scaleY 드로잉, 현재 항목 강조 */
+export function MiniBars({ bars, width = 216, height = 120 }: Props) {
   const max = Math.max(...bars.map((b) => b.amount), 1)
   const gap = 14
   const barW = (width - gap * (bars.length - 1)) / bars.length
@@ -23,7 +28,7 @@ export function WeekBars({ bars, width = 216, height = 120 }: Props) {
         const x = i * (barW + gap)
         const h = Math.max((b.amount / max) * (chartH - 8), 4)
         return (
-          <g key={b.week}>
+          <g key={b.label}>
             <motion.rect
               x={x}
               y={chartH - h}
@@ -46,7 +51,7 @@ export function WeekBars({ bars, width = 216, height = 120 }: Props) {
               fill="currentColor"
               opacity={b.isCurrent ? 0.9 : 0.45}
             >
-              {b.week}주
+              {b.label}
             </text>
           </g>
         )
