@@ -2,15 +2,21 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Bell, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DayCardsOverlay } from './DayCardsOverlay'
-import { DIARY_TODAY } from '../../data/diary'
-import { getDiaryDays } from '../../data/selectors'
+import { DIARY_TODAY, DOMINANT_ART } from '../../data/diary'
+import { getDayDominant, getDiaryDays } from '../../data/selectors'
+import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { formatKrwCompact } from '../../shared/format/krw'
 import { snappy } from '../../shared/motion/springs'
 
+type DiarySort = 'latest' | 'oldest'
+
 export function DiaryPage() {
   const [month, setMonth] = useState(7)
+  const [sort, setSort] = useState<DiarySort>('latest')
   const [open, setOpen] = useState(false)
-  const { days, totalIncome, totalSpend } = getDiaryDays()
+  const { days: latestDays, totalIncome, totalSpend } = getDiaryDays()
+  const days = sort === 'latest' ? latestDays : [...latestDays].reverse()
+  const todayArt = DOMINANT_ART[getDayDominant(DIARY_TODAY.dateKey)]
 
   return (
     <div className="relative min-h-full pb-6">
@@ -77,8 +83,21 @@ export function DiaryPage() {
               지출 <b className="text-fall">-{formatKrwCompact(totalSpend)}</b>
             </p>
 
-            {/* 최신순 3열 그리드 — 오늘만 이미지·탭 가능 */}
-            <div className="mt-4 grid grid-cols-3 gap-2.5 px-5">
+            {/* 정렬 토글 */}
+            <div className="mt-3 flex justify-center">
+              <SegmentedControl
+                id="diary-sort"
+                items={[
+                  { value: 'latest' as const, label: '최신순' },
+                  { value: 'oldest' as const, label: '날짜순' },
+                ]}
+                value={sort}
+                onChange={setSort}
+              />
+            </div>
+
+            {/* 3열 그리드 — 오늘만 이미지·탭 가능 */}
+            <div className="mt-3 grid grid-cols-3 gap-2.5 px-5">
               {days.map((d, i) => {
                 const isToday = d.day === DIARY_TODAY.day
                 return (
@@ -98,10 +117,11 @@ export function DiaryPage() {
                         style={{ visibility: open ? 'hidden' : 'visible' }}
                       >
                         <img
-                          src={DIARY_TODAY.art}
+                          src={todayArt}
                           alt=""
                           draggable={false}
                           className="absolute inset-0 h-full w-full select-none object-cover"
+                          style={{ objectPosition: '50% 18%' }}
                         />
                         <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
                           {d.day}일 · 오늘

@@ -222,6 +222,18 @@ export function getDiaryDays(): { days: DiaryDay[]; totalIncome: number; totalSp
   }
 }
 
+/** 그날 가장 컸던 활동(소비/저축/투자 금액 비교) — 다이어리 대표 이미지·첫 카드 결정 */
+export function getDayDominant(dateKey: string): Metric {
+  const txs = TRANSACTIONS.filter((t) => t.date === dateKey && t.amount < 0)
+  const sums: Record<Metric, number> = { budget: 0, saving: 0, invest: 0 }
+  for (const t of txs) {
+    if (t.category === 'saving') sums.saving += -t.amount
+    else if (t.category === 'invest') sums.invest += -t.amount
+    else sums.budget += -t.amount
+  }
+  return (Object.entries(sums) as [Metric, number][]).sort((a, b) => b[1] - a[1])[0][0]
+}
+
 /** 다이어리 캘린더용: 날짜별 순지출/수입 여부 */
 export function getMonthActivity(): Map<string, { spent: number; earned: number }> {
   const { startKey, endKey } = getPeriodRange('monthly')
