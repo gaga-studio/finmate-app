@@ -18,6 +18,6 @@ export const DOMINANT_HEADLINE: Record<Metric, string> = {
 }
 
 export const DIARY_TODAY = {
-  day: 18,
-  dateKey: '2026-07-18',
+  day: 23,
+  dateKey: '2026-07-23',
 } as const

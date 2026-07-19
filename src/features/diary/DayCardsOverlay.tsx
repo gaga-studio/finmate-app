@@ -151,7 +151,7 @@ export function DayCardsOverlay({ onClose }: Props) {
 function buildCards(dominant: Metric): WrappedCardData[] {
   const b = getBudget('daily')
   const spendCard: WrappedCardData = {
-    title: '7월 18일의 소비',
+    title: '7월 23일의 소비',
     rangeLabel: '오늘',
     headline: DOMINANT_HEADLINE.budget,
     subline: `지출 ${formatKrw(b.spent)} · 예산 ${Math.round(b.pct * 100)}% 남음`,

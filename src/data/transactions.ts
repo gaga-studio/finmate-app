@@ -31,13 +31,13 @@ const WEIGHTED_CATEGORIES: (keyof typeof MERCHANTS)[] = [
 
 /** 시연 대사에 등장하는 거래 — 날짜·금액을 수기로 고정한다. */
 const NARRATIVE: Transaction[] = [
-  { id: 'n-shoes', date: '2026-07-16', merchant: '나이키 강남', amount: -120000, category: 'shopping', memo: '고민 중이던 운동화' },
+  { id: 'n-shoes', date: '2026-07-21', merchant: '나이키 강남', amount: -120000, category: 'shopping', memo: '고민 중이던 운동화' },
   { id: 'n-macbook', date: '2026-07-06', merchant: '맥북 에어 할부', amount: -132500, category: 'shopping', memo: '드디어 질렀다 · 1/12회차' },
   // 오늘 합계 13,900원 고정 — 커피가 오늘의 1위가 되도록 배분
-  { id: 'n-coffee-today', date: '2026-07-18', merchant: '스타벅스', amount: -7200, category: 'cafe', memo: '아메리카노 + 치즈케이크' },
-  { id: 'n-lunch-today', date: '2026-07-18', merchant: '한솥도시락', amount: -5200, category: 'food' },
-  { id: 'n-bus-today', date: '2026-07-18', merchant: '버스', amount: -1500, category: 'transport' },
-  { id: 'n-save-today', date: '2026-07-18', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
+  { id: 'n-coffee-today', date: '2026-07-23', merchant: '스타벅스', amount: -7200, category: 'cafe', memo: '아메리카노 + 치즈케이크' },
+  { id: 'n-lunch-today', date: '2026-07-23', merchant: '한솥도시락', amount: -5200, category: 'food' },
+  { id: 'n-bus-today', date: '2026-07-23', merchant: '버스', amount: -1500, category: 'transport' },
+  { id: 'n-save-today', date: '2026-07-23', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
   // 7월 저축 다양화 — 월간 뷰의 "수입에서 한 전체 저축"의 근거
   { id: 'n-emergency', date: '2026-07-05', merchant: '비상금 통장', amount: -200000, category: 'saving', memo: '월급날 자동이체' },
   { id: 'n-housing', date: '2026-07-02', merchant: '청약 납입', amount: -100000, category: 'saving', memo: '13회차' },
@@ -46,7 +46,7 @@ const NARRATIVE: Transaction[] = [
   { id: 'n-allow', date: '2026-07-03', merchant: '알바비', amount: 380000, category: 'income' },
   { id: 'n-carrot', date: '2026-07-12', merchant: '당근마켓 판매', amount: 45000, category: 'income', memo: '안 입는 패딩' },
   { id: 'n-interest', date: '2026-07-15', merchant: '예금 이자', amount: 12400, category: 'income' },
-  { id: 'n-etf', date: '2026-07-13', merchant: 'TIGER 미국S&P500 매수', amount: -50000, category: 'invest', memo: '첫 소액 투자' },
+  { id: 'n-etf', date: '2026-07-20', merchant: 'TIGER 미국S&P500 매수', amount: -50000, category: 'invest', memo: '첫 소액 투자' },
 ]
 
 function generate(): Transaction[] {
@@ -74,11 +74,11 @@ function generate(): Transaction[] {
         category: cat,
       })
     }
-    // 주 3회 정도 소액 저축, 격주 투자
-    if (d.getDay() === 1 || d.getDay() === 4) {
+    // 주 2회 정도 소액 저축, 격주 투자 — 오늘은 내러티브 거래만 (수치 고정 원칙)
+    if ((d.getDay() === 1 || d.getDay() === 4) && key !== todayKey) {
       out.push({ id: `s-${key}`, date: key, merchant: '파리 여행 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
     }
-    if (d.getDay() === 5 && i % 14 < 7) {
+    if (d.getDay() === 5 && i % 14 < 7 && key !== todayKey) {
       out.push({ id: `i-${key}`, date: key, merchant: 'KODEX 200 매수', amount: -30000, category: 'invest' })
     }
     // 월급(매월 10일), 알바비(매월 3일)
