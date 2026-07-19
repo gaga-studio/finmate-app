@@ -5,7 +5,7 @@ import { mulberry32 } from './seed'
 export const BUDGET_LIMIT = { daily: 20000, weekly: 250000, monthly: 650000 } as const
 
 export const SAVING_GOAL: SavingGoal = {
-  title: '제주 한 달 살기',
+  title: '파리 한 달 살기',
   target: 5_000_000,
   current: 2_250_000,
   dueDate: '2026-12-31',
@@ -33,7 +33,7 @@ export const ASSET_SERIES: number[] = (() => {
 
 export const WISHLIST: WishItem[] = [
   { id: 'w1', title: 'MacBook Air', price: 1_590_000, savedPct: 0.38, emoji: '💻' },
-  { id: 'w2', title: '제주 왕복 항공권', price: 89_000, savedPct: 0.72, emoji: '✈️' },
+  { id: 'w2', title: '파리 왕복 항공권', price: 890_000, savedPct: 0.72, emoji: '✈️' },
   { id: 'w3', title: '에어팟 프로', price: 359_000, savedPct: 0.21, emoji: '🎧' },
   { id: 'w4', title: '러닝화', price: 120_000, savedPct: 0.55, emoji: '👟' },
   { id: 'w5', title: '필름 카메라', price: 240_000, savedPct: 0.12, emoji: '📷' },
@@ -58,7 +58,7 @@ export const MISSIONS: Mission[] = [
   {
     id: 'm3',
     title: '여행 통장에 5,000원 옮기기',
-    detail: '제주 한 달 살기까지 45%',
+    detail: '파리 한 달 살기까지 45%',
     reward: '+15 XP',
     done: false,
   },

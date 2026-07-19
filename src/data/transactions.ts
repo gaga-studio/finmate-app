@@ -35,7 +35,7 @@ const NARRATIVE: Transaction[] = [
   { id: 'n-coffee-today', date: '2026-07-18', merchant: '스타벅스', amount: -5600, category: 'cafe' },
   { id: 'n-lunch-today', date: '2026-07-18', merchant: '한솥도시락', amount: -6800, category: 'food' },
   { id: 'n-bus-today', date: '2026-07-18', merchant: '버스', amount: -1500, category: 'transport' },
-  { id: 'n-save-today', date: '2026-07-18', merchant: '제주 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
+  { id: 'n-save-today', date: '2026-07-18', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
   { id: 'n-salary', date: '2026-07-10', merchant: '월급', amount: 2150000, category: 'income' },
   { id: 'n-allow', date: '2026-07-03', merchant: '알바비', amount: 380000, category: 'income' },
   { id: 'n-etf', date: '2026-07-13', merchant: 'TIGER 미국S&P500 매수', amount: -50000, category: 'invest', memo: '첫 소액 투자' },
@@ -68,7 +68,7 @@ function generate(): Transaction[] {
     }
     // 주 3회 정도 소액 저축, 격주 투자
     if (d.getDay() === 1 || d.getDay() === 4) {
-      out.push({ id: `s-${key}`, date: key, merchant: '제주 여행 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
+      out.push({ id: `s-${key}`, date: key, merchant: '파리 여행 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
     }
     if (d.getDay() === 5 && i % 14 < 7) {
       out.push({ id: `i-${key}`, date: key, merchant: 'KODEX 200 매수', amount: -30000, category: 'invest' })

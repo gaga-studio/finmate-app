@@ -36,7 +36,7 @@ export const WRAPPED: Record<Metric, Record<Period, WrappedContent>> = {
       metric: 'saving',
       period: 'daily',
       title: '오늘의 저축',
-      headline: '제주 한 달 살기에\n5,000원 더 가까워진 밤',
+      headline: '파리 한 달 살기에\n5,000원 더 가까워진 밤',
       subline: '오늘 +5,000원 · 목표 45%',
       artKey: 'saving-daily',
     },

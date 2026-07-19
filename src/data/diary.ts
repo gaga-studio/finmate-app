@@ -3,7 +3,7 @@ import type { DiaryEntry } from './types'
 export const DIARY: DiaryEntry[] = [
   {
     date: '2026-07-18',
-    caption: '커피 한 잔을 남기고 제주 통장에 5,000원. 잔잔하게 이긴 하루.',
+    caption: '커피 한 잔을 남기고 파리 통장에 5,000원. 잔잔하게 이긴 하루.',
     mood: 'good',
     artKey: '2026-07-18',
   },
