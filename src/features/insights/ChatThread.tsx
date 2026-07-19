@@ -1,0 +1,326 @@
+import { useEffect, useRef, useState } from 'react'
+import { motion } from 'motion/react'
+import { useNavigate } from 'react-router-dom'
+import { ChevronDown, ChevronRight } from 'lucide-react'
+import { formatKrw } from '../../shared/format/krw'
+import { getDailySummary } from '../../data/selectors'
+import { QUIZ, RECOMMENDED_MISSIONS } from '../../data/domain'
+import { SAVING_SLIDER, makeSavingProjection, type InsightMsg, type InsightWidget } from '../../data/insights'
+import { snappy } from '../../shared/motion/springs'
+
+interface Props {
+  messages: InsightMsg[]
+  typing: boolean
+  /** 칩 탭 → 입력창에 템플릿 삽입 */
+  onChip: (text: string) => void
+  /** 슬라이더 이동 → 상단 차트 갱신 */
+  onSlider: (monthly: number) => void
+  /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
+  readOnly?: boolean
+}
+
+export function ChatThread({ messages, typing, onChip, onSlider, readOnly }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [messages.length, typing])
+
+  return (
+    <div
+      ref={scrollRef}
+      className="flex-1 overflow-y-auto px-5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      <div className="flex flex-col gap-2.5">
+        {messages.map((m, i) => (
+          <Bubble
+            key={m.id}
+            msg={m}
+            showAvatar={m.role === 'ai' && messages[i - 1]?.role !== 'ai'}
+            onChip={onChip}
+            onSlider={onSlider}
+            readOnly={readOnly}
+          />
+        ))}
+        {typing && <TypingIndicator />}
+      </div>
+    </div>
+  )
+}
+
+function Bubble({
+  msg,
+  showAvatar,
+  onChip,
+  onSlider,
+  readOnly,
+}: {
+  msg: InsightMsg
+  showAvatar: boolean
+  onChip: (text: string) => void
+  onSlider: (monthly: number) => void
+  readOnly?: boolean
+}) {
+  if (msg.role === 'user') {
+    return (
+      <motion.div
+        className="max-w-[78%] self-end rounded-2xl rounded-tr-md bg-accent px-3.5 py-2.5 text-body font-medium text-white"
+        initial={{ opacity: 0, y: 10, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={snappy}
+      >
+        {msg.text}
+      </motion.div>
+    )
+  }
+
+  return (
+    <motion.div
+      className="flex items-start gap-2"
+      initial={{ opacity: 0, y: 10, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={snappy}
+    >
+      <Avatar visible={showAvatar} />
+      <div className="flex max-w-[82%] flex-col gap-2">
+        {msg.text && (
+          <div className="whitespace-pre-line rounded-2xl rounded-tl-md bg-elevated px-3.5 py-2.5 text-body font-medium text-ink shadow-soft">
+            {msg.text}
+          </div>
+        )}
+        {msg.widget && <Widget widget={msg.widget} onChip={onChip} onSlider={onSlider} readOnly={readOnly} />}
+      </div>
+    </motion.div>
+  )
+}
+
+function Avatar({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-invest text-[13px] ${visible ? '' : 'invisible'}`}
+      aria-hidden
+    >
+      ✨
+    </div>
+  )
+}
+
+function TypingIndicator() {
+  return (
+    <div className="flex items-start gap-2">
+      <Avatar visible />
+      <div className="flex items-center gap-1 rounded-2xl rounded-tl-md bg-elevated px-3.5 py-3 shadow-soft">
+        {[0, 1, 2].map((i) => (
+          <motion.span
+            key={i}
+            className="h-1.5 w-1.5 rounded-full bg-ink-faint"
+            animate={{ opacity: [0.25, 1, 0.25] }}
+            transition={{ duration: 1, repeat: Infinity, delay: i * 0.18 }}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Widget({
+  widget,
+  onChip,
+  onSlider,
+  readOnly,
+}: {
+  widget: InsightWidget
+  onChip: (text: string) => void
+  onSlider: (monthly: number) => void
+  readOnly?: boolean
+}) {
+  if (widget.type === 'summary') return <SummaryCard />
+  if (widget.type === 'slider') return <SliderWidget onSlider={onSlider} readOnly={readOnly} />
+  if (widget.type === 'quiz') return <QuizWidget quizId={widget.quizId} readOnly={readOnly} />
+  if (widget.type === 'mission') return <MissionWidget missionId={widget.missionId} readOnly={readOnly} />
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {widget.chips.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => !readOnly && onChip(c)}
+          className="rounded-full border border-accent/30 bg-accent/8 px-3 py-1.5 text-caption font-bold text-accent"
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+/** 오늘의 총평 — 마이 탭과 동일 셀렉터 수치, '자세히'로 근거 펼침 */
+function SummaryCard() {
+  const [open, setOpen] = useState(false)
+  const s = getDailySummary()
+  const lines = [
+    {
+      emoji: '☕️',
+      text: `소비 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 남김`,
+      detail: `오늘 1위 ${s.top.merchant} ${formatKrw(s.top.amount)} — 한도 안 방어 성공!`,
+    },
+    {
+      emoji: '✈️',
+      text: `파리 자금 +${formatKrw(s.savingDelta)} · 목표 ${s.savingPct}%`,
+      detail: '오늘의 미션 저축 완료, 절반이 코앞!',
+    },
+    {
+      emoji: '📈',
+      text: `포트 +${s.investReturnPct}% 유지`,
+      detail: '급락장에도 분산 투자가 버팀목!',
+    },
+  ]
+
+  return (
+    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="daily-summary">
+      <div className="flex flex-col gap-2.5">
+        {lines.map((l, i) => (
+          <div key={l.emoji} className="flex items-start gap-2.5">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/6 text-micro font-extrabold text-ink-soft">
+              {i + 1}
+            </span>
+            <div>
+              <p className="text-body font-bold leading-snug text-ink">
+                {l.emoji} {l.text}
+              </p>
+              {open && (
+                <motion.p
+                  className="mt-0.5 text-caption font-medium text-ink-soft"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={snappy}
+                >
+                  {l.detail}
+                </motion.p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="mt-2.5 flex items-center gap-0.5 text-caption font-bold text-accent"
+      >
+        {open ? '접기' : '자세히'}
+        <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+    </div>
+  )
+}
+
+/** 월 저축액 슬라이더 — 움직이면 상단 투영 차트·도달 문구가 실시간 변화 */
+function SliderWidget({ onSlider, readOnly }: { onSlider: (v: number) => void; readOnly?: boolean }) {
+  const [monthly, setMonthly] = useState<number>(SAVING_SLIDER.initial)
+  const p = makeSavingProjection(monthly)
+
+  return (
+    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="saving-slider">
+      <div className="flex items-baseline justify-between">
+        <p className="text-body font-bold text-ink">월 저축액</p>
+        <p className="text-section font-extrabold text-saving">{Math.round(monthly / 10000)}만원</p>
+      </div>
+      <input
+        type="range"
+        min={SAVING_SLIDER.min}
+        max={SAVING_SLIDER.max}
+        step={SAVING_SLIDER.step}
+        value={monthly}
+        disabled={readOnly}
+        onChange={(e) => {
+          const v = Number(e.target.value)
+          setMonthly(v)
+          onSlider(v)
+        }}
+        className="mt-2 w-full accent-[var(--color-saving)]"
+        aria-label="월 저축액"
+      />
+      <div className="mt-0.5 flex justify-between text-micro font-semibold text-ink-faint">
+        <span>10만</span>
+        <span>50만</span>
+      </div>
+      <p className="mt-1.5 text-caption font-bold text-ink-soft">
+        {p.months}개월 뒤 목표 달성 · {p.arrivalLabel} 파리 출발 ✈️
+      </p>
+    </div>
+  )
+}
+
+/** OX 퀴즈 — 답하면 해설 + 포인트 */
+function QuizWidget({ quizId, readOnly }: { quizId: string; readOnly?: boolean }) {
+  const quiz = QUIZ.find((q) => q.id === quizId) ?? QUIZ[0]
+  const [picked, setPicked] = useState<boolean | null>(null)
+  const correct = picked !== null && picked === quiz.answer
+
+  return (
+    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="quiz-card">
+      <p className="text-body font-bold leading-snug text-ink">{quiz.question}</p>
+
+      {picked === null ? (
+        <div className="mt-2.5 flex gap-2">
+          {([true, false] as const).map((v) => (
+            <button
+              key={String(v)}
+              type="button"
+              disabled={readOnly}
+              onClick={() => setPicked(v)}
+              className={`flex-1 rounded-xl py-2 text-title font-extrabold ${
+                v ? 'bg-rise/10 text-rise' : 'bg-fall/10 text-fall'
+              }`}
+            >
+              {v ? 'O' : 'X'}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={snappy}>
+          <div className="mt-2.5 flex items-center gap-2">
+            <span className={`text-body font-extrabold ${correct ? 'text-saving' : 'text-fall'}`}>
+              {correct ? '정답! 🎉' : '아쉽다! 정답은 ' + (quiz.answer ? 'O' : 'X')}
+            </span>
+            {correct && (
+              <span className="rounded-full bg-point px-2 py-0.5 text-micro font-extrabold text-point-ink">
+                +60P
+              </span>
+            )}
+          </div>
+          <p className="mt-1 text-caption font-medium leading-relaxed text-ink-soft">{quiz.explanation}</p>
+        </motion.div>
+      )}
+    </div>
+  )
+}
+
+/** 추천 미션 카드 — 미션 탭으로 이동 */
+function MissionWidget({ missionId, readOnly }: { missionId: string; readOnly?: boolean }) {
+  const navigate = useNavigate()
+  const m = RECOMMENDED_MISSIONS.find((r) => r.id === missionId) ?? RECOMMENDED_MISSIONS[0]
+
+  return (
+    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="mission-card">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-point text-[20px]">{m.emoji}</span>
+        <div className="min-w-0">
+          <p className="text-body font-bold text-ink">{m.title}</p>
+          <p className="text-caption font-medium text-ink-soft">
+            {m.reason} · +{m.reward}P
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={() => !readOnly && navigate('/missions')}
+        className="mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl bg-point py-2 text-body font-bold text-point-ink"
+      >
+        미션 탭에서 담기
+        <ChevronRight size={14} />
+      </button>
+    </div>
+  )
+}
