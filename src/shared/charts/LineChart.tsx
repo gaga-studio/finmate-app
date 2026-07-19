@@ -50,7 +50,8 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
           ].map(({ y, v, x, anchor }) => (
             <g key={v}>
               <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.12} strokeWidth={1} strokeDasharray="3 4" />
-              <text x={x} y={y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.55}>
+              {/* 그리드가 차트 상단에 붙으면 라벨을 선 아래로 내려 잘림을 막는다 */}
+              <text x={x} y={y < 14 ? y + 12 : y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.55}>
                 {formatKrwCompact(v)}
               </text>
             </g>
@@ -115,16 +116,19 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
         />
       </g>
 
-      {/* x축: 월 라벨 */}
+      {/* x축: 월 라벨 — 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
       {xLabels?.map((label, i) => {
-        const x =
+        const raw =
           xLabels.length === pts.length ? pts[i].x : 8 + (i / (xLabels.length - 1)) * (width - 16)
+        const half = (label.length * 9) / 2
+        const anchor = raw - half < 1 ? 'start' : raw + half > width - 1 ? 'end' : 'middle'
+        const x = anchor === 'start' ? 1 : anchor === 'end' ? width - 1 : raw
         return (
           <text
             key={label}
             x={x}
             y={height - 3}
-            textAnchor="middle"
+            textAnchor={anchor}
             fontSize={9.5}
             fontWeight={i === xLabels.length - 1 ? 800 : 600}
             fill="currentColor"
