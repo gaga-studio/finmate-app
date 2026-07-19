@@ -44,7 +44,7 @@ export function PhoneFrame({ children }: { children: ReactNode }) {
       <div className="contents sm:block" style={desktop ? { width: FRAME_W * scale, height: FRAME_H * scale } : undefined}>
         <div
           id="phone-frame"
-          className="relative mx-auto min-h-dvh w-full max-w-[430px] origin-top-left overflow-hidden bg-surface sm:min-h-0 sm:max-w-none sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-ink/90"
+          className="relative mx-auto h-dvh w-full max-w-[430px] origin-top-left overflow-hidden bg-surface sm:max-w-none sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-ink/90"
           style={
             desktop
               ? { width: FRAME_W, height: FRAME_H, transform: `scale(${scale})` }
