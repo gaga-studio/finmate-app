@@ -1,5 +1,5 @@
 import { ASSET_SERIES, BUDGET_LIMIT, SAVING_GOAL } from './domain'
-import { getPeriodRange, keysInRange } from './dates'
+import { fromKey, getPeriodRange, keysInRange, TODAY_KEY } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
 import type { Category, Metric, Period, Transaction, WrappedContent } from './types'
@@ -50,6 +50,57 @@ export function getSavingProgress(period: Period): SavingSummary {
     pct: SAVING_GOAL.current / SAVING_GOAL.target,
     delta,
   }
+}
+
+export interface SavingWeekBar {
+  /** 이번 달 n주차 (1부터) */
+  week: number
+  amount: number
+  isCurrent: boolean
+}
+
+/** 날짜의 이번 달 주차 — dates.ts 주간 라벨과 같은 공식 */
+function weekOfMonth(d: Date): number {
+  const firstDow = new Date(d.getFullYear(), d.getMonth(), 1).getDay()
+  return Math.ceil((d.getDate() + firstDow) / 7)
+}
+
+/** 월간 뷰: 이번 달 저축액을 주차별로 합산 (미래 주차는 0) */
+export function getSavingWeekBars(): SavingWeekBar[] {
+  const today = fromKey(TODAY_KEY)
+  const currentWeek = weekOfMonth(today)
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+  const totalWeeks = weekOfMonth(lastDay)
+
+  const bars: SavingWeekBar[] = Array.from({ length: totalWeeks }, (_, i) => ({
+    week: i + 1,
+    amount: 0,
+    isCurrent: i + 1 === currentWeek,
+  }))
+  for (const t of inRange('monthly')) {
+    if (t.category !== 'saving') continue
+    bars[weekOfMonth(fromKey(t.date)) - 1].amount += -t.amount
+  }
+  return bars
+}
+
+/** 자산 뷰: 저축 잔액 누적 곡선 — 마지막 값이 SAVING_GOAL.current와 일치 */
+export function getSavingBalanceSeries(n = 30): { points: number[]; current: number } {
+  const savings = TRANSACTIONS.filter((t) => t.category === 'saving').sort((a, b) =>
+    a.date.localeCompare(b.date),
+  )
+  const perDay = new Map<string, number>()
+  for (const t of savings) perDay.set(t.date, (perDay.get(t.date) ?? 0) + -t.amount)
+
+  const dayKeys = keysInRange({ startKey: savings[0].date, endKey: TODAY_KEY, label: '' })
+  const totalSaved = savings.reduce((sum, t) => sum + -t.amount, 0)
+  // 기록 이전에 이미 모여 있던 금액 — 최종 잔액을 현재값에 맞춘다
+  let balance = SAVING_GOAL.current - totalSaved
+  const points = dayKeys.map((key) => {
+    balance += perDay.get(key) ?? 0
+    return balance
+  })
+  return { points: points.slice(-n), current: SAVING_GOAL.current }
 }
 
 export interface InvestSummary {
