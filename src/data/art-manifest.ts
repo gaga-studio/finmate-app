@@ -1,4 +1,4 @@
-import type { Metric, Period } from './types'
+import type { Metric, WrappedArtKey } from './types'
 
 /**
  * AI 아트 에셋의 단일 매핑.
@@ -7,10 +7,16 @@ import type { Metric, Period } from './types'
  */
 export const ART = {
   wrapped: {
-    daily: '/art/wrapped/daily.png',
-    weekly: '/art/wrapped/weekly.png',
-    monthly: '/art/wrapped/monthly.png',
-  } satisfies Record<Period, string>,
+    'budget-daily': '/art/wrapped/budget-daily.png',
+    'budget-weekly': '/art/wrapped/budget-weekly.png',
+    'budget-monthly': '/art/wrapped/budget-monthly.png',
+    'saving-daily': '/art/wrapped/saving-daily.png',
+    'saving-weekly': '/art/wrapped/saving-weekly.png',
+    'saving-monthly': '/art/wrapped/saving-monthly.png',
+    'invest-daily': '/art/wrapped/invest-daily.png',
+    'invest-weekly': '/art/wrapped/invest-weekly.png',
+    'invest-monthly': '/art/wrapped/invest-monthly.png',
+  } satisfies Record<WrappedArtKey, string>,
   diary: {
     '2026-07-14': '/art/diary/2026-07-14.png',
     '2026-07-16': '/art/diary/2026-07-16.png',

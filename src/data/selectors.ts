@@ -2,7 +2,7 @@ import { ASSET_SERIES, BUDGET_LIMIT, SAVING_GOAL } from './domain'
 import { getPeriodRange, keysInRange } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
-import type { Category, Period, Transaction, WrappedContent } from './types'
+import type { Category, Metric, Period, Transaction, WrappedContent } from './types'
 
 /** 모든 화면이 의존하는 기간별 파생 집계 — 전부 동기 순수함수. */
 
@@ -119,9 +119,9 @@ export interface WrappedSummary extends WrappedContent {
   topSpending: CategorySum[]
 }
 
-export function getWrapped(period: Period): WrappedSummary {
+export function getWrapped(metric: Metric, period: Period): WrappedSummary {
   return {
-    ...WRAPPED[period],
+    ...WRAPPED[metric][period],
     rangeLabel: getPeriodRange(period).label,
     budget: getBudget(period),
     saving: getSavingProgress(period),
