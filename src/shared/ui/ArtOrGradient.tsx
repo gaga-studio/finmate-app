@@ -14,9 +14,10 @@ interface Props {
  * 지표 팔레트 그라디언트 폴백 — 에셋 도착 전에도 촬영 가능한 미감.
  */
 export function ArtOrGradient({ src, palette, className, children }: Props) {
-  const [failed, setFailed] = useState(false)
+  // 실패를 src별로 기억 — 컴포넌트가 재사용되며 src가 바뀌면(지표 전환) 자동 리셋된다
+  const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const [from, to] = FALLBACK_GRADIENT[palette]
-  const showImage = src && !failed
+  const showImage = !!src && failedSrc !== src
 
   return (
     <div
@@ -28,7 +29,7 @@ export function ArtOrGradient({ src, palette, className, children }: Props) {
           src={src}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(src)}
         />
       )}
       {!showImage && (
