@@ -32,6 +32,8 @@
 | `invest-monthly.png` | 궤도의 로켓 | a rocket soaring through space past a big moon and stars, upward arc trajectory, deep violet night palette with neon accents |
 | `saving-income.png` | 1위 소득 = 월급 | a thick pay envelope with banknotes on an office desk, golden hour light through window blinds, mint and gold palette |
 | `saving-asset.png` | 1위 자산 = 집(전세) | a cozy small apartment building exterior with warm lit windows at dusk, keys in the foreground, mint teal palette |
+| `invest-portfolio.png` | 포트폴리오 | a neat grid of colorful stacked blocks like a mosaic chart on a desk, magnifying glass, violet purple palette |
+| `invest-news.png` | 오늘의 시장 | a stock market electronic display board with glowing tickers and arrows, city trading floor mood, violet palette with red and blue accents |
 
 기간 문법: 일간 = 시작/준비의 순간, 주간 = 진행 중인 액션, 월간 = 도달/성취의 순간. 소비는 "그 기간 가장 많이 쓴 것"(커피 → 운동화 → 쇼핑)을 그린다.
 
