@@ -44,18 +44,22 @@ export const NET_WORTH_HISTORY: number[] = [
   12_650_000, 12_930_000, 13_180_000, 13_420_000, 13_660_000, 14_000_000,
 ]
 
-/** 보유 종목 — 합계 1,326,000 = 평가액 정합. 스페이스X(2026 상장 설정)가 수익률 1위. */
+/**
+ * 보유 종목 — 합계 1,326,000 = 평가액 정합. 수익률은 2026-07-17 실제 시장 반영:
+ * 코스피는 급락에도 연초 대비 큰 플러스(KODEX 200 1위), 스페이스X는
+ * 6/12 IPO($135) 후 $123까지 밀려 마이너스.
+ */
 export const HOLDINGS: Holding[] = [
-  { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 400_000, returnPct: 14.2 },
-  { ticker: 'KODEX 200', name: 'KODEX 200', value: 330_000, returnPct: 8.9 },
-  { ticker: 'SPACEX', name: '스페이스X', value: 268_000, returnPct: 34.5 },
-  { ticker: '005930', name: '삼성전자', value: 212_000, returnPct: 6.1 },
-  { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 116_000, returnPct: 17.8 },
+  { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 400_000, returnPct: 11.8 },
+  { ticker: 'KODEX 200', name: 'KODEX 200', value: 330_000, returnPct: 19.6 },
+  { ticker: 'SPACEX', name: '스페이스X', value: 268_000, returnPct: -8.9 },
+  { ticker: '005930', name: '삼성전자', value: 212_000, returnPct: 4.2 },
+  { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 116_000, returnPct: 14.6 },
 ]
 
-/** 투자 평가액 월별 추이(2~7월) — 끝값 = HOLDINGS 합계 */
+/** 투자 평가액 월별 추이(2~7월) — 6월 고점 후 7월 급락장 반영, 끝값 = HOLDINGS 합계 */
 export const INVEST_VALUE_HISTORY: number[] = [
-  872_000, 942_000, 1_021_000, 1_098_000, 1_176_500, 1_326_000,
+  872_000, 942_000, 1_021_000, 1_176_500, 1_368_000, 1_326_000,
 ]
 
 /**
@@ -75,11 +79,15 @@ export interface MarketIndex {
   changeAbs: string
 }
 
-/** 뉴스 뷰 상단 지수 보드 — 2026 데모 수치 */
+/**
+ * 뉴스 뷰 상단 지수 보드 — 2026-07-17(금) 실제 장 마감 기준.
+ * 중동 리스크 + 금리 인상으로 코스피 -9.95% 서킷브레이커(올해 7번째),
+ * 원/달러 1,487.73(+0.53%) 실측. 코스닥은 코스피 동조 추정치.
+ */
 export const MARKET_INDICES: MarketIndex[] = [
-  { id: 'kospi', name: '코스피', value: '5,507.01', changePct: 0.85, changeAbs: '46.31' },
-  { id: 'usdkrw', name: '원/달러', value: '1,444.90', changePct: -0.33, changeAbs: '4.70' },
-  { id: 'kosdaq', name: '코스닥', value: '1,106.08', changePct: 1.77, changeAbs: '19.24' },
+  { id: 'kospi', name: '코스피', value: '6,142.47', changePct: -9.95, changeAbs: '678.95' },
+  { id: 'usdkrw', name: '원/달러', value: '1,487.73', changePct: 0.53, changeAbs: '7.83' },
+  { id: 'kosdaq', name: '코스닥', value: '763.20', changePct: -7.99, changeAbs: '66.23' },
 ]
 
 export interface StockNews {
@@ -89,12 +97,12 @@ export interface StockNews {
   changePct: number
 }
 
-/** 뉴스 뷰 오른쪽 카드 — 반도체(삼성·하이닉스)가 메인, 아트 이미지와 정합 */
+/** 뉴스 뷰 오른쪽 카드 — 2026-07-17 실제 시장 반영, 반도체(삼성·하이닉스)가 메인 */
 export const STOCK_NEWS: StockNews[] = [
-  { id: 'nw1', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
-  { id: 'nw2', name: 'SK하이닉스', summary: '반도체 슈퍼사이클 전망에', changePct: 5.2 },
-  { id: 'nw3', name: '스페이스X', summary: '스타십 상업 발사 성공에', changePct: 6.8 },
-  { id: 'nw4', name: 'KODEX 200', summary: '외국인 차익 실현 매물에', changePct: -0.6 },
+  { id: 'nw1', name: '삼성전자', summary: '급락장 직격, 7/23 실적 발표 대기', changePct: -7.8 },
+  { id: 'nw2', name: 'SK하이닉스', summary: '나스닥 이중상장 뒤 차익 매물에', changePct: -6.4 },
+  { id: 'nw3', name: '스페이스X', summary: '스타십 시험발사 중단 여파로', changePct: -3.2 },
+  { id: 'nw4', name: 'TIGER 미국S&P500', summary: 'AI 고평가 논란에 미국도 조정', changePct: -1.2 },
 ]
 
 /** 총자산 일별 곡선(90일) — 완만한 우상향 + 시드 노이즈 */
