@@ -35,12 +35,12 @@ export const MY_ASSETS: AssetItem[] = [
   { id: 'as-deposit', title: '예·적금', value: 11_000_000, emoji: '💰' },
   { id: 'as-car', title: '중고차', value: 8_000_000, emoji: '🚗' },
   { id: 'as-paris', title: '파리 여행 통장', value: 2_250_000, emoji: '✈️' },
-  { id: 'as-invest', title: '투자 계좌', value: 1_311_565, emoji: '📈' },
+  { id: 'as-invest', title: '투자 계좌', value: 1_326_000, emoji: '📈' },
 ]
 
-/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(142,561,565)와 일치해야 한다 */
+/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(142,576,000)와 일치해야 한다 */
 export const NET_WORTH_HISTORY: number[] = [
-  139_800_000, 140_400_000, 141_050_000, 141_500_000, 142_180_000, 142_561_565,
+  139_800_000, 140_400_000, 141_050_000, 141_500_000, 142_180_000, 142_576_000,
 ]
 
 export const HOLDINGS: Holding[] = [
@@ -49,6 +49,42 @@ export const HOLDINGS: Holding[] = [
   { ticker: '005930', name: '삼성전자', value: 248_000, returnPct: 6.1 },
   { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 190_000, returnPct: 17.8 },
   { ticker: 'ACE 금현물', name: 'ACE KRX금현물', value: 121_000, returnPct: 4.3 },
+]
+
+/** 투자 평가액 월별 추이(2~7월) — 끝값 = HOLDINGS 합계, 이번 달 +12.7%(1,176,500 → 1,326,000) */
+export const INVEST_VALUE_HISTORY: number[] = [
+  872_000, 942_000, 1_021_000, 1_098_000, 1_176_500, 1_326_000,
+]
+
+export interface MarketIndex {
+  id: string
+  name: string
+  /** 표시용 문자열 (콤마·소수점 유지) */
+  value: string
+  changePct: number
+  changeAbs: string
+}
+
+/** 뉴스 뷰 상단 지수 보드 — 2026 데모 수치 */
+export const MARKET_INDICES: MarketIndex[] = [
+  { id: 'kospi', name: '코스피', value: '5,507.01', changePct: 0.85, changeAbs: '46.31' },
+  { id: 'usdkrw', name: '원/달러', value: '1,444.90', changePct: -0.33, changeAbs: '4.70' },
+  { id: 'kosdaq', name: '코스닥', value: '1,106.08', changePct: 1.77, changeAbs: '19.24' },
+]
+
+export interface StockNews {
+  id: string
+  name: string
+  summary: string
+  changePct: number
+}
+
+/** 뉴스 뷰 오른쪽 카드 — 핫한 주식 뉴스 요약 */
+export const STOCK_NEWS: StockNews[] = [
+  { id: 'nw1', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
+  { id: 'nw2', name: 'SK하이닉스', summary: '반도체 슈퍼사이클 전망에', changePct: 5.2 },
+  { id: 'nw3', name: '테슬라', summary: '실적 부담 우려로', changePct: -2.3 },
+  { id: 'nw4', name: '카카오', summary: '플랫폼 규제 이슈로', changePct: -1.8 },
 ]
 
 /** 총자산 일별 곡선(90일) — 완만한 우상향 + 시드 노이즈 */

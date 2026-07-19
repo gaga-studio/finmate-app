@@ -1,12 +1,15 @@
 import {
   ASSET_SERIES,
   BUDGET_LIMIT,
+  HOLDINGS,
+  INVEST_VALUE_HISTORY,
   MY_ASSETS,
   NET_WORTH_HISTORY,
   SAVING_GOAL,
   SAVING_MONTHLY_HISTORY,
   type AssetItem,
 } from './domain'
+import type { Holding } from './types'
 import { getPeriodRange, keysInRange } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
@@ -135,6 +138,28 @@ export function getInvestSeries(period: Period): InvestSummary {
     returnPct: Math.round(((last - first) / first) * 1000) / 10,
     totalValue: last,
   }
+}
+
+/** 현황 뷰: 평가액 월별 추이 (나의 자산과 같은 마커 곡선 형식) */
+export function getInvestStatus(): { points: number[]; total: number; monthPct: number } {
+  const points = INVEST_VALUE_HISTORY
+  const total = points[points.length - 1]
+  const prev = points[points.length - 2]
+  return { points, total, monthPct: Math.round(((total - prev) / prev) * 1000) / 10 }
+}
+
+export interface PortfolioSlice extends Holding {
+  /** 비중 0~1 */
+  weight: number
+}
+
+/** 포폴 뷰: 보유 종목 비중 내림차순 */
+export function getPortfolio(): { slices: PortfolioSlice[]; total: number } {
+  const total = HOLDINGS.reduce((sum, h) => sum + h.value, 0)
+  const slices = [...HOLDINGS]
+    .sort((a, b) => b.value - a.value)
+    .map((h) => ({ ...h, weight: h.value / total }))
+  return { slices, total }
 }
 
 /** 소비 탑 N: 카테고리 합산이 아니라 개별 구매 상위 — 커피/운동화/맥북 같은 스토리가 행으로 보인다 */

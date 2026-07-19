@@ -27,7 +27,7 @@ export const SAVING_CARDS: Record<SavingView, SavingCardContent> = {
   asset: {
     title: '나의 자산',
     headline: '전세 보증금부터\n파리 통장까지, 1.4억',
-    subline: '총자산 1억 4,256만원 · 이번 달 +38만원',
+    subline: '총자산 1억 4,258만원 · 이번 달 +40만원',
     artKey: 'saving-asset',
   },
 }

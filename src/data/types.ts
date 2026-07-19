@@ -2,6 +2,8 @@ export type Period = 'daily' | 'weekly' | 'monthly'
 export type Metric = 'budget' | 'saving' | 'invest'
 /** 저축 지표 전용 세로축 — 기간이 아니라 뷰를 순환한다 */
 export type SavingView = 'goal' | 'monthly' | 'asset'
+/** 투자 지표 전용 세로축 */
+export type InvestView = 'status' | 'portfolio' | 'news'
 
 export type Category =
   | 'food'

@@ -24,6 +24,10 @@
   --color-line: oklch(0.92 0.008 260);
   --color-danger: oklch(0.62 0.19 25);
 
+  /* 등락 색 — 한국 증권 관례: 상승=빨강, 하락=파랑 */
+  --color-rise: oklch(0.58 0.21 25);
+  --color-fall: oklch(0.55 0.16 250);
+
   /* 타이포 스케일 6단계 — 임의 px 금지, 전 화면이 이 토큰만 쓴다 */
   --text-display: 32px; /* 카드 큰 숫자 (extrabold) */
   --text-display--line-height: 1;
