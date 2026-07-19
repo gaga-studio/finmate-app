@@ -121,6 +121,11 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
+      {/* 지표 소제목 — 캐러셀과 함께 전환 */}
+      <h2 className="px-6 pb-1.5 text-title font-extrabold text-ink">
+        {metric === 'budget' ? '예산' : metric === 'saving' ? '저축' : '투자'}
+      </h2>
+
       <MetricCarousel
         metric={metric}
         period={period}
@@ -164,7 +169,9 @@ export function MyPage() {
         )}
       </div>
 
-      <section className="relative mt-4 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
+      <h2 className="mt-4 px-6 text-title font-extrabold text-ink">요약</h2>
+
+      <section className="relative mt-2 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
         <div className="h-[248px]">
           {openCard === null && (
             <ArtCardThumb
