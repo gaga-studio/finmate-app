@@ -6,6 +6,7 @@ import {
   COMPARE_TARGETS,
   getHabitProjection,
   getMacbookSim,
+  HABIT_BOOST,
   MACBOOK,
   makeSavingProjection,
   PROJECTION_MONTHS,
@@ -84,19 +85,23 @@ function renderState(state: InsightChartState) {
 
     // 비교 중이었다면 메이트 선을 유지 — 맥북을 사면 격차가 어떻게 변하는지가 포인트
     if (target) {
-      // 습관 따라하기: 내 선이 메이트의 월별 증가 패턴을 그대로 따라간다 (시작점은 맥북 반영)
+      // 습관 따라하기: 메이트 패턴 + 내 기존 흐름 시너지(HABIT_BOOST) — 10~11월 사이 역전
       const myCurve = state.habit
-        ? target.curve.map((v) => sim.base[0] - MACBOOK.price + (v - target.curve[0]))
+        ? target.curve.map((v) => sim.base[0] - MACBOOK.price + Math.round((v - target.curve[0]) * HABIT_BOOST))
         : sim.bought
       const end = myCurve[myCurve.length - 1]
       const diff = end - target.curve[target.curve.length - 1]
+      // 역전이 일어나는 첫 달
+      const crossIdx = state.habit ? myCurve.findIndex((v, i) => i > 0 && v >= target.curve[i]) : -1
 
       return {
         title: state.habit
           ? `습관 따라하면 12월 ${formatKrwCompact(end)}`
           : `맥북 사면 12월 ${formatKrwCompact(end)}`,
         caption: state.habit
-          ? `맥북 반영 대비 +${formatKrwCompact(end - sim.endBought)} 만회!`
+          ? crossIdx > 0
+            ? `${PROJECTION_MONTHS[crossIdx]}이면 ${target.label} 역전 — 12월 +${formatKrwCompact(diff)}!`
+            : `맥북 반영 대비 +${formatKrwCompact(end - sim.endBought)} 만회!`
           : diff >= 0
             ? `그래도 ${target.label}보다 +${formatKrwCompact(diff)} 앞서요`
             : `이러면 ${target.label}${iGa(target.label)} +${formatKrwCompact(-diff)} 앞서요`,
