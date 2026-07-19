@@ -113,10 +113,14 @@ export interface DiaryEntry {
   artKey: string
 }
 
+/** 아트 파일명과 1:1 대응하는 키 — art-manifest의 단일 키 체계 */
+export type WrappedArtKey = `${Metric}-${Period}`
+
 export interface WrappedContent {
+  metric: Metric
   period: Period
   title: string
   headline: string
   subline: string
-  artKey: string
+  artKey: WrappedArtKey
 }

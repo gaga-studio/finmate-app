@@ -7,7 +7,7 @@ import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
-import { PERIODS, PERIOD_LABEL, type Metric, type Period } from './myState'
+import { METRICS, PERIODS, PERIOD_LABEL, type Metric, type Period } from './myState'
 
 const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -17,15 +17,22 @@ const TINT: Record<Metric, string> = {
   invest: 'from-invest/18 via-invest/6',
 }
 
+/** "?card=budget-daily" → {metric, period} — 지표/기간 유니온에 '-'가 없어 split이 안전하다 */
+function parseCardParam(raw: string | null): { metric: Metric; period: Period } | null {
+  if (!raw) return null
+  const [m, p] = raw.split('-')
+  if (!METRICS.includes(m as Metric) || !PERIODS.includes(p as Period)) return null
+  return { metric: m as Metric, period: p as Period }
+}
+
 export function MyPage() {
   const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
   const [params, setParams] = useSearchParams()
 
-  const cardParam = params.get('card')
-  const openCard: Period | null = PERIODS.includes(cardParam as Period) ? (cardParam as Period) : null
+  const openCard = parseCardParam(params.get('card'))
 
-  const openWrapped = () => setParams({ card: period })
+  const openWrapped = () => setParams({ card: `${metric}-${period}` })
   const closeWrapped = () => {
     const next = new URLSearchParams(params)
     next.delete('card')
@@ -96,7 +103,9 @@ export function MyPage() {
       </section>
 
       <AnimatePresence>
-        {openCard !== null && <WrappedOverlay period={openCard} onClose={closeWrapped} />}
+        {openCard !== null && (
+          <WrappedOverlay metric={openCard.metric} period={openCard.period} onClose={closeWrapped} />
+        )}
       </AnimatePresence>
     </div>
   )

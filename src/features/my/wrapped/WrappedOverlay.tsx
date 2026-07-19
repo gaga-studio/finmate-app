@@ -5,9 +5,10 @@ import { Download, Share2, X } from 'lucide-react'
 import { WrappedCardNode } from './WrappedCardNode'
 import { captureCard, saveOrShare } from './exportCard'
 import { dramatic } from '../../../shared/motion/springs'
-import type { Period } from '../myState'
+import type { Metric, Period } from '../myState'
 
 interface Props {
+  metric: Metric
   period: Period
   onClose: () => void
 }
@@ -16,7 +17,7 @@ interface Props {
  * Wrapped 9:16 풀스크린 오버레이 — 썸네일과 layoutId="wrapped-card"를
  * 공유해 위치/크기/radius가 자동 보간된다. 아래로 드래그해 닫는다.
  */
-export function WrappedOverlay({ period, onClose }: Props) {
+export function WrappedOverlay({ metric, period, onClose }: Props) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
@@ -61,7 +62,7 @@ export function WrappedOverlay({ period, onClose }: Props) {
           transition={dramatic}
           className="overflow-hidden rounded-sheet shadow-float"
         >
-          <WrappedCardNode ref={cardRef} period={period} />
+          <WrappedCardNode ref={cardRef} metric={metric} period={period} />
         </motion.div>
 
         {/* 콘텐츠 등장 후 액션 바 */}
