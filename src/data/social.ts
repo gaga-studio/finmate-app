@@ -13,7 +13,7 @@ export const FEED_GROUPS: FeedGroup[] = [
   { id: 'g-follow', emoji: '⭐️', label: '팔로잉', desc: '내가 팔로우한 메이트', members: 10 },
 ]
 
-const A = {
+export const AUTHORS = {
   coffee: { id: 'a-coffee', nickname: '커피끊은사람', emoji: '☕️', bio: '카페 지출 -70% 달성', badges: ['카페 절약러'] },
   bruncher: { id: 'a-bruncher', nickname: '주말브런처', emoji: '🥞', bio: '주말 한 끼는 제대로', badges: ['외식비 상위 30%'] },
   squirrel: { id: 'a-squirrel', nickname: '야금야금', emoji: '🐿️', bio: '도시락 파', badges: ['식비 절약 4주'] },
@@ -27,6 +27,8 @@ const A = {
   bear: { id: 'a-bear', nickname: '곰손재테크', emoji: '🐻', bio: 'ETF 적립 6개월차', badges: ['자동이체 마스터'] },
   raccoon: { id: 'a-raccoon', nickname: '월급루팡아님', emoji: '🦝', bio: '사회초년생 2년차', badges: ['첫 청약 납입'] },
 } satisfies Record<string, ProfileSummary>
+
+const A = AUTHORS
 
 export const STORIES: Story[] = [
   {
