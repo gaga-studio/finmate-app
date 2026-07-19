@@ -138,13 +138,13 @@ export function InvestCard({ view }: { view: InvestView }) {
 
   return (
     <CardShell title="뉴스" metricClass={METRIC_TEXT.invest}>
-      {/* 증시 전광판처럼 3열 배치 */}
-      <div className="grid w-full grid-cols-3 gap-1 py-2 text-center">
+      {/* 증시 전광판처럼 3열 배치 — 열 사이 은은한 구분선 */}
+      <div className="grid w-full grid-cols-3 divide-x divide-line py-2 text-center">
         {MARKET_INDICES.map((m) => {
           const rise = m.changePct >= 0
           return (
-            <div key={m.id} className="flex flex-col items-center gap-1.5">
-              <span className="text-caption font-bold text-ink-soft">{m.name}</span>
+            <div key={m.id} className="flex flex-col items-center gap-2 px-1 py-1">
+              <span className="text-body font-bold text-ink">{m.name}</span>
               <b className="text-section font-extrabold leading-none tracking-tight text-ink tabular-nums">
                 {m.value}
               </b>
