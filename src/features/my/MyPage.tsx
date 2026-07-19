@@ -8,6 +8,7 @@ import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import { UserAvatar } from '../../shared/profile/UserAvatar'
+import { PageTitle } from '../../shared/ui/PageTitle'
 import {
   INVEST_VIEWS,
   INVEST_VIEW_LABEL,
@@ -108,6 +109,7 @@ export function MyPage() {
       ))}
 
       <header className="relative flex items-center justify-between px-5 pb-2 pt-14">
+        <PageTitle>마이</PageTitle>
         <div>
           <p className="text-body font-semibold text-ink-soft">
             {DEMO_TODAY.getMonth() + 1}월 {DEMO_TODAY.getDate()}일 {WEEKDAY[DEMO_TODAY.getDay()]}요일

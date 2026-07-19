@@ -6,6 +6,7 @@ import { StoryGrid } from './StoryGrid'
 import { StoryOverlay } from './StoryOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { STORIES } from '../../data/social'
+import { PageTitle } from '../../shared/ui/PageTitle'
 
 type StorySort = 'popular' | 'recent'
 
@@ -25,7 +26,8 @@ export function FeedPage() {
 
   return (
     <div className="relative min-h-full">
-      <header className="flex items-center justify-between px-5 pb-1 pt-14">
+      <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
+        <PageTitle>피드</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"

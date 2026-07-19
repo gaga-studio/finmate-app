@@ -8,6 +8,7 @@ import { RecommendedList } from './RecommendedList'
 import { RewardSheet } from './RewardSheet'
 import { MISSIONS, POINTS_BALANCE, RECOMMENDED_MISSIONS, STREAK_CHECK_REWARD } from '../../data/domain'
 import type { Mission, RecommendedMission } from '../../data/types'
+import { PageTitle } from '../../shared/ui/PageTitle'
 
 export function MissionsPage() {
   const [points, setPoints] = useState(POINTS_BALANCE)
@@ -58,7 +59,8 @@ export function MissionsPage() {
 
   return (
     <div className="relative min-h-full pb-6">
-      <header className="flex items-center justify-between px-5 pb-3 pt-14">
+      <header className="relative flex items-center justify-between px-5 pb-3 pt-14">
+        <PageTitle>미션</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
