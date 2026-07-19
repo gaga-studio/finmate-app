@@ -18,12 +18,14 @@ interface Props {
   /** 슬라이더 이동 → 상단 차트 갱신 */
   onSlider: (monthly: number) => void
   /** 리포트 생성 버튼 → 리포트 오버레이 */
-  onReport: () => void
+  onReport: (variant?: 'macbook') => void
+  /** 메이트/그룹 선택지 → 비교 바텀시트 열기 */
+  onComparePick: () => void
   /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
   readOnly?: boolean
 }
 
-export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, readOnly }: Props) {
+export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, onComparePick, readOnly }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,6 +48,7 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
             onOption={onOption}
             onSlider={onSlider}
             onReport={onReport}
+            onComparePick={onComparePick}
             readOnly={readOnly}
           />
         ))}
@@ -62,6 +65,7 @@ function Bubble({
   onOption,
   onSlider,
   onReport,
+  onComparePick,
   readOnly,
 }: {
   msg: InsightMsg
@@ -69,7 +73,8 @@ function Bubble({
   onChip: (text: string) => void
   onOption: (text: string) => void
   onSlider: (monthly: number) => void
-  onReport: () => void
+  onReport: (variant?: 'macbook') => void
+  onComparePick: () => void
   readOnly?: boolean
 }) {
   if (msg.role === 'user') {
@@ -106,6 +111,7 @@ function Bubble({
             onOption={onOption}
             onSlider={onSlider}
             onReport={onReport}
+            onComparePick={onComparePick}
             readOnly={readOnly}
           />
         )}
@@ -149,13 +155,15 @@ function Widget({
   onOption,
   onSlider,
   onReport,
+  onComparePick,
   readOnly,
 }: {
   widget: InsightWidget
   onChip: (text: string) => void
   onOption: (text: string) => void
   onSlider: (monthly: number) => void
-  onReport: () => void
+  onReport: (variant?: 'macbook') => void
+  onComparePick: () => void
   readOnly?: boolean
 }) {
   if (widget.type === 'summary') return <SummaryCard />
@@ -163,7 +171,8 @@ function Widget({
   if (widget.type === 'quiz') return <QuizWidget quizId={widget.quizId} readOnly={readOnly} />
   if (widget.type === 'mission') return <MissionWidget missionId={widget.missionId} readOnly={readOnly} />
   if (widget.type === 'options') return <OptionsWidget options={widget.options} onOption={onOption} readOnly={readOnly} />
-  if (widget.type === 'report') return <ReportWidget onReport={onReport} readOnly={readOnly} />
+  if (widget.type === 'compare-picker') return <ComparePickerWidget onComparePick={onComparePick} readOnly={readOnly} />
+  if (widget.type === 'report') return <ReportWidget variant={widget.variant} onReport={onReport} readOnly={readOnly} />
   return (
     <div className="flex flex-wrap gap-1.5">
       {widget.chips.map((c) => (
@@ -216,20 +225,54 @@ function OptionsWidget({
   )
 }
 
+/** 메이트/그룹 선택지 — 어느 쪽이든 비교 바텀시트를 연다 */
+function ComparePickerWidget({ onComparePick, readOnly }: { onComparePick: () => void; readOnly?: boolean }) {
+  return (
+    <div className="flex flex-wrap gap-1.5" data-testid="compare-picker">
+      {['🤝 메이트 고르기', '👥 그룹 고르기'].map((label) => (
+        <button
+          key={label}
+          type="button"
+          disabled={readOnly}
+          onClick={onComparePick}
+          className="rounded-full border border-accent/35 bg-elevated px-3.5 py-2 text-body font-bold text-accent shadow-soft"
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 /** 리포트 생성 — 리포트 오버레이 화면을 연다 */
-function ReportWidget({ onReport, readOnly }: { onReport: () => void; readOnly?: boolean }) {
+function ReportWidget({
+  variant,
+  onReport,
+  readOnly,
+}: {
+  variant?: 'macbook'
+  onReport: (variant?: 'macbook') => void
+  readOnly?: boolean
+}) {
+  const macbook = variant === 'macbook'
   return (
     <button
       type="button"
       disabled={readOnly}
-      onClick={onReport}
+      onClick={() => onReport(variant)}
       className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-elevated px-4 py-3 shadow-soft"
       data-testid="report-widget"
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-[17px]">📋</span>
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-[17px]">
+        {macbook ? '💻' : '📋'}
+      </span>
       <span className="text-left">
-        <span className="block text-body font-bold text-ink">7월 리포트 보기</span>
-        <span className="block text-caption font-medium text-ink-soft">소비 · 저축 · 투자 한 장 정리</span>
+        <span className="block text-body font-bold text-ink">
+          {macbook ? '7월 예상 리포트 보기' : '7월 리포트 보기'}
+        </span>
+        <span className="block text-caption font-medium text-ink-soft">
+          {macbook ? '맥북 M5 프로 반영 시뮬레이션' : '소비 · 저축 · 투자 한 장 정리'}
+        </span>
       </span>
       <ChevronRight size={15} className="ml-1 text-ink-faint" />
     </button>

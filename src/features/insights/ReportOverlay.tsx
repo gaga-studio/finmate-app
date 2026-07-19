@@ -11,17 +11,33 @@ import {
   getSavingProgress,
   getTopPurchases,
 } from '../../data/selectors'
-import { getHabitProjection } from '../../data/insights'
+import { getHabitProjection, MACBOOK } from '../../data/insights'
 import { USER } from '../../data/demo'
 
-/** AI가 생성한 7월 마무리 리포트 — 전 수치가 마이 탭과 같은 셀렉터에서 파생 */
-export function ReportOverlay({ onClose }: { onClose: () => void }) {
+interface Props {
+  /** macbook = "이번 달 맥북을 산다면"의 예상 리포트 */
+  variant?: 'macbook'
+  onClose: () => void
+}
+
+/** AI가 생성한 7월 리포트 — 전 수치가 마이 탭과 같은 셀렉터에서 파생 */
+export function ReportOverlay({ variant, onClose }: Props) {
+  const macbook = variant === 'macbook'
   const budget = getBudget('monthly')
-  const top3 = getTopPurchases('monthly', 3)
   const saving = getSavingProgress('monthly')
   const invest = getInvestStatus()
   const nw = getNetWorth()
-  const nextMonth = getHabitProjection().curve[1]
+  const nextMonth = getHabitProjection().curve[1] - (macbook ? MACBOOK.price : 0)
+
+  // 맥북 버전은 이번 달 소비에 200만을 얹은 예상치
+  const spent = budget.spent + (macbook ? MACBOOK.price : 0)
+  const overBudget = spent > budget.limit
+  const top3 = macbook
+    ? [
+        { id: 'sim-macbook', merchant: MACBOOK.name, amount: -MACBOOK.price },
+        ...getTopPurchases('monthly', 2),
+      ]
+    : getTopPurchases('monthly', 3)
 
   return createPortal(
     <div className="absolute inset-0 z-[60]">
@@ -43,8 +59,12 @@ export function ReportOverlay({ onClose }: { onClose: () => void }) {
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-ink/15" />
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-caption font-bold text-ink-faint">{USER.nickname}님의 월간 리포트</p>
-            <h2 className="mt-0.5 text-title font-extrabold text-ink">7월, 한 장 정리 📋</h2>
+            <p className="text-caption font-bold text-ink-faint">
+              {USER.nickname}님의 월간 리포트{macbook ? ' · 맥북 M5 프로 반영' : ''}
+            </p>
+            <h2 className="mt-0.5 text-title font-extrabold text-ink">
+              {macbook ? '7월 예상 리포트 💻' : '7월, 한 장 정리 📋'}
+            </h2>
           </div>
           <button
             type="button"
@@ -63,17 +83,22 @@ export function ReportOverlay({ onClose }: { onClose: () => void }) {
             {formatKrwCompact(nw.total)}
           </p>
           <p className="mt-1.5 text-body font-medium text-ink-soft">
-            지금 습관대로면 8월엔 <b className="text-saving">{formatKrwCompact(nextMonth)}</b>
+            {macbook ? '맥북 사면 8월엔' : '지금 습관대로면 8월엔'}{' '}
+            <b className={macbook ? 'text-fall' : 'text-saving'}>{formatKrwCompact(nextMonth)}</b>
           </p>
         </div>
 
         {/* 소비 */}
         <section className="mt-3 rounded-card bg-elevated px-5 py-4 shadow-float" data-metric="budget">
           <div className="flex items-baseline justify-between">
-            <p className="text-section font-bold text-ink">소비</p>
-            <p className="text-body font-bold text-budget">예산 {Math.round(budget.pct * 100)}% 남김</p>
+            <p className="text-section font-bold text-ink">소비{macbook ? ' (예상)' : ''}</p>
+            {overBudget ? (
+              <p className="text-body font-bold text-fall">예산 초과 ⚠️</p>
+            ) : (
+              <p className="text-body font-bold text-budget">예산 {Math.round(budget.pct * 100)}% 남김</p>
+            )}
           </div>
-          <p className="mt-1 text-title font-extrabold text-ink">{formatKrw(budget.spent)}</p>
+          <p className="mt-1 text-title font-extrabold text-ink">{formatKrw(spent)}</p>
           <div className="mt-2 flex flex-col gap-1.5">
             {top3.map((t, i) => (
               <div key={t.id} className="flex items-center gap-2">
@@ -122,11 +147,21 @@ export function ReportOverlay({ onClose }: { onClose: () => void }) {
 
         {/* 다음 달 한 줄 제안 */}
         <div className="mt-3 rounded-card bg-accent/8 px-5 py-4">
-          <p className="text-caption font-bold text-accent">8월 제안</p>
+          <p className="text-caption font-bold text-accent">{macbook ? 'AI 제안' : '8월 제안'}</p>
           <p className="mt-1 text-body font-bold leading-relaxed text-ink">
-            카페를 주 2회로 줄이면
-            <br />
-            파리 출발이 6일 빨라져요 ✈️
+            {macbook ? (
+              <>
+                12개월 할부면 월 16.7만원 —
+                <br />
+                비상금은 지키는 걸로! 🛡️
+              </>
+            ) : (
+              <>
+                카페를 주 2회로 줄이면
+                <br />
+                파리 출발이 6일 빨라져요 ✈️
+              </>
+            )}
           </p>
         </div>
 
