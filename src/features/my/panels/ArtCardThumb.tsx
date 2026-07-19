@@ -13,7 +13,8 @@ interface Props {
 
 /** Wrapped 공유 카드의 썸네일 — layoutId로 오버레이 확대의 출발점이 된다 */
 export function ArtCardThumb({ period, metric, onOpen }: Props) {
-  const content = WRAPPED[metric][period]
+  // 저축은 뷰 축(목표/월간/자산)이라 파리(월간) 카드로 고정
+  const content = metric === 'saving' ? WRAPPED.saving.monthly : WRAPPED[metric][period]
   return (
     <motion.button
       type="button"

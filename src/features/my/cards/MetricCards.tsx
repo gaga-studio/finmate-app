@@ -1,10 +1,17 @@
 import { WaterGlass } from '../../../shared/charts/WaterGlass'
-import { RingGauge } from '../../../shared/charts/RingGauge'
+import { CoinJar } from '../../../shared/charts/CoinJar'
+import { WeekBars } from '../../../shared/charts/WeekBars'
 import { LineChart } from '../../../shared/charts/LineChart'
 import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
 import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/format/krw'
-import { getBudget, getInvestSeries, getSavingProgress } from '../../../data/selectors'
-import { METRIC_TEXT, PERIOD_PREFIX } from '../myState'
+import {
+  getBudget,
+  getInvestSeries,
+  getSavingBalanceSeries,
+  getSavingProgress,
+  getSavingWeekBars,
+} from '../../../data/selectors'
+import { METRIC_TEXT, type SavingView } from '../myState'
 import type { Period } from '../../../data/types'
 
 const BUDGET_TITLE: Record<Period, string> = {
@@ -28,22 +35,47 @@ export function BudgetCard({ period }: { period: Period }) {
   )
 }
 
-export function SavingCard({ period }: { period: Period }) {
-  const s = getSavingProgress(period)
+export function SavingCard({ view }: { view: SavingView }) {
+  const s = getSavingProgress('monthly')
+
+  if (view === 'goal') {
+    return (
+      <CardShell title="저축 목표" metricClass={METRIC_TEXT.saving}>
+        <CoinJar pct={s.pct} width={172} height={150} />
+        <p className="mt-1 text-[34px] font-extrabold leading-none">
+          <AnimatedNumber value={s.pct * 100} format={(v) => `${Math.round(v)}%`} />
+        </p>
+        <p className="mt-1.5 text-[13px] font-medium text-ink-soft">
+          {s.title} · <b className="text-ink">{formatKrwCompact(s.current)}</b> / {formatKrwCompact(s.target)}
+        </p>
+      </CardShell>
+    )
+  }
+
+  if (view === 'monthly') {
+    return (
+      <CardShell title="월간 저축" metricClass={METRIC_TEXT.saving}>
+        <div className="pt-3">
+          <WeekBars bars={getSavingWeekBars()} width={216} height={118} />
+        </div>
+        <p className="mt-2 text-[30px] font-extrabold leading-none">
+          <AnimatedNumber value={s.delta} format={(v) => formatKrwSigned(Math.round(v))} />
+        </p>
+        <p className="mt-1.5 text-[13px] font-medium text-ink-soft">이번 달 저축</p>
+      </CardShell>
+    )
+  }
+
+  const bal = getSavingBalanceSeries()
   return (
-    <CardShell title="저축 목표" metricClass={METRIC_TEXT.saving}>
-      <div className="py-1.5">
-        <RingGauge pct={s.pct} size={144} thickness={14}>
-          <span className="text-[30px] font-extrabold leading-none text-ink">
-            <AnimatedNumber value={s.pct * 100} format={(v) => `${Math.round(v)}%`} />
-          </span>
-          <span className="mt-1 text-[12px] font-semibold text-ink-soft">{formatKrwCompact(s.target)}</span>
-        </RingGauge>
+    <CardShell title="저축 자산" metricClass={METRIC_TEXT.saving}>
+      <div className="pt-3">
+        <LineChart points={bal.points} width={216} height={104} drawKey="saving-asset" />
       </div>
-      <p className="mt-1 text-[15px] font-bold text-ink">{s.title}</p>
-      <p className="mt-0.5 text-[13px] font-medium text-ink-soft">
-        {PERIOD_PREFIX[period]} <b className="text-ink">{formatKrwSigned(s.delta)}</b> 저축
+      <p className="mt-2 text-[30px] font-extrabold leading-none">
+        <AnimatedNumber value={bal.current} format={(v) => formatKrwCompact(Math.round(v))} />
       </p>
+      <p className="mt-1.5 text-[13px] font-medium text-ink-soft">{s.title} 통장 잔액</p>
     </CardShell>
   )
 }
