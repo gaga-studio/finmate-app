@@ -1,7 +1,6 @@
 import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import { ArtOrGradient } from '../../../shared/ui/ArtOrGradient'
-import { WrappedArt } from '../../../shared/ui/art/WrappedArt'
 import { ART } from '../../../data/art-manifest'
 import { WRAPPED } from '../../../data/wrapped'
 import type { Metric, Period } from '../myState'
@@ -23,12 +22,7 @@ export function ArtCardThumb({ period, metric, onOpen }: Props) {
       whileTap={{ scale: 0.97 }}
       className="relative block h-full w-full overflow-hidden rounded-card text-left shadow-float"
     >
-      <ArtOrGradient
-        src={ART.wrapped[content.artKey]}
-        palette={metric}
-        placeholder={<WrappedArt metric={metric} period={period} />}
-        className="h-full w-full"
-      >
+      <ArtOrGradient src={ART.wrapped[content.artKey]} palette={metric} className="h-full w-full">
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex items-center justify-between p-3.5">
           <span className="rounded-full bg-white/20 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
