@@ -17,6 +17,8 @@ export function useInsightChat() {
   const [messages, setMessages] = useState<InsightMsg[]>([])
   const [chart, setChart] = useState<InsightChartState>({ kind: 'projection' })
   const [typing, setTyping] = useState(false)
+  /** 마지막 비교 대상 — 시나리오 버튼이 그래프를 재구성할 때 쓴다 */
+  const lastTarget = useRef<string | undefined>(undefined)
   const timers = useRef<number[]>([])
   const seq = useRef(0)
 
@@ -30,8 +32,10 @@ export function useInsightChat() {
         if (next.kind === 'sim-macbook' && next.targetId === undefined) {
           const inherited =
             prev.kind === 'compare' || prev.kind === 'sim-macbook' ? prev.targetId : undefined
+          if (inherited) lastTarget.current = inherited
           return { ...next, targetId: inherited }
         }
+        if ('targetId' in next && next.targetId) lastTarget.current = next.targetId
         return next
       })
     }
@@ -83,7 +87,18 @@ export function useInsightChat() {
 
   /** 그래프 우상단 '비교' — 대상 선택/해제 (null이면 내 투영으로 복귀) */
   const setCompare = useCallback((targetId: string | null) => {
+    if (targetId) lastTarget.current = targetId
     setChart(targetId ? { kind: 'compare', targetId } : { kind: 'projection' })
+  }, [])
+
+  /** 시나리오 버튼 — 그대로/맥북 반영/습관 적용 그래프를 자유 전환 */
+  const applyScenario = useCallback((kind: 'base' | 'macbook' | 'habit') => {
+    const targetId = lastTarget.current
+    if (kind === 'base') {
+      setChart(targetId ? { kind: 'compare', targetId } : { kind: 'projection' })
+    } else {
+      setChart({ kind: 'sim-macbook', targetId, habit: kind === 'habit' })
+    }
   }, [])
 
   /** 비교 시트에서 대상을 고름 — 차트 전환 + "시뮬레이션 완성" 채팅 발화 */
@@ -128,6 +143,7 @@ export function useInsightChat() {
     send,
     setSavingMonthly,
     setCompare,
+    applyScenario,
     completeCompare,
     sessions,
     viewing,

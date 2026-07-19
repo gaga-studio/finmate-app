@@ -27,6 +27,8 @@ export type InsightWidget =
   | { type: 'compare-picker' }
   /** 습관 미션 제안 — '미션 수락' 버튼이 다음 단계(예상 리포트)로 잇는다 */
   | { type: 'mission-accept' }
+  /** 시나리오 3버튼 — 그대로/맥북 반영/습관 적용 그래프를 자유 전환 (전송 아님) */
+  | { type: 'scenario-switch' }
   /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
   | { type: 'report'; variant?: 'macbook' }
 
