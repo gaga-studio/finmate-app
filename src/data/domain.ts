@@ -11,6 +11,20 @@ export const SAVING_GOAL: SavingGoal = {
   dueDate: '2026-12-31',
 }
 
+/**
+ * 목표 시작(3월) 이후 월별 저축 실적 — 7월은 셀렉터가 거래에서 실측한다.
+ * 시작 잔액 + 히스토리 합 + 7월 실측(66,600) = current(225만) 정합.
+ */
+export const SAVING_MONTHLY_HISTORY: { month: number; amount: number }[] = [
+  { month: 3, amount: 400_000 },
+  { month: 4, amount: 420_000 },
+  { month: 5, amount: 380_000 },
+  { month: 6, amount: 430_000 },
+]
+
+/** 3월 목표 시작 시점에 이미 모여 있던 금액 */
+export const SAVING_START_BALANCE = 553_400
+
 export const HOLDINGS: Holding[] = [
   { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 412_000, returnPct: 14.2 },
   { ticker: 'KODEX 200', name: 'KODEX 200', value: 355_000, returnPct: 8.9 },

@@ -1,5 +1,11 @@
-import { ASSET_SERIES, BUDGET_LIMIT, SAVING_GOAL } from './domain'
-import { fromKey, getPeriodRange, keysInRange, TODAY_KEY } from './dates'
+import {
+  ASSET_SERIES,
+  BUDGET_LIMIT,
+  SAVING_GOAL,
+  SAVING_MONTHLY_HISTORY,
+  SAVING_START_BALANCE,
+} from './domain'
+import { getPeriodRange, keysInRange } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
 import type { Category, Metric, Period, Transaction, WrappedContent } from './types'
@@ -52,55 +58,41 @@ export function getSavingProgress(period: Period): SavingSummary {
   }
 }
 
-export interface SavingWeekBar {
-  /** 이번 달 n주차 (1부터) */
-  week: number
+export interface SavingBar {
+  label: string
   amount: number
   isCurrent: boolean
 }
 
-/** 날짜의 이번 달 주차 — dates.ts 주간 라벨과 같은 공식 */
-function weekOfMonth(d: Date): number {
-  const firstDow = new Date(d.getFullYear(), d.getMonth(), 1).getDay()
-  return Math.ceil((d.getDate() + firstDow) / 7)
+/** 이번 달 저축 실측 (거래 파생) */
+function currentMonthSaving(): number {
+  return inRange('monthly')
+    .filter((t) => t.category === 'saving')
+    .reduce((sum, t) => sum + -t.amount, 0)
 }
 
-/** 월간 뷰: 이번 달 저축액을 주차별로 합산 (미래 주차는 0) */
-export function getSavingWeekBars(): SavingWeekBar[] {
-  const today = fromKey(TODAY_KEY)
-  const currentWeek = weekOfMonth(today)
-  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-  const totalWeeks = weekOfMonth(lastDay)
-
-  const bars: SavingWeekBar[] = Array.from({ length: totalWeeks }, (_, i) => ({
-    week: i + 1,
-    amount: 0,
-    isCurrent: i + 1 === currentWeek,
+/** 월간 뷰: 목표 시작(3월)부터의 월별 저축 막대 — 이번 달은 실측 */
+export function getSavingMonthBars(): SavingBar[] {
+  const bars: SavingBar[] = SAVING_MONTHLY_HISTORY.map((h) => ({
+    label: `${h.month}월`,
+    amount: h.amount,
+    isCurrent: false,
   }))
-  for (const t of inRange('monthly')) {
-    if (t.category !== 'saving') continue
-    bars[weekOfMonth(fromKey(t.date)) - 1].amount += -t.amount
-  }
+  bars.push({ label: '7월', amount: currentMonthSaving(), isCurrent: true })
   return bars
 }
 
-/** 자산 뷰: 저축 잔액 누적 곡선 — 마지막 값이 SAVING_GOAL.current와 일치 */
-export function getSavingBalanceSeries(n = 30): { points: number[]; current: number } {
-  const savings = TRANSACTIONS.filter((t) => t.category === 'saving').sort((a, b) =>
-    a.date.localeCompare(b.date),
-  )
-  const perDay = new Map<string, number>()
-  for (const t of savings) perDay.set(t.date, (perDay.get(t.date) ?? 0) + -t.amount)
-
-  const dayKeys = keysInRange({ startKey: savings[0].date, endKey: TODAY_KEY, label: '' })
-  const totalSaved = savings.reduce((sum, t) => sum + -t.amount, 0)
-  // 기록 이전에 이미 모여 있던 금액 — 최종 잔액을 현재값에 맞춘다
-  let balance = SAVING_GOAL.current - totalSaved
-  const points = dayKeys.map((key) => {
-    balance += perDay.get(key) ?? 0
-    return balance
-  })
-  return { points: points.slice(-n), current: SAVING_GOAL.current }
+/** 자산 뷰: 3월 시작 잔액부터 현재까지의 누적 여정 곡선 (월당 3포인트 보간) */
+export function getSavingJourney(): { points: number[]; current: number; gained: number } {
+  const points: number[] = [SAVING_START_BALANCE]
+  let balance = SAVING_START_BALANCE
+  for (const h of [...SAVING_MONTHLY_HISTORY, { month: 7, amount: currentMonthSaving() }]) {
+    for (let step = 1; step <= 3; step++) {
+      points.push(Math.round(balance + (h.amount * step) / 3))
+    }
+    balance += h.amount
+  }
+  return { points, current: balance, gained: balance - SAVING_START_BALANCE }
 }
 
 export interface InvestSummary {
