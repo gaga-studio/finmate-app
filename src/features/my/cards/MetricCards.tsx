@@ -2,17 +2,29 @@ import { WaterGlass } from '../../../shared/charts/WaterGlass'
 import { SpeedGauge } from '../../../shared/charts/SpeedGauge'
 import { MiniBars } from '../../../shared/charts/MiniBars'
 import { LineChart } from '../../../shared/charts/LineChart'
+import { Treemap } from '../../../shared/charts/Treemap'
 import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
 import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/format/krw'
+import { MARKET_INDICES } from '../../../data/domain'
 import {
   getBudget,
-  getInvestSeries,
+  getInvestStatus,
   getNetWorth,
+  getPortfolio,
   getSavingMonthBars,
   getSavingProgress,
 } from '../../../data/selectors'
-import { METRIC_TEXT, type SavingView } from '../myState'
+import { METRIC_TEXT, type InvestView, type SavingView } from '../myState'
 import type { Period } from '../../../data/types'
+
+/** 트리맵 셀용 짧은 종목명 */
+const SHORT_NAME: Record<string, string> = {
+  'TIGER S&P500': 'S&P500',
+  'KODEX 200': 'KODEX 200',
+  '005930': '삼성전자',
+  'KODEX 미국나스닥': '나스닥100',
+  'ACE 금현물': '금',
+}
 
 const BUDGET_TITLE: Record<Period, string> = {
   daily: '오늘의 예산',
@@ -82,20 +94,69 @@ export function SavingCard({ view }: { view: SavingView }) {
   )
 }
 
-export function InvestCard({ period }: { period: Period }) {
-  const inv = getInvestSeries(period)
-  const positive = inv.returnPct >= 0
+export function InvestCard({ view }: { view: InvestView }) {
+  if (view === 'status') {
+    const inv = getInvestStatus()
+    return (
+      <CardShell title="투자 현황" metricClass={METRIC_TEXT.invest}>
+        <div className="pt-3">
+          <LineChart points={inv.points} width={216} height={104} drawKey="invest-status" markers />
+        </div>
+        <p className={`mt-2 text-display font-extrabold leading-none ${inv.monthPct >= 0 ? 'text-rise' : 'text-fall'}`}>
+          <AnimatedNumber value={inv.monthPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
+        </p>
+        <p className="mt-1.5 text-body font-medium text-ink-soft">
+          평가 금액 <b className="text-ink">{formatKrwCompact(inv.total)}</b>
+        </p>
+      </CardShell>
+    )
+  }
+
+  if (view === 'portfolio') {
+    const pf = getPortfolio()
+    return (
+      <CardShell title="포트폴리오" metricClass={METRIC_TEXT.invest}>
+        <div className="pt-2">
+          <Treemap
+            items={pf.slices.map((s) => ({
+              key: s.ticker,
+              label: SHORT_NAME[s.ticker] ?? s.ticker,
+              value: s.value,
+              weight: s.weight,
+            }))}
+            width={224}
+            height={150}
+          />
+        </div>
+        <p className="mt-2 text-display font-extrabold leading-none">
+          <AnimatedNumber value={pf.total} format={(v) => formatKrwCompact(Math.round(v))} />
+        </p>
+        <p className="mt-1.5 text-body font-medium text-ink-soft">{pf.slices.length}종목 분산 투자</p>
+      </CardShell>
+    )
+  }
+
   return (
-    <CardShell title="투자 현황" metricClass={METRIC_TEXT.invest}>
-      <div className="pt-3">
-        <LineChart points={inv.points} width={216} height={104} drawKey={period} />
+    <CardShell title="뉴스" metricClass={METRIC_TEXT.invest}>
+      <div className="flex w-full flex-col gap-3 px-1 py-2">
+        {MARKET_INDICES.map((m) => {
+          const rise = m.changePct >= 0
+          return (
+            <div key={m.id} className="flex items-baseline justify-between">
+              <span className="text-body font-semibold text-ink-soft">{m.name}</span>
+              <span className="flex items-baseline gap-2">
+                <b className="text-title font-extrabold leading-none tracking-tight text-ink tabular-nums">
+                  {m.value}
+                </b>
+                <span className={`text-caption font-bold ${rise ? 'text-rise' : 'text-fall'}`}>
+                  {rise ? '▲' : '▼'}{m.changeAbs} ({rise ? '+' : '-'}{Math.abs(m.changePct).toFixed(2)}%)
+                </span>
+              </span>
+            </div>
+          )
+        })}
       </div>
-      <p className={`mt-2 text-display font-extrabold leading-none ${positive ? '' : 'text-danger'}`}>
-        <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
-      </p>
-      <p className="mt-1.5 text-body font-medium text-ink-soft">
-        평가 금액 <b className="text-ink">{formatKrwCompact(inv.totalValue)}</b>
-      </p>
+      <p className="mt-2 text-body font-medium text-ink-soft">2026. 7. 18. 장 마감 기준</p>
     </CardShell>
   )
 }
