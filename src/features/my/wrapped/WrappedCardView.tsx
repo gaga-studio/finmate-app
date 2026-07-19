@@ -12,11 +12,29 @@ export interface WrappedCardData {
   top3Title?: string
 }
 
-/** 하단 플랫 배경 — 지표색 계열의 진한 단색 (흰 텍스트 대비 확보) */
-const CARD_BG: Record<Metric, string> = {
-  budget: 'oklch(0.42 0.14 245)',
-  saving: 'oklch(0.4 0.12 175)',
-  invest: 'oklch(0.4 0.15 300)',
+export const TOP3_TITLE: Record<Metric, string> = {
+  budget: '소비 탑 3',
+  saving: '위시 리스트',
+  invest: '투자 종목',
+}
+
+/**
+ * 카드 배경 — 지표색 계열의 세로 그라디언트 (위 = 이미지와 이어지는 밝은 톤,
+ * 아래로 갈수록 깊어짐). top은 이미지 하단 블렌딩에도 쓴다.
+ */
+const CARD_BG: Record<Metric, { top: string; gradient: string }> = {
+  budget: {
+    top: 'oklch(0.47 0.15 245)',
+    gradient: 'linear-gradient(180deg, oklch(0.47 0.15 245) 0%, oklch(0.33 0.12 262) 100%)',
+  },
+  saving: {
+    top: 'oklch(0.45 0.13 175)',
+    gradient: 'linear-gradient(180deg, oklch(0.45 0.13 175) 0%, oklch(0.31 0.1 195) 100%)',
+  },
+  invest: {
+    top: 'oklch(0.45 0.16 300)',
+    gradient: 'linear-gradient(180deg, oklch(0.45 0.16 300) 0%, oklch(0.31 0.13 315) 100%)',
+  },
 }
 
 /**
@@ -24,16 +42,23 @@ const CARD_BG: Record<Metric, string> = {
  * 피드 스토리 오버레이가 공유한다. 캡처 재현성을 위해 무한 애니메이션은 없다.
  */
 export function WrappedCardView({ data }: { data: WrappedCardData }) {
+  const bg = CARD_BG[data.metric]
+
   return (
     <div
       className="relative flex aspect-[9/16] w-full flex-col overflow-hidden"
-      style={{ background: CARD_BG[data.metric] }}
+      style={{ background: bg.gradient }}
     >
       {/* 상단 이미지 영역 — 정사각형, 스포티파이 Wrapped처럼 상단만 차지 */}
       <div className="relative aspect-square w-full">
         <ArtOrGradient src={data.artSrc} palette={data.metric} className="h-full w-full">
           {/* 배지 가독용 얕은 상단 스크림 */}
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/35 to-transparent" />
+          {/* 이미지 → 하단 컬러로 부드럽게 녹아드는 블렌딩 */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-24"
+            style={{ background: `linear-gradient(to top, ${bg.top}, transparent)` }}
+          />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 text-white">
             <span className="rounded-full bg-white/22 px-3 py-1.5 text-[12px] font-bold backdrop-blur-sm">
               {data.title}

@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import { WrappedCardView } from './WrappedCardView'
+import { TOP3_TITLE, WrappedCardView } from './WrappedCardView'
 import { ART } from '../../../data/art-manifest'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, WISHLIST } from '../../../data/domain'
@@ -38,12 +38,6 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
     </div>
   )
 })
-
-const TOP3_TITLE: Record<Metric, string> = {
-  budget: '소비 탑 3',
-  saving: '위시 리스트',
-  invest: '투자 종목',
-}
 
 function top3Rows(metric: Metric, w: WrappedSummary): { key: string; label: string; value: string }[] {
   if (metric === 'budget') {
