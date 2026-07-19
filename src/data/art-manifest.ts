@@ -23,6 +23,21 @@ export const ART = {
     'invest-portfolio': '/art/wrapped/invest-portfolio.png',
     'invest-news': '/art/wrapped/invest-news.png',
   } satisfies Record<WrappedArtKey | SavingArtKey | InvestArtKey, string>,
+  /** 피드 스토리 아트 — 신규 8장 + 마이 탭 재사용 4장 */
+  stories: {
+    'story-coffee': '/art/wrapped/budget-daily.png',
+    'story-brunch': '/art/stories/story-brunch.png',
+    'story-grocery': '/art/stories/story-grocery.png',
+    'story-shopping': '/art/wrapped/budget-weekly.png',
+    'story-concert': '/art/stories/story-concert.png',
+    'story-interior': '/art/stories/story-interior.png',
+    'story-workout': '/art/stories/story-workout.png',
+    'story-paris': '/art/wrapped/saving-monthly.png',
+    'story-housekey': '/art/stories/story-housekey.png',
+    'story-jeonse': '/art/wrapped/saving-asset.png',
+    'story-bio': '/art/stories/story-bio.png',
+    'story-green': '/art/stories/story-green.png',
+  } as Record<string, string>,
   diary: {
     '2026-07-14': '/art/diary/2026-07-14.png',
     '2026-07-16': '/art/diary/2026-07-16.png',
