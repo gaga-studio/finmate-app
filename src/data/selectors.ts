@@ -4,14 +4,15 @@ import {
   HOLDINGS,
   INVEST_PRINCIPAL_HISTORY,
   INVEST_VALUE_HISTORY,
+  MONTHLY_LEDGER,
   MY_ASSETS,
   NET_WORTH_HISTORY,
   SAVING_GOAL,
   SAVING_MONTHLY_HISTORY,
   type AssetItem,
 } from './domain'
-import type { Holding } from './types'
-import { getPeriodRange, keysInRange } from './dates'
+import type { Holding, Mission } from './types'
+import { fromKey, getPeriodRange, keysInRange, TODAY_KEY } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
 import type { Metric, Period, Transaction, WrappedContent } from './types'
@@ -205,6 +206,118 @@ export function getMonthActivity(): Map<string, { spent: number; earned: number 
     else cell.earned += t.amount
   }
   return map
+}
+
+/* ---------- 미션 탭: "예산을 지켜라" 챌린지 판정 ---------- */
+
+export type StreakStatus = 'pass' | 'fail' | 'current' | 'future'
+
+export interface StreakDot {
+  label: string
+  status: StreakStatus
+}
+
+/** 소비 지출만 합산 (저축·투자 제외) */
+function spendOf(txs: Transaction[]): number {
+  return txs
+    .filter((t) => t.amount < 0 && t.category !== 'saving' && t.category !== 'invest')
+    .reduce((sum, t) => sum + -t.amount, 0)
+}
+
+function weekOfMonth(d: Date): number {
+  const firstDow = new Date(d.getFullYear(), d.getMonth(), 1).getDay()
+  return Math.ceil((d.getDate() + firstDow) / 7)
+}
+
+const WEEKDAY_LABEL = ['일', '월', '화', '수', '목', '금', '토']
+
+/**
+ * 판정 규칙 — 일: 하루 지출 ≤ 일 예산 / 주: 주 지출 ≤ 월 예산의 ¼ /
+ * 월: 지출 ≤ 수입 (2~6월 원장 수기, 7월 실측)
+ */
+export function getKeepStreak(period: Period): StreakDot[] {
+  const today = fromKey(TODAY_KEY)
+
+  if (period === 'daily') {
+    const { startKey } = getPeriodRange('weekly')
+    const start = fromKey(startKey)
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(start)
+      d.setDate(d.getDate() + i)
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      const status: StreakStatus =
+        key === TODAY_KEY
+          ? 'current'
+          : key > TODAY_KEY
+            ? 'future'
+            : spendOf(TRANSACTIONS.filter((t) => t.date === key)) <= BUDGET_LIMIT.daily
+              ? 'pass'
+              : 'fail'
+      return { label: WEEKDAY_LABEL[d.getDay()], status }
+    })
+  }
+
+  if (period === 'weekly') {
+    const weekBudget = BUDGET_LIMIT.monthly / 4
+    const currentWeek = weekOfMonth(today)
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    const totalWeeks = weekOfMonth(lastDay)
+    const monthTx = inRange('monthly')
+    return Array.from({ length: totalWeeks }, (_, i) => {
+      const week = i + 1
+      const status: StreakStatus =
+        week === currentWeek
+          ? 'current'
+          : week > currentWeek
+            ? 'future'
+            : spendOf(monthTx.filter((t) => weekOfMonth(fromKey(t.date)) === week)) <= weekBudget
+              ? 'pass'
+              : 'fail'
+      return { label: `${week}주`, status }
+    })
+  }
+
+  const dots: StreakDot[] = MONTHLY_LEDGER.map((m) => ({
+    label: `${m.month}월`,
+    status: m.spend <= m.income ? 'pass' : 'fail',
+  }))
+  dots.push({ label: `${today.getMonth() + 1}월`, status: 'current' })
+  return dots
+}
+
+/** current 직전까지의 연속 pass 수 — 🔥 뱃지 */
+export function getStreakFlame(dots: StreakDot[]): number {
+  const currentIdx = dots.findIndex((d) => d.status === 'current')
+  let flame = 0
+  for (let i = (currentIdx === -1 ? dots.length : currentIdx) - 1; i >= 0; i--) {
+    if (dots[i].status !== 'pass') break
+    flame++
+  }
+  return flame
+}
+
+export interface MissionProgress {
+  current: number
+  target: number
+  /** 0~1 클램프 */
+  pct: number
+  unit: 'krw' | 'count'
+  /** daily-budget처럼 낮을수록 좋은 미션 */
+  inverted?: boolean
+}
+
+/** 진행형 미션의 파생 진행률 — 촬영 재현성: 전부 거래에서 계산 */
+export function getMissionProgress(kind: Mission['kind']): MissionProgress {
+  if (kind === 'saving') {
+    const current = getSavingProgress('weekly').delta
+    return { current, target: 50_000, pct: Math.min(1, current / 50_000), unit: 'krw' }
+  }
+  if (kind === 'daily-budget') {
+    const target = Math.round(BUDGET_LIMIT.daily * 0.9)
+    const current = getBudget('daily').spent
+    return { current, target, pct: Math.min(1, current / target), unit: 'krw', inverted: true }
+  }
+  return { current: 1, target: 3, pct: 1 / 3, unit: 'count' }
 }
 
 export interface WrappedSummary extends WrappedContent {
