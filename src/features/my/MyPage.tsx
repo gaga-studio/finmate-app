@@ -19,6 +19,9 @@ import {
   nextInvestView,
   nextPeriod,
   nextSavingView,
+  prevInvestView,
+  prevPeriod,
+  prevSavingView,
   type InvestView,
   type Metric,
   type Period,
@@ -126,6 +129,11 @@ export function MyPage() {
           if (metric === 'saving') setSavingView(nextSavingView(savingView))
           else if (metric === 'invest') setInvestView(nextInvestView(investView))
           else setPeriod(nextPeriod(period))
+        }}
+        onStackPrev={() => {
+          if (metric === 'saving') setSavingView(prevSavingView(savingView))
+          else if (metric === 'invest') setInvestView(prevInvestView(investView))
+          else setPeriod(prevPeriod(period))
         }}
       />
 

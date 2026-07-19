@@ -21,6 +21,10 @@ export function nextPeriod(p: Period): Period {
   return PERIODS[(PERIODS.indexOf(p) + 1) % PERIODS.length]
 }
 
+export function prevPeriod(p: Period): Period {
+  return PERIODS[(PERIODS.indexOf(p) + PERIODS.length - 1) % PERIODS.length]
+}
+
 export const SAVING_VIEWS: SavingView[] = ['goal', 'monthly', 'asset']
 
 export const SAVING_VIEW_LABEL: Record<SavingView, string> = {
@@ -33,6 +37,10 @@ export function nextSavingView(v: SavingView): SavingView {
   return SAVING_VIEWS[(SAVING_VIEWS.indexOf(v) + 1) % SAVING_VIEWS.length]
 }
 
+export function prevSavingView(v: SavingView): SavingView {
+  return SAVING_VIEWS[(SAVING_VIEWS.indexOf(v) + SAVING_VIEWS.length - 1) % SAVING_VIEWS.length]
+}
+
 export const INVEST_VIEWS: InvestView[] = ['status', 'portfolio', 'news']
 
 export const INVEST_VIEW_LABEL: Record<InvestView, string> = {
@@ -43,6 +51,10 @@ export const INVEST_VIEW_LABEL: Record<InvestView, string> = {
 
 export function nextInvestView(v: InvestView): InvestView {
   return INVEST_VIEWS[(INVEST_VIEWS.indexOf(v) + 1) % INVEST_VIEWS.length]
+}
+
+export function prevInvestView(v: InvestView): InvestView {
+  return INVEST_VIEWS[(INVEST_VIEWS.indexOf(v) + INVEST_VIEWS.length - 1) % INVEST_VIEWS.length]
 }
 
 /** 지표별 고유 색 클래스 — 카드가 활성이 아니어도 자기 색을 유지한다 */
