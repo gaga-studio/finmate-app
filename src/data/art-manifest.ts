@@ -38,11 +38,6 @@ export const ART = {
     'story-bio': '/art/stories/story-bio.png',
     'story-green': '/art/stories/story-green.png',
   } as Record<string, string>,
-  diary: {
-    '2026-07-14': '/art/diary/2026-07-14.png',
-    '2026-07-16': '/art/diary/2026-07-16.png',
-    '2026-07-18': '/art/diary/2026-07-18.png',
-  } as Record<string, string>,
 }
 
 /** 에셋 미도착 시 지표 팔레트 그라디언트 폴백 */
