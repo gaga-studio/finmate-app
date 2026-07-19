@@ -28,6 +28,9 @@
   --color-rise: oklch(0.58 0.21 25);
   --color-fall: oklch(0.55 0.16 250);
 
+  /* 포인트 전용 골드 — 미션·리워드 화폐 */
+  --color-point: oklch(0.72 0.14 80);
+
   /* 타이포 스케일 6단계 — 임의 px 금지, 전 화면이 이 토큰만 쓴다 */
   --text-display: 32px; /* 카드 큰 숫자 (extrabold) */
   --text-display--line-height: 1;

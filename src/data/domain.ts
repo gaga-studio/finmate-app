@@ -1,4 +1,14 @@
-import type { Holding, Mission, QuizQuestion, SavingGoal, SimScenario, WeekStreak, WishItem } from './types'
+import type {
+  Holding,
+  Mission,
+  MonthLedger,
+  QuizQuestion,
+  RecommendedMission,
+  RewardItem,
+  SavingGoal,
+  SimScenario,
+  WishItem,
+} from './types'
 import { mulberry32 } from './seed'
 
 /** 자유예산 — 기간별로 사용자가 따로 설정한 값이라는 설정 */
@@ -130,36 +140,42 @@ export const WISHLIST: WishItem[] = [
   { id: 'w5', title: '맥북 프로', price: 2_390_000, emoji: '💻' },
 ]
 
+/** 미션 탭 — 포인트 잔고 */
+export const POINTS_BALANCE = 12_450
+
+/** 오늘 스트릭 체크 보상 */
+export const STREAK_CHECK_REWARD = 50
+
+/** 진행 중인 미션 — 진행률은 셀렉터 파생(getMissionProgress) */
 export const MISSIONS: Mission[] = [
-  {
-    id: 'm1',
-    title: '투자 O/X 퀴즈 3문제',
-    detail: 'ETF 기초, 1분이면 충분해요',
-    reward: '+20 XP',
-    done: true,
-    linkTo: '#quiz',
-  },
-  {
-    id: 'm2',
-    title: '어제보다 100원 덜 쓰기',
-    detail: '어제 지출 14,100원 · 오늘 13,900원',
-    reward: '+10 XP',
-    done: true,
-  },
-  {
-    id: 'm3',
-    title: '여행 통장에 5,000원 옮기기',
-    detail: '파리 한 달 살기까지 45%',
-    reward: '+15 XP',
-    done: false,
-  },
+  { id: 'm-save', emoji: '✈️', title: '이번 주 저축 5만원 추가', reward: 120, kind: 'saving' },
+  { id: 'm-budget', emoji: '🎯', title: '일 소비예산 10% 줄이기', reward: 80, kind: 'daily-budget' },
+  { id: 'm-quiz', emoji: '🧠', title: '금융 퀴즈 풀기', reward: 60, kind: 'quiz' },
 ]
 
-/** 일~토, 2026-07-18은 토요일이라 이번 주가 꽉 찼다 */
-export const WEEK_STREAK: WeekStreak = {
-  days: [true, false, true, false, true, true, true],
-  flame: 3,
-}
+/** 추천 미션 — 해체분석에서 나온 근거를 함께 보여준다 */
+export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
+  { id: 'r-cafe', emoji: '☕️', title: '일주일 카페 2회 이하', reason: '이번 주 카페 3회 · 14,200원', reward: 80 },
+  { id: 'r-quiz', emoji: '📉', title: '물타기 전 투자 퀴즈', reason: '스페이스X -8.9% 보유 중', reward: 60 },
+  { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
+]
+
+/** 포인트 상점 교환 아이템 */
+export const REWARD_ITEMS: RewardItem[] = [
+  { id: 'rw-gs', emoji: '🏪', title: 'GS25 2천원권', cost: 2_000 },
+  { id: 'rw-coffee', emoji: '☕️', title: '스타벅스 아메리카노', cost: 4_500 },
+  { id: 'rw-baemin', emoji: '🍗', title: '배민 5천원권', cost: 5_000 },
+  { id: 'rw-cgv', emoji: '🎬', title: 'CGV 영화 관람권', cost: 12_000 },
+]
+
+/** 월별 수입·지출 원장(2~6월 수기) — 챌린지 월간 판정용. 4월은 과소비 달. 7월은 실측. */
+export const MONTHLY_LEDGER: MonthLedger[] = [
+  { month: 2, income: 2_450_000, spend: 2_180_000 },
+  { month: 3, income: 2_530_000, spend: 2_310_000 },
+  { month: 4, income: 2_380_000, spend: 2_650_000 },
+  { month: 5, income: 2_530_000, spend: 2_290_000 },
+  { month: 6, income: 2_530_000, spend: 2_420_000 },
+]
 
 export const QUIZ: QuizQuestion[] = [
   {

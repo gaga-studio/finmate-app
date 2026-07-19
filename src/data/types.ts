@@ -50,19 +50,35 @@ export interface WishItem {
 
 export interface Mission {
   id: string
+  emoji: string
   title: string
-  detail: string
-  reward: string
-  done: boolean
-  /** 탭 이동 대상 (예: "/insights#quiz") */
-  linkTo?: string
+  /** 완료 보상 포인트 */
+  reward: number
+  /** 진행률 파생 소스 — saving/daily-budget은 셀렉터 파생, quiz는 탭 완료형 */
+  kind: 'saving' | 'daily-budget' | 'quiz'
 }
 
-export interface WeekStreak {
-  /** 일~토, null = 미래 */
-  days: (boolean | null)[]
-  /** 현재 연속 일수 */
-  flame: number
+export interface RecommendedMission {
+  id: string
+  emoji: string
+  title: string
+  /** 해체분석 기반 추천 근거 — 행동화 설득의 핵심 */
+  reason: string
+  reward: number
+}
+
+export interface RewardItem {
+  id: string
+  emoji: string
+  title: string
+  cost: number
+}
+
+/** 월별 수입·지출 원장 (챌린지 월간 판정용, 7월은 실측) */
+export interface MonthLedger {
+  month: number
+  income: number
+  spend: number
 }
 
 export interface QuizQuestion {
