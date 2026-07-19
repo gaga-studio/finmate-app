@@ -84,7 +84,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView): Row[] {
         leading: rank(i),
         title: `${meta.emoji} ${t.merchant}`,
         sub: t.memo ?? meta.label,
-        trailing: formatKrwCompact(-t.amount),
+        trailing: <span className="text-budget">{formatKrwCompact(-t.amount)}</span>,
       }
     })
   }
