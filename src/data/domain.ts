@@ -160,6 +160,23 @@ export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
   { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
 ]
 
+/** 지난 내역 탭 — 완료한 미션 기록 (절대일 고정, 촬영 재현성) */
+export interface PastMission {
+  id: string
+  emoji: string
+  title: string
+  completedAt: string
+  reward: number
+}
+
+export const PAST_MISSIONS: PastMission[] = [
+  { id: 'pm1', emoji: '🎯', title: '일 소비예산 지키기 7일', completedAt: '7월 21일', reward: 100 },
+  { id: 'pm2', emoji: '✈️', title: '파리 통장 3회 저축', completedAt: '7월 16일', reward: 120 },
+  { id: 'pm3', emoji: '🧠', title: '금융 퀴즈 3연속 정답', completedAt: '7월 12일', reward: 90 },
+  { id: 'pm4', emoji: '📉', title: '첫 소액 투자 시작', completedAt: '7월 8일', reward: 150 },
+  { id: 'pm5', emoji: '🍱', title: '일주일 배달 2회 이하', completedAt: '7월 3일', reward: 80 },
+]
+
 /** 포인트 상점 교환 아이템 */
 export const REWARD_ITEMS: RewardItem[] = [
   { id: 'rw-gs', emoji: '🏪', title: 'GS25 2천원권', cost: 2_000 },

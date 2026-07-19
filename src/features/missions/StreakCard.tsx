@@ -24,10 +24,10 @@ export function StreakCard({ todayChecked, onCheckToday }: Props) {
   const flame = getStreakFlame(dots)
 
   return (
-    <section className="mx-5 mt-3 rounded-card bg-elevated p-5 shadow-float">
+    <section className="mx-5 mt-3 rounded-card bg-gradient-to-br from-point/70 via-point/35 to-elevated p-5 shadow-float ring-1 ring-point-ink/15">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-section font-bold text-ink">예산을 지켜라</h2>
+          <h2 className="text-title font-extrabold text-ink">예산을 지켜라</h2>
           <span className="rounded-full bg-point px-2 py-0.5 text-caption font-bold text-point-ink">
             🔥 {flame}연속
           </span>
