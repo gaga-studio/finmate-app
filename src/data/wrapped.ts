@@ -1,17 +1,18 @@
-import type { Metric, Period, SavingView, WrappedContent } from './types'
+import type { InvestView, Metric, Period, SavingView, WrappedContent } from './types'
 
-/** 마이 탭 저축 뷰별 카드의 아트 슬롯 — income/asset은 팀 이미지 도착 전 그라디언트 폴백 */
+/** 마이 탭 뷰별 카드의 아트 슬롯 — 신규 슬롯은 팀 이미지 도착 전 그라디언트 폴백 */
 export type SavingArtKey = 'saving-monthly' | 'saving-income' | 'saving-asset'
+export type InvestArtKey = 'invest-monthly' | 'invest-portfolio' | 'invest-news'
 
-export interface SavingCardContent {
+export interface ViewCardContent {
   title: string
   headline: string
   subline: string
-  artKey: SavingArtKey
+  artKey: SavingArtKey | InvestArtKey
 }
 
 /** 마이 탭 저축 지표의 뷰별 카드 — 하단 아트카드·오버레이가 뷰를 따라 갈아입는다 */
-export const SAVING_CARDS: Record<SavingView, SavingCardContent> = {
+export const SAVING_CARDS: Record<SavingView, ViewCardContent> = {
   goal: {
     title: '나의 저축 목표',
     headline: '파리 한 달 살기,\n절반을 넘었다',
@@ -29,6 +30,28 @@ export const SAVING_CARDS: Record<SavingView, SavingCardContent> = {
     headline: '전세 보증금부터\n파리 통장까지, 1.4억',
     subline: '총자산 1억 4,258만원 · 이번 달 +40만원',
     artKey: 'saving-asset',
+  },
+}
+
+/** 마이 탭 투자 지표의 뷰별 카드 */
+export const INVEST_CARDS: Record<InvestView, ViewCardContent> = {
+  status: {
+    title: '7월의 투자',
+    headline: '수익률 +12.7%,\n로켓이 궤도에 올랐다',
+    subline: '평가 132.6만원 · 이번 달 +12.7%',
+    artKey: 'invest-monthly',
+  },
+  portfolio: {
+    title: '나의 포트폴리오',
+    headline: 'ETF가 절반 이상,\n분산은 순항 중',
+    subline: '5종목 · 평가 132.6만원',
+    artKey: 'invest-portfolio',
+  },
+  news: {
+    title: '오늘의 시장',
+    headline: '코스피는 오르고,\n내 종목은 더 올랐다',
+    subline: '코스피 +0.85% · 코스닥 +1.77%',
+    artKey: 'invest-news',
   },
 }
 

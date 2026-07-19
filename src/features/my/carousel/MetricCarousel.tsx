@@ -1,15 +1,16 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, animate, motion, useMotionValue, useTransform, type MotionValue } from 'motion/react'
 import { BudgetCard, InvestCard, SavingCard } from '../cards/MetricCards'
-import { METRICS, type Metric, type Period, type SavingView } from '../myState'
+import { METRICS, type InvestView, type Metric, type Period, type SavingView } from '../myState'
 import { snappy } from '../../../shared/motion/springs'
 
 interface Props {
   metric: Metric
   period: Period
   savingView: SavingView
+  investView: InvestView
   onMetricChange: (m: Metric) => void
-  /** 위로 밀기 스택 전환 — 무엇을 순환할지(기간/저축 뷰)는 MyPage가 결정 */
+  /** 위로 밀기 스택 전환 — 무엇을 순환할지(기간/뷰)는 MyPage가 결정 */
   onStackNext: () => void
 }
 
@@ -24,7 +25,7 @@ const AXIS_LOCK = 12
  * 축을 잠근다(제스처 충돌 방지). 기간 칩이 항상 폴백으로 존재하므로
  * 제스처가 실패해도 같은 장면을 재현할 수 있다.
  */
-export function MetricCarousel({ metric, period, savingView, onMetricChange, onStackNext }: Props) {
+export function MetricCarousel({ metric, period, savingView, investView, onMetricChange, onStackNext }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [vw, setVw] = useState(390)
 
@@ -108,7 +109,13 @@ export function MetricCarousel({ metric, period, savingView, onMetricChange, onS
             <CarouselSlot key={m} i={i} x={x} step={step} cardW={cardW} vw={vw}>
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
-                  key={m === 'saving' ? `saving-${savingView}` : `${m}-${period}`}
+                  key={
+                    m === 'saving'
+                      ? `saving-${savingView}`
+                      : m === 'invest'
+                        ? `invest-${investView}`
+                        : `${m}-${period}`
+                  }
                   className="h-full"
                   initial={{ y: -20, scale: 0.94, opacity: 0 }}
                   animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -120,7 +127,7 @@ export function MetricCarousel({ metric, period, savingView, onMetricChange, onS
                   ) : m === 'saving' ? (
                     <SavingCard view={savingView} />
                   ) : (
-                    <InvestCard period={period} />
+                    <InvestCard view={investView} />
                   )}
                 </motion.div>
               </AnimatePresence>

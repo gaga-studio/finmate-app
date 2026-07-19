@@ -8,13 +8,17 @@ import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import {
+  INVEST_VIEWS,
+  INVEST_VIEW_LABEL,
   METRICS,
   PERIODS,
   PERIOD_LABEL,
   SAVING_VIEWS,
   SAVING_VIEW_LABEL,
+  nextInvestView,
   nextPeriod,
   nextSavingView,
+  type InvestView,
   type Metric,
   type Period,
   type SavingView,
@@ -32,9 +36,10 @@ interface OpenCard {
   metric: Metric
   period: Period
   savingView?: SavingView
+  investView?: InvestView
 }
 
-/** "?card=budget-daily" 또는 저축 뷰 카드 "?card=saving-goal|monthly|asset" */
+/** "?card=budget-daily" 또는 뷰 카드 "?card=saving-goal", "?card=invest-portfolio" */
 function parseCardParam(raw: string | null): OpenCard | null {
   if (!raw) return null
   const [m, p] = raw.split('-')
@@ -42,6 +47,10 @@ function parseCardParam(raw: string | null): OpenCard | null {
   if (m === 'saving') {
     if (!SAVING_VIEWS.includes(p as SavingView)) return null
     return { metric: 'saving', period: 'monthly', savingView: p as SavingView }
+  }
+  if (m === 'invest') {
+    if (!INVEST_VIEWS.includes(p as InvestView)) return null
+    return { metric: 'invest', period: 'monthly', investView: p as InvestView }
   }
   if (!PERIODS.includes(p as Period)) return null
   return { metric: m as Metric, period: p as Period }
@@ -51,13 +60,21 @@ export function MyPage() {
   const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
   const [savingView, setSavingView] = useState<SavingView>('goal')
+  const [investView, setInvestView] = useState<InvestView>('status')
   const [params, setParams] = useSearchParams()
 
   const openCard = parseCardParam(params.get('card'))
 
-  // 저축은 뷰 축 — 현재 뷰의 카드(목표/소득/자산)가 열린다
+  // 저축·투자는 뷰 축 — 현재 뷰의 카드가 열린다
   const openWrapped = () =>
-    setParams({ card: metric === 'saving' ? `saving-${savingView}` : `${metric}-${period}` })
+    setParams({
+      card:
+        metric === 'saving'
+          ? `saving-${savingView}`
+          : metric === 'invest'
+            ? `invest-${investView}`
+            : `${metric}-${period}`,
+    })
   const closeWrapped = () => {
     const next = new URLSearchParams(params)
     next.delete('card')
@@ -104,10 +121,13 @@ export function MyPage() {
         metric={metric}
         period={period}
         savingView={savingView}
+        investView={investView}
         onMetricChange={setMetric}
-        onStackNext={() =>
-          metric === 'saving' ? setSavingView(nextSavingView(savingView)) : setPeriod(nextPeriod(period))
-        }
+        onStackNext={() => {
+          if (metric === 'saving') setSavingView(nextSavingView(savingView))
+          else if (metric === 'invest') setInvestView(nextInvestView(investView))
+          else setPeriod(nextPeriod(period))
+        }}
       />
 
       <div className="relative mt-2 flex justify-center">
@@ -117,6 +137,13 @@ export function MyPage() {
             items={SAVING_VIEWS.map((v) => ({ value: v, label: SAVING_VIEW_LABEL[v] }))}
             value={savingView}
             onChange={setSavingView}
+          />
+        ) : metric === 'invest' ? (
+          <SegmentedControl
+            id="period"
+            items={INVEST_VIEWS.map((v) => ({ value: v, label: INVEST_VIEW_LABEL[v] }))}
+            value={investView}
+            onChange={setInvestView}
           />
         ) : (
           <SegmentedControl
@@ -131,11 +158,17 @@ export function MyPage() {
       <section className="relative mt-4 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
         <div className="h-[248px]">
           {openCard === null && (
-            <ArtCardThumb period={period} metric={metric} savingView={savingView} onOpen={openWrapped} />
+            <ArtCardThumb
+              period={period}
+              metric={metric}
+              savingView={savingView}
+              investView={investView}
+              onOpen={openWrapped}
+            />
           )}
         </div>
         <div className="h-[248px]">
-          <LinkedListPanel metric={metric} period={period} savingView={savingView} />
+          <LinkedListPanel metric={metric} period={period} savingView={savingView} investView={investView} />
         </div>
       </section>
 
@@ -145,6 +178,7 @@ export function MyPage() {
             metric={openCard.metric}
             period={openCard.period}
             savingView={openCard.savingView}
+            investView={openCard.investView}
             onClose={closeWrapped}
           />
         )}
