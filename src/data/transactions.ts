@@ -32,8 +32,10 @@ const WEIGHTED_CATEGORIES: (keyof typeof MERCHANTS)[] = [
 /** 시연 대사에 등장하는 거래 — 날짜·금액을 수기로 고정한다. */
 const NARRATIVE: Transaction[] = [
   { id: 'n-shoes', date: '2026-07-16', merchant: '나이키 강남', amount: -120000, category: 'shopping', memo: '고민 중이던 운동화' },
-  { id: 'n-coffee-today', date: '2026-07-18', merchant: '스타벅스', amount: -5600, category: 'cafe' },
-  { id: 'n-lunch-today', date: '2026-07-18', merchant: '한솥도시락', amount: -6800, category: 'food' },
+  { id: 'n-macbook', date: '2026-07-06', merchant: '맥북 에어 할부', amount: -132500, category: 'shopping', memo: '드디어 질렀다 · 1/12회차' },
+  // 오늘 합계 13,900원 고정 — 커피가 오늘의 1위가 되도록 배분
+  { id: 'n-coffee-today', date: '2026-07-18', merchant: '스타벅스', amount: -7200, category: 'cafe', memo: '아메리카노 + 치즈케이크' },
+  { id: 'n-lunch-today', date: '2026-07-18', merchant: '한솥도시락', amount: -5200, category: 'food' },
   { id: 'n-bus-today', date: '2026-07-18', merchant: '버스', amount: -1500, category: 'transport' },
   { id: 'n-save-today', date: '2026-07-18', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
   { id: 'n-salary', date: '2026-07-10', merchant: '월급', amount: 2150000, category: 'income' },

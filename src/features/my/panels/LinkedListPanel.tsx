@@ -3,7 +3,7 @@ import { ListRow } from '../../../shared/ui/ListRow'
 import { snappy } from '../../../shared/motion/springs'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, WISHLIST } from '../../../data/domain'
-import { getTopSpending } from '../../../data/selectors'
+import { getTopPurchases } from '../../../data/selectors'
 import { formatKrwCompact } from '../../../shared/format/krw'
 import type { Metric, Period } from '../myState'
 
@@ -52,14 +52,14 @@ interface Row {
 
 function rows(metric: Metric, period: Period): Row[] {
   if (metric === 'budget') {
-    return getTopSpending(period).map((c, i) => {
-      const meta = CATEGORY_META[c.category]
+    return getTopPurchases(period).map((t, i) => {
+      const meta = CATEGORY_META[t.category]
       return {
-        key: c.category,
+        key: t.id,
         leading: <span className="text-body font-extrabold text-ink-soft">{i + 1}</span>,
-        title: `${meta.emoji} ${meta.label}`,
-        sub: `${c.count}건`,
-        trailing: formatKrwCompact(c.total),
+        title: `${meta.emoji} ${t.merchant}`,
+        sub: t.memo ?? meta.label,
+        trailing: formatKrwCompact(-t.amount),
       }
     })
   }
