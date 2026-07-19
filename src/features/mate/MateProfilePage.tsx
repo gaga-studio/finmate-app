@@ -11,6 +11,7 @@ import { SpeedGauge } from '../../shared/charts/SpeedGauge'
 import { MateAnalysisOverlay } from './MateAnalysisOverlay'
 import { snappy } from '../../shared/motion/springs'
 import type { Metric } from '../../data/types'
+import { PageTitle } from '../../shared/ui/PageTitle'
 
 const METRIC_LABEL: Record<Metric, string> = { budget: '소비', saving: '저축', invest: '투자' }
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
@@ -30,7 +31,8 @@ export function MateProfilePage() {
 
   return (
     <div className="relative min-h-full pb-28">
-      <header className="flex items-center justify-between px-5 pb-1 pt-14">
+      <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
+        <PageTitle>메이트</PageTitle>
         <button
           type="button"
           onClick={() => navigate(-1)}

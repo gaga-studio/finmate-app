@@ -9,6 +9,7 @@ import { ComparePickerSheet } from './ComparePickerSheet'
 import { ReportOverlay } from './ReportOverlay'
 import { useInsightChat } from './useInsightChat'
 import { snappy } from '../../shared/motion/springs'
+import { PageTitle } from '../../shared/ui/PageTitle'
 
 export function InsightsPage() {
   const chat = useInsightChat()
@@ -44,7 +45,8 @@ export function InsightsPage() {
   return (
     // 페이지는 고정(TabLayout이 overflow-hidden) — 입력바가 탭바(62px+안전영역) 바로 위에 붙는다
     <div className="relative flex h-full flex-col pb-[calc(62px+env(safe-area-inset-bottom,0px))]">
-      <header className="flex items-center justify-between px-5 pb-1 pt-14">
+      <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
+        <PageTitle>인사이트</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
