@@ -43,8 +43,6 @@ export interface WishItem {
   id: string
   title: string
   price: number
-  /** 0~1, 목표 저축 진행률 */
-  savedPct: number
   emoji: string
 }
 
