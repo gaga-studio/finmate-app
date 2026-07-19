@@ -54,8 +54,8 @@ export interface Mission {
   title: string
   /** 완료 보상 포인트 */
   reward: number
-  /** 진행률 파생 소스 — saving/daily-budget은 셀렉터 파생, quiz는 탭 완료형 */
-  kind: 'saving' | 'daily-budget' | 'quiz'
+  /** 진행률 파생 소스 — saving/daily-budget은 셀렉터 파생, quiz는 탭 완료형, simple은 추천에서 담은 미션 */
+  kind: 'saving' | 'daily-budget' | 'quiz' | 'simple'
 }
 
 export interface RecommendedMission {
