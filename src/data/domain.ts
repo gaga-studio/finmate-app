@@ -51,9 +51,17 @@ export const HOLDINGS: Holding[] = [
   { ticker: 'ACE 금현물', name: 'ACE KRX금현물', value: 121_000, returnPct: 4.3 },
 ]
 
-/** 투자 평가액 월별 추이(2~7월) — 끝값 = HOLDINGS 합계, 이번 달 +12.7%(1,176,500 → 1,326,000) */
+/** 투자 평가액 월별 추이(2~7월) — 끝값 = HOLDINGS 합계 */
 export const INVEST_VALUE_HISTORY: number[] = [
   872_000, 942_000, 1_021_000, 1_098_000, 1_176_500, 1_326_000,
+]
+
+/**
+ * 누적 투입 원금(2~7월, 단조 증가) — 최종 1,176,500이라 총 수익률이 정확히 +12.7%.
+ * 7월 신규 투입 +80,000 = TIGER 5만(7/13) + KODEX 3만 거래와 정합.
+ */
+export const INVEST_PRINCIPAL_HISTORY: number[] = [
+  850_000, 900_000, 950_000, 1_030_000, 1_096_500, 1_176_500,
 ]
 
 export interface MarketIndex {
