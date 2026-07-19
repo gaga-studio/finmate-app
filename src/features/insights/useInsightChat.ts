@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { InsightChartState, InsightMsg } from '../../data/insights'
+import { PRESET_SESSIONS, type InsightChartState, type InsightMsg, type SavedSession } from '../../data/insights'
+import { DEMO_TODAY } from '../../data/demo'
 import { findReplies, INITIAL_REPLIES, type Reply } from './script'
 
 /** 타이핑 인디케이터 노출 시간 / 버블 간 간격 (ms) — 촬영 리듬 고정 */
@@ -63,5 +64,41 @@ export function useInsightChat() {
     setChart({ kind: 'sim-saving', monthly })
   }, [])
 
-  return { messages, chart, typing, send, setSavingMonthly }
+  /* ---- 저장·다시보기 ---- */
+  const [sessions, setSessions] = useState<SavedSession[]>(PRESET_SESSIONS)
+  const [viewing, setViewing] = useState<SavedSession | null>(null)
+
+  /** 현재 대화를 세션으로 저장 — 성공 여부 반환(토스트용) */
+  const saveSession = useCallback((): boolean => {
+    if (viewing || messages.length === 0) return false
+    const session: SavedSession = {
+      id: `saved-${++seq.current}`,
+      title: messages.find((m) => m.role === 'user')?.text ?? '오늘의 총평',
+      savedAt: `${DEMO_TODAY.getMonth() + 1}월 ${DEMO_TODAY.getDate()}일`,
+      messages,
+    }
+    setSessions((prev) => [session, ...prev])
+    return true
+  }, [messages, viewing])
+
+  const openSession = useCallback((s: SavedSession) => setViewing(s), [])
+  const newChat = useCallback(() => setViewing(null), [])
+
+  // 다시보기 중에는 저장된 대화·그 대화의 마지막 차트 상태를 보여준다
+  const viewingChart: InsightChartState | null = viewing
+    ? ([...viewing.messages].reverse().find((m) => m.chart)?.chart ?? { kind: 'default' })
+    : null
+
+  return {
+    messages: viewing?.messages ?? messages,
+    chart: viewingChart ?? chart,
+    typing: viewing ? false : typing,
+    send,
+    setSavingMonthly,
+    sessions,
+    viewing,
+    saveSession,
+    openSession,
+    newChat,
+  }
 }
