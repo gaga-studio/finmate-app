@@ -49,6 +49,24 @@ function textWidth(label: string): number {
   return w
 }
 
+interface FittedLabel {
+  lines: string[]
+  fontSize: number
+}
+
+/** 셀 폭에 이름을 맞추는 전략: 기본 크기 → 축소 → 공백 기준 두 줄 → 실패 시 null */
+function fitLabel(label: string, w: number, h: number): FittedLabel | null {
+  const avail = w - 16
+  const fits = (text: string, size: number) => textWidth(text) * (size / 10.5) <= avail
+  if (fits(label, 10.5)) return { lines: [label], fontSize: 10.5 }
+  if (fits(label, 9)) return { lines: [label], fontSize: 9 }
+  const words = label.split(' ')
+  if (words.length > 1 && h > 56 && words.every((word) => fits(word, 10))) {
+    return { lines: words, fontSize: 10 }
+  }
+  return null
+}
+
 /** 보유 종목 트리맵 — 면적 = 비중. 라벨은 렉트 위 레이어 + 셀 클립으로 잘림 방지. */
 export function Treemap({ items, width = 216, height = 148 }: Props) {
   const uid = useId()
@@ -77,7 +95,7 @@ export function Treemap({ items, width = 216, height = 148 }: Props) {
       {cells.map((c, i) => {
         const light = CELL_L[Math.min(c.rank, CELL_L.length - 1)]
         const showPct = c.h > 30 && c.w > 34
-        const showName = showPct && textWidth(c.label) <= c.w - 18
+        const fitted = showPct ? fitLabel(c.label, c.w, c.h) : null
         return (
           <motion.g
             key={c.key}
@@ -95,15 +113,22 @@ export function Treemap({ items, width = 216, height = 148 }: Props) {
               fill={`oklch(${light} 0.15 295)`}
             />
             <g clipPath={`url(#${uid}-${c.rank})`}>
-              {showName && (
-                <text x={c.x + 9} y={c.y + 19} fontSize={10.5} fontWeight={700} fill={labelColor(light)}>
-                  {c.label}
+              {fitted?.lines.map((line, li) => (
+                <text
+                  key={line}
+                  x={c.x + 9}
+                  y={c.y + 19 + li * (fitted.fontSize + 3)}
+                  fontSize={fitted.fontSize}
+                  fontWeight={700}
+                  fill={labelColor(light)}
+                >
+                  {line}
                 </text>
-              )}
+              ))}
               {showPct && (
                 <text
                   x={c.x + 9}
-                  y={c.y + (showName ? 33 : 21)}
+                  y={c.y + (fitted ? 19 + fitted.lines.length * (fitted.fontSize + 3) + 1 : 21)}
                   fontSize={11}
                   fontWeight={800}
                   fill={labelColor(light)}

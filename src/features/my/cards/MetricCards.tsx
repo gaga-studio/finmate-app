@@ -22,7 +22,7 @@ const SHORT_NAME: Record<string, string> = {
   'TIGER S&P500': 'S&P500',
   'KODEX 200': 'KODEX 200',
   '005930': '삼성전자',
-  'KODEX 미국나스닥': '나스닥100',
+  'KODEX 미국나스닥': '나스닥',
   'ACE 금현물': '금',
 }
 
