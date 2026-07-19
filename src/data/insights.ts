@@ -10,8 +10,9 @@ import { MY_ASSETS } from './domain'
 export type InsightChartState =
   | { kind: 'projection' }
   | { kind: 'compare'; targetId: string }
-  /** 맥북 반영 투영 — 비교 중이었다면 targetId를 이어받아 메이트 선을 유지한다 */
-  | { kind: 'sim-macbook'; targetId?: string }
+  /** 맥북 반영 투영 — 비교 중이었다면 targetId를 이어받아 메이트 선을 유지한다.
+   *  habit이 켜지면 내 선이 메이트의 저축 습관(기울기)을 따라간다 */
+  | { kind: 'sim-macbook'; targetId?: string; habit?: boolean }
   | { kind: 'sim-saving'; monthly: number }
 
 export type InsightWidget =

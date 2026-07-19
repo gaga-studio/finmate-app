@@ -87,7 +87,7 @@ export function ChartPanel({ state, onCompareOpen }: Props) {
 /** 상태 전환 애니메이션 키 — 슬라이더 이동은 같은 키(내부 재드로잉만), 비교는 대상별 재생 */
 function chartKey(state: InsightChartState): string {
   if (state.kind === 'compare') return `compare-${state.targetId}`
-  if (state.kind === 'sim-macbook') return `macbook-${state.targetId ?? 'solo'}`
+  if (state.kind === 'sim-macbook') return `macbook-${state.targetId ?? 'solo'}${state.habit ? '-habit' : ''}`
   return state.kind
 }
 
@@ -98,17 +98,27 @@ function renderState(state: InsightChartState) {
 
     // 비교 중이었다면 메이트 선을 유지 — 맥북을 사면 격차가 어떻게 변하는지가 포인트
     if (target) {
-      const diff = sim.endBought - target.curve[target.curve.length - 1]
+      // 습관 따라하기: 내 선이 메이트의 월 기울기를 따라간다 (시작점은 맥북 반영)
+      const targetStep = (target.curve[5] - target.curve[0]) / 5
+      const myCurve = state.habit
+        ? Array.from({ length: 6 }, (_, i) => sim.base[0] - MACBOOK.price + targetStep * i)
+        : sim.bought
+      const end = myCurve[myCurve.length - 1]
+      const diff = end - target.curve[target.curve.length - 1]
+
       return {
-        title: `맥북 사면 12월 ${formatKrwCompact(sim.endBought)}`,
-        caption:
-          diff >= 0
+        title: state.habit
+          ? `습관 따라하면 12월 ${formatKrwCompact(end)}`
+          : `맥북 사면 12월 ${formatKrwCompact(end)}`,
+        caption: state.habit
+          ? `맥북 반영 대비 +${formatKrwCompact(end - sim.endBought)} 만회!`
+          : diff >= 0
             ? `그래도 ${target.label}보다 +${formatKrwCompact(diff)} 앞서요`
             : `이러면 ${target.label}${iGa(target.label)} +${formatKrwCompact(-diff)} 앞서요`,
         metricClass: 'text-ink',
         chart: (
           <CompareChart
-            value={sim.bought}
+            value={myCurve}
             principal={target.curve}
             labels={['나', target.label]}
             colors={COMPARE_COLORS}

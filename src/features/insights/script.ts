@@ -59,7 +59,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
-  // 시연 핵심: 맥북 200만 — 투영 그래프가 실시간으로 꺾이고 예상 리포트로 이어진다
+  // 시연 핵심: 맥북 200만 — 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다
   {
     id: 'macbook',
     match: /맥북|m5|노트북/i,
@@ -70,6 +70,23 @@ const SCENARIOS: Scenario[] = [
         chart: { kind: 'sim-macbook' },
       },
       { role: 'ai', text: '12월 예상 1,637만원 → 1,437만원 · 그래도 우상향은 지켜져요' },
+      {
+        role: 'ai',
+        text: '메이트의 저축 습관을 따라해볼 수 있어요',
+        widget: { type: 'options', options: ['시뮬레이션 적용해보기'] },
+      },
+    ],
+  },
+  // 습관 따라하기 — 내 선이 메이트 기울기를 따라가고, 이어서 예상 리포트
+  {
+    id: 'apply-habit',
+    match: /^시뮬레이션 적용해보기$/,
+    replies: [
+      {
+        role: 'ai',
+        text: '메이트의 저축 습관을 그래프에 얹어봤어요 ✨',
+        chart: { kind: 'sim-macbook', habit: true },
+      },
       { role: 'ai', text: '맥북을 샀을 때 이번 달 예상 리포트는 이렇게 나와요!' },
       { role: 'ai', widget: { type: 'report', variant: 'macbook' } },
     ],
