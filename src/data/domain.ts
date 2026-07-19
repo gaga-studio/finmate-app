@@ -16,10 +16,10 @@ export const SAVING_GOAL: SavingGoal = {
  * 시작 잔액 + 히스토리 합 + 7월 실측(66,600) = current(225만) 정합.
  */
 export const SAVING_MONTHLY_HISTORY: { month: number; amount: number }[] = [
-  { month: 3, amount: 400_000 },
-  { month: 4, amount: 420_000 },
-  { month: 5, amount: 380_000 },
-  { month: 6, amount: 430_000 },
+  { month: 3, amount: 520_000 },
+  { month: 4, amount: 300_000 },
+  { month: 5, amount: 460_000 },
+  { month: 6, amount: 350_000 },
 ]
 
 /** 3월 목표 시작 시점에 이미 모여 있던 금액 */
