@@ -22,10 +22,6 @@ export const ART = {
     '2026-07-16': '/art/diary/2026-07-16.png',
     '2026-07-18': '/art/diary/2026-07-18.png',
   } as Record<string, string>,
-  feed: {
-    'feed-mate-weekly': '/art/wrapped/feed-mate-weekly.png',
-    'feed-friend-diary': '/art/diary/feed-friend.png',
-  } as Record<string, string>,
 }
 
 /** 에셋 미도착 시 지표 팔레트 그라디언트 폴백 */
