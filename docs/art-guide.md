@@ -1,33 +1,37 @@
-# Wrapped AI 아트 제작 가이드 (9종)
+# Wrapped 팝아트 이미지 제작 가이드 (9종)
 
-마이 탭 Wrapped 카드에 들어갈 AI 아트 스펙. **파일을 `public/art/wrapped/`에 아래 파일명 그대로 넣기만 하면** 코드 수정 없이 현재의 코드 드로잉 플레이스홀더를 자동 대체한다 (`src/data/art-manifest.ts`가 단일 매핑).
+마이 탭 Wrapped 카드 **상단 이미지 영역**에 들어갈 팝아트 이미지 스펙. **파일을 `public/art/wrapped/`에 아래 파일명 그대로 넣기만 하면** 코드 수정 없이 자동 반영된다 (`src/data/art-manifest.ts`가 단일 매핑, 없으면 그라디언트 폴백).
 
 ## 공통 규격
 
-- **크기**: 1080×1920 PNG (9:16)
-- **텍스트 금지**: 카피(제목/헤드라인/수치)는 앱이 얹는다. 아트에 글자가 있으면 겹친다.
-- **세이프 에어리어**: 하단 45%는 어두운 스크림 + 텍스트/통계 카드가 덮는다. **핵심 모티프는 상단~중상단(위에서 15~55% 밴드)에** 배치. 상단 10%에는 배지가 얹힌다.
-- **썸네일 크롭**: 같은 파일이 마이 탭에서 약 163×248로 센터 크롭되어 보인다. 모티프를 좌우 가장자리에 붙이지 말 것.
-- **지표별 컬러 키**: 예산=블루(hue 230), 저축=민트(hue 168), 투자=바이올렛(hue 295). 앱 팔레트와 어울리게.
-- **기간별 시간대 무드**: 일간=아침(밝고 맑음), 주간=노을(따뜻한 역광), 월간=밤(어둡고 별). 플레이스홀더와 같은 문법이라 교체 시 위화감이 없다.
+- **크기**: 1024×1024 정사각 PNG
+- **크롭**: 카드에서 폭 100% × 높이 42% (약 4:3)로 **센터 크롭**된다 → 모티프는 중앙 배치, 상하 가장자리 ~12%는 잘릴 수 있음. 마이 탭 썸네일에서는 세로로 길게(9:16) 크롭되니 좌우 가장자리에도 핵심을 두지 말 것.
+- **텍스트 금지**: 카피는 앱이 얹는다.
+- **상단 여백**: 이미지 위 상단에 배지("오늘의 소비" 등)가 얹힌다 — 최상단 15%는 심플하게.
+- **스타일**: 팝아트 — 굵은 검정 아웃라인, 하프톤 도트, 비비드 플랫 컬러, 스크린 프린트 질감.
+- **컬러 키**: 카드 하단이 지표색 플랫 컬러라 이미지도 같은 계열이 주조면 이어져 보인다 — 소비=블루, 저축=민트/틸, 투자=바이올렛.
 
-## 슬롯별 테마
+## 공통 프롬프트 서픽스
 
-| 파일명 | 지표 × 기간 | 장면 프롬프트 방향 |
+모든 프롬프트 뒤에 붙이기:
+
+> pop art style, bold black outlines, halftone dot texture, vivid flat colors, screen print look, no text, centered composition, square
+
+## 슬롯별 프롬프트
+
+| 파일명 | 장면 | 프롬프트 (서픽스 앞부분) |
 |---|---|---|
-| `budget-daily.png` | 소비 × 일간 | 아침 하늘에 떠 있는 운동화, 아래 도시 스카이라인·언덕, 커피 김 — 초현실 미니멀 포스터 |
-| `budget-weekly.png` | 소비 × 주간 | 같은 장면, 노을 역광 — 큰 해 앞의 운동화 실루엣 |
-| `budget-monthly.png` | 소비 × 월간 | 같은 장면, 밤 — 달빛 아래 운동화, 별 |
-| `saving-daily.png` | 저축 × 일간 | 아침 바다 위 한라산(제주), 종이비행기가 점선 궤적으로 상승 |
-| `saving-weekly.png` | 저축 × 주간 | 노을 바다, 큰 해를 향해 나는 종이비행기 |
-| `saving-monthly.png` | 저축 × 월간 | 밤바다와 달, 별 사이의 종이비행기 |
-| `invest-daily.png` | 투자 × 일간 | 아침 안개 산맥 — 능선이 우상향 차트 곡선, 능선 위 빛나는 선 |
-| `invest-weekly.png` | 투자 × 주간 | 노을 산맥, 역광의 우상향 능선 |
-| `invest-monthly.png` | 투자 × 월간 | 밤 산맥과 달, 별 — 능선 끝에서 빛나는 점 |
+| `budget-daily.png` | 카페의 커피 한 잔 | a steaming coffee cup on a cafe table with a lunch box beside it, cozy morning light, blue dominant palette with warm yellow accents |
+| `budget-weekly.png` | 스니커즈 히어로샷 | a single stylish sneaker floating heroically at dramatic angle, radial sunburst background, blue and orange pop palette |
+| `budget-monthly.png` | 쇼핑백 하울 | colorful shopping bags overflowing with purchases, confetti burst, deep blue background with pink and yellow accents |
+| `saving-daily.png` | 여행의 출발선 | a boarding pass and stacked coins on a table, tiny Eiffel Tower far away on the horizon through a window, mint green morning palette |
+| `saving-weekly.png` | 순항하는 비행기 | a passenger airplane cruising above stylized clouds, dotted flight path curving forward, mint and teal palette with warm sun |
+| `saving-monthly.png` | 파리 도착 직전 | a passenger airplane flying right up to the Eiffel Tower, Paris skyline, celebratory mood, mint teal palette with golden lights |
+| `invest-daily.png` | 발사 카운트다운 | a rocket standing on a launch pad with steam venting, countdown mood, violet purple palette with morning sky |
+| `invest-weekly.png` | 리프트오프 | a rocket lifting off with bold flame and smoke clouds, upward motion lines, violet and magenta pop palette |
+| `invest-monthly.png` | 궤도의 로켓 | a rocket soaring through space past a big moon and stars, upward arc trajectory, deep violet night palette with neon accents |
 
-프롬프트 예시 (budget-weekly):
-
-> minimal surreal poster art, a giant sneaker silhouette floating in a warm sunset sky, backlit by a large sun disc, rolling hills and tiny city skyline below, blue-hour color palette with hue 230, grainy texture, no text, 9:16
+기간 문법: 일간 = 시작/준비의 순간, 주간 = 진행 중인 액션, 월간 = 도달/성취의 순간. 소비는 "그 기간 가장 많이 쓴 것"(커피 → 운동화 → 쇼핑)을 그린다.
 
 ## 다이어리 아트 (참고)
 
