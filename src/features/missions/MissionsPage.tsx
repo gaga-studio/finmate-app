@@ -59,7 +59,7 @@ export function MissionsPage() {
   return (
     <div className="relative min-h-full pb-6">
       <header className="flex items-center justify-between px-5 pb-3 pt-14">
-        <h1 className="text-title font-extrabold tracking-tight text-ink">finmate</h1>
+        <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
