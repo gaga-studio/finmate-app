@@ -1,5 +1,5 @@
 import { WaterGlass } from '../../../shared/charts/WaterGlass'
-import { CoinJar } from '../../../shared/charts/CoinJar'
+import { SpeedGauge } from '../../../shared/charts/SpeedGauge'
 import { WeekBars } from '../../../shared/charts/WeekBars'
 import { LineChart } from '../../../shared/charts/LineChart'
 import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
@@ -41,7 +41,7 @@ export function SavingCard({ view }: { view: SavingView }) {
   if (view === 'goal') {
     return (
       <CardShell title="저축 목표" metricClass={METRIC_TEXT.saving}>
-        <CoinJar pct={s.pct} width={172} height={150} />
+        <SpeedGauge pct={s.pct} width={200} height={152} />
         <p className="mt-1 text-display font-extrabold leading-none">
           <AnimatedNumber value={s.pct * 100} format={(v) => `${Math.round(v)}%`} />
         </p>
