@@ -12,18 +12,36 @@ export const SAVING_GOAL: SavingGoal = {
 }
 
 /**
- * 목표 시작(3월) 이후 월별 저축 실적 — 7월은 셀렉터가 거래에서 실측한다.
- * 시작 잔액 + 히스토리 합 + 7월 실측(66,600) = current(225만) 정합.
+ * 월별 전체 저축 실적(파리 통장 + 비상금 + 청약 등 수입에서 한 저축 전부).
+ * 7월은 셀렉터가 saving 카테고리 거래에서 실측한다.
  */
 export const SAVING_MONTHLY_HISTORY: { month: number; amount: number }[] = [
-  { month: 3, amount: 520_000 },
-  { month: 4, amount: 300_000 },
-  { month: 5, amount: 460_000 },
-  { month: 6, amount: 350_000 },
+  { month: 3, amount: 720_000 },
+  { month: 4, amount: 550_000 },
+  { month: 5, amount: 680_000 },
+  { month: 6, amount: 610_000 },
 ]
 
-/** 3월 목표 시작 시점에 이미 모여 있던 금액 */
-export const SAVING_START_BALANCE = 553_400
+/** 총자산 구성 — 청년 현실형 (합계가 자산 뷰의 총자산) */
+export interface AssetItem {
+  id: string
+  title: string
+  value: number
+  emoji: string
+}
+
+export const MY_ASSETS: AssetItem[] = [
+  { id: 'as-home', title: '전세 보증금', value: 120_000_000, emoji: '🏠' },
+  { id: 'as-deposit', title: '예·적금', value: 11_000_000, emoji: '💰' },
+  { id: 'as-car', title: '중고차', value: 8_000_000, emoji: '🚗' },
+  { id: 'as-paris', title: '파리 여행 통장', value: 2_250_000, emoji: '✈️' },
+  { id: 'as-invest', title: '투자 계좌', value: 1_311_565, emoji: '📈' },
+]
+
+/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(142,561,565)와 일치해야 한다 */
+export const NET_WORTH_HISTORY: number[] = [
+  139_800_000, 140_400_000, 141_050_000, 141_500_000, 142_180_000, 142_561_565,
+]
 
 export const HOLDINGS: Holding[] = [
   { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 412_000, returnPct: 14.2 },

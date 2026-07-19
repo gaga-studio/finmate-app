@@ -7,7 +7,7 @@ import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/fo
 import {
   getBudget,
   getInvestSeries,
-  getSavingJourney,
+  getNetWorth,
   getSavingMonthBars,
   getSavingProgress,
 } from '../../../data/selectors'
@@ -61,22 +61,22 @@ export function SavingCard({ view }: { view: SavingView }) {
         <p className="mt-2 text-display font-extrabold leading-none">
           <AnimatedNumber value={s.delta} format={(v) => formatKrwSigned(Math.round(v))} />
         </p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">이번 달 저축</p>
+        <p className="mt-1.5 text-body font-medium text-ink-soft">이번 달 수입에서 저축</p>
       </CardShell>
     )
   }
 
-  const journey = getSavingJourney()
+  const nw = getNetWorth()
   return (
-    <CardShell title="저축 자산" metricClass={METRIC_TEXT.saving}>
+    <CardShell title="나의 자산" metricClass={METRIC_TEXT.saving}>
       <div className="pt-3">
-        <LineChart points={journey.points} width={216} height={104} drawKey="saving-asset" markers />
+        <LineChart points={nw.points} width={216} height={104} drawKey="saving-asset" markers />
       </div>
       <p className="mt-2 text-display font-extrabold leading-none">
-        <AnimatedNumber value={journey.current} format={(v) => formatKrwCompact(Math.round(v))} />
+        <AnimatedNumber value={nw.total} format={(v) => formatKrwCompact(Math.round(v))} />
       </p>
       <p className="mt-1.5 text-body font-medium text-ink-soft">
-        3월부터 <b className="text-ink">+{formatKrwCompact(journey.gained)}</b> 모음
+        총자산 · 이번 달 <b className="text-ink">+{formatKrwCompact(nw.monthGain)}</b>
       </p>
     </CardShell>
   )
@@ -94,7 +94,7 @@ export function InvestCard({ period }: { period: Period }) {
         <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
       </p>
       <p className="mt-1.5 text-body font-medium text-ink-soft">
-        총 자산 <b className="text-ink">{formatKrwCompact(inv.totalValue)}</b>
+        평가 금액 <b className="text-ink">{formatKrwCompact(inv.totalValue)}</b>
       </p>
     </CardShell>
   )

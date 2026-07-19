@@ -1,4 +1,36 @@
-import type { Metric, Period, WrappedContent } from './types'
+import type { Metric, Period, SavingView, WrappedContent } from './types'
+
+/** 마이 탭 저축 뷰별 카드의 아트 슬롯 — income/asset은 팀 이미지 도착 전 그라디언트 폴백 */
+export type SavingArtKey = 'saving-monthly' | 'saving-income' | 'saving-asset'
+
+export interface SavingCardContent {
+  title: string
+  headline: string
+  subline: string
+  artKey: SavingArtKey
+}
+
+/** 마이 탭 저축 지표의 뷰별 카드 — 하단 아트카드·오버레이가 뷰를 따라 갈아입는다 */
+export const SAVING_CARDS: Record<SavingView, SavingCardContent> = {
+  goal: {
+    title: '나의 저축 목표',
+    headline: '파리 한 달 살기,\n절반을 넘었다',
+    subline: '225만 / 500만 · 45% 달성',
+    artKey: 'saving-monthly',
+  },
+  monthly: {
+    title: '7월의 소득',
+    headline: '월급이 이끌고,\n부수입이 밀어준 달',
+    subline: '수입 258.7만원 · 저축 35.8만원',
+    artKey: 'saving-income',
+  },
+  asset: {
+    title: '나의 자산',
+    headline: '전세 보증금부터\n파리 통장까지, 1.4억',
+    subline: '총자산 1억 4,256만원 · 이번 달 +38만원',
+    artKey: 'saving-asset',
+  },
+}
 
 /**
  * Wrapped 카드 카피 — 지표 × 기간 9종. "AI 품질"은 곧 카피 품질이라 전량 수기.
@@ -19,7 +51,7 @@ export const WRAPPED: Record<Metric, Record<Period, WrappedContent>> = {
       period: 'weekly',
       title: '7월 3주차의 소비',
       headline: '고민하던 12만원 운동화,\n결국 데려온 한 주',
-      subline: '지출 12건 · 운동화 12만원 · 예산 24% 남음',
+      subline: '지출 11건 · 운동화 12만원 · 예산 23% 남음',
       artKey: 'budget-weekly',
     },
     monthly: {
@@ -27,7 +59,7 @@ export const WRAPPED: Record<Metric, Record<Period, WrappedContent>> = {
       period: 'monthly',
       title: '7월의 소비',
       headline: '맥북을 들이고도\n예산 30%를 지킨 달',
-      subline: '지출 28건 45.4만원 · 예산 30% 남음',
+      subline: '지출 26건 45.3만원 · 예산 30% 남음',
       artKey: 'budget-monthly',
     },
   },

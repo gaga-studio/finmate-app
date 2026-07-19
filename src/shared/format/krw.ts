@@ -9,9 +9,14 @@ export function formatKrwSigned(amount: number): string {
   return `${sign}${Math.abs(amount).toLocaleString('ko-KR')}원`
 }
 
-/** 5000000 → "500만원", 12500000 → "1,250만원", 8000 → "8,000원" */
+/** 5000000 → "500만원", 143000000 → "1.4억", 8000 → "8,000원" */
 export function formatKrwCompact(amount: number): string {
   const abs = Math.abs(amount)
+  if (abs >= 100_000_000) {
+    const eok = abs / 100_000_000
+    const rounded = Math.round(eok * 10) / 10
+    return Number.isInteger(rounded) ? `${rounded}억` : `${rounded.toFixed(1)}억`
+  }
   if (abs >= 10000) {
     const man = Math.round(abs / 10000)
     return `${man.toLocaleString('ko-KR')}만원`

@@ -1,4 +1,5 @@
 import type { Metric, WrappedArtKey } from './types'
+import type { SavingArtKey } from './wrapped'
 
 /**
  * AI 아트 에셋의 단일 매핑.
@@ -16,7 +17,10 @@ export const ART = {
     'invest-daily': '/art/wrapped/invest-daily.png',
     'invest-weekly': '/art/wrapped/invest-weekly.png',
     'invest-monthly': '/art/wrapped/invest-monthly.png',
-  } satisfies Record<WrappedArtKey, string>,
+    // 저축 뷰별 카드 전용 슬롯 (1위 소득/1위 자산 그림)
+    'saving-income': '/art/wrapped/saving-income.png',
+    'saving-asset': '/art/wrapped/saving-asset.png',
+  } satisfies Record<WrappedArtKey | SavingArtKey, string>,
   diary: {
     '2026-07-14': '/art/diary/2026-07-14.png',
     '2026-07-16': '/art/diary/2026-07-16.png',

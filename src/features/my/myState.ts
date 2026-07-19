@@ -1,6 +1,6 @@
-import type { Metric, Period } from '../../data/types'
+import type { Metric, Period, SavingView } from '../../data/types'
 
-export type { Metric, Period }
+export type { Metric, Period, SavingView }
 
 export const METRICS: Metric[] = ['budget', 'saving', 'invest']
 export const PERIODS: Period[] = ['daily', 'weekly', 'monthly']
@@ -20,9 +20,6 @@ export const PERIOD_PREFIX: Record<Period, string> = {
 export function nextPeriod(p: Period): Period {
   return PERIODS[(PERIODS.indexOf(p) + 1) % PERIODS.length]
 }
-
-/** 저축 지표 전용 세로축 — 기간이 아니라 뷰(목표/월간/자산)를 순환한다 */
-export type SavingView = 'goal' | 'monthly' | 'asset'
 
 export const SAVING_VIEWS: SavingView[] = ['goal', 'monthly', 'asset']
 
