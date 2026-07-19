@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { ChevronLeft, Lock, Sparkles, Users } from 'lucide-react'
+import { ChevronLeft, Sparkles, Users } from 'lucide-react'
 import { getMateProfile, type MateCategoryRow, type MateProfile } from '../../data/mates'
 import { getBudget, getInvestStatus, getSavingProgress, getTopPurchases } from '../../data/selectors'
 import { HOLDINGS, MY_ASSETS } from '../../data/domain'
@@ -10,15 +10,28 @@ import { ART } from '../../data/art-manifest'
 import { CATEGORY_META } from '../../data/categories'
 import { formatKrw, formatKrwCompact } from '../../shared/format/krw'
 import { ProfileCard } from '../../shared/profile/ProfileCard'
-import { SegmentedControl } from '../../shared/ui/SegmentedControl'
+import { MetricCarousel } from '../my/carousel/MetricCarousel'
+import { MetricTabs } from '../my/MetricTabs'
+import { ViewChips } from '../my/ViewChips'
+import { makeMateCardRenderer } from './MateMetricCards'
 import { PageTitle } from '../../shared/ui/PageTitle'
 import { WaterGlass } from '../../shared/charts/WaterGlass'
 import { SpeedGauge } from '../../shared/charts/SpeedGauge'
 import { MateAnalysisOverlay } from './MateAnalysisOverlay'
 import { snappy } from '../../shared/motion/springs'
+import {
+  nextInvestView,
+  nextPeriod,
+  nextSavingView,
+  prevInvestView,
+  prevPeriod,
+  prevSavingView,
+  type InvestView,
+  type Period,
+  type SavingView,
+} from '../my/myState'
 import type { Metric } from '../../data/types'
 
-const METRIC_LABEL: Record<Metric, string> = { budget: '소비', saving: '저축', invest: '투자' }
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
 const CARD_TITLE: Record<Metric, string> = { budget: '오늘의 예산', saving: '저축 목표', invest: '투자 현황' }
 const LIST_TITLE: Record<Metric, string> = { budget: '소비 탑 3', saving: '저축 구성', invest: '투자 구성' }
@@ -36,6 +49,9 @@ export function MateProfilePage() {
   const navigate = useNavigate()
   const mate = id ? getMateProfile(id) : undefined
   const [metric, setMetric] = useState<Metric>('budget')
+  const [period, setPeriod] = useState<Period>('daily')
+  const [savingView, setSavingView] = useState<SavingView>('goal')
+  const [investView, setInvestView] = useState<InvestView>('status')
   const [following, setFollowing] = useState(false)
   const [comparing, setComparing] = useState(false)
   const [analysisOpen, setAnalysisOpen] = useState(false)
@@ -72,14 +88,9 @@ export function MateProfilePage() {
 
       <ProfileCard profile={mate} className="px-5" />
 
-      {/* 지표 칩 — 프로필/비교 공용 */}
-      <div className="mt-4 flex justify-center">
-        <SegmentedControl
-          id="mate-metric"
-          items={(['budget', 'saving', 'invest'] as const).map((m) => ({ value: m, label: METRIC_LABEL[m] }))}
-          value={metric}
-          onChange={setMetric}
-        />
+      {/* 지표 밑줄 탭 — 마이와 동일 문법, 프로필/비교 공용 */}
+      <div className="mt-3">
+        <MetricTabs metric={metric} onChange={setMetric} layoutId="mate-metric-tab" />
       </div>
 
       <AnimatePresence mode="popLayout" initial={false}>
@@ -102,20 +113,39 @@ export function MateProfilePage() {
             exit={{ opacity: 0, y: -14 }}
             transition={snappy}
           >
-            {/* 상단 지표 카드 — 마이 카드와 동일 문법 (테마 밴드) */}
-            <div className="mt-3 px-5" data-metric={metric}>
-              <div className={`flex flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${METRIC_TEXT[metric]}`}>
-                <div className="w-full bg-current/25 px-5 py-2.5 text-center">
-                  <p className="text-section font-bold text-ink">{CARD_TITLE[metric]}</p>
-                </div>
-                <div className="flex min-h-[200px] flex-col items-center justify-center px-5 pb-3 pt-2">
-                  <MetricBody mate={mate} metric={metric} />
-                </div>
-                <p className="flex items-center gap-1 pb-3 text-caption font-medium text-ink-faint">
-                  <Lock size={11} />
-                  상세 내역은 비공개 · 카테고리와 구간만 공개돼요
-                </p>
-              </div>
+            {/* 마이 탭과 동일한 캐러셀 — 가로 스와이프=지표, 세로/휠=뷰 스택 */}
+            <div className="pt-2" data-metric={metric}>
+              <MetricCarousel
+                metric={metric}
+                period={period}
+                savingView={savingView}
+                investView={investView}
+                onMetricChange={setMetric}
+                onStackNext={() => {
+                  if (metric === 'saving') setSavingView(nextSavingView(savingView))
+                  else if (metric === 'invest') setInvestView(nextInvestView(investView))
+                  else setPeriod(nextPeriod(period))
+                }}
+                onStackPrev={() => {
+                  if (metric === 'saving') setSavingView(prevSavingView(savingView))
+                  else if (metric === 'invest') setInvestView(prevInvestView(investView))
+                  else setPeriod(prevPeriod(period))
+                }}
+                renderCard={makeMateCardRenderer(mate)}
+              />
+            </div>
+
+            <div className="relative mt-2 flex justify-center">
+              <ViewChips
+                id="mate-period"
+                metric={metric}
+                period={period}
+                savingView={savingView}
+                investView={investView}
+                onPeriod={setPeriod}
+                onSavingView={setSavingView}
+                onInvestView={setInvestView}
+              />
             </div>
 
             {/* 하단 2열 — 마이 탭처럼 좌 이미지 카드, 우 리스트 카드 */}
@@ -169,42 +199,6 @@ export function MateProfilePage() {
         {analysisOpen && <MateAnalysisOverlay mate={mate} onClose={() => setAnalysisOpen(false)} />}
       </AnimatePresence>
     </div>
-  )
-}
-
-function MetricBody({ mate, metric }: { mate: MateProfile; metric: Metric }) {
-  const m = mate.metrics
-  if (metric === 'budget') {
-    return (
-      <>
-        <WaterGlass pct={m.budgetLeftPct / 100} width={104} height={118} />
-        <p className="mt-1 text-display font-extrabold leading-none">{m.budgetLeftPct}%</p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">
-          예산 남김 · <b className="text-ink">{m.budgetBand}</b> 소비
-        </p>
-      </>
-    )
-  }
-  if (metric === 'saving') {
-    return (
-      <>
-        <SpeedGauge pct={m.savingPct / 100} width={170} height={128} />
-        <p className="mt-1 text-display font-extrabold leading-none">{m.savingPct}%</p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">
-          목표 <b className="text-ink">{m.savingGoal}</b> 진행 중
-        </p>
-      </>
-    )
-  }
-  const rise = m.investReturnPct >= 0
-  return (
-    <>
-      <p className={`text-[44px] font-extrabold leading-none ${rise ? 'text-rise' : 'text-fall'}`}>
-        {rise ? '+' : ''}
-        {m.investReturnPct}%
-      </p>
-      <p className="mt-3 text-body font-medium text-ink-soft">총 수익률 · 종목 구성은 비중만 공개</p>
-    </>
   )
 }
 

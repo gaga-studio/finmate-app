@@ -167,9 +167,15 @@ function generate(author: ProfileSummary): MateProfile {
 }
 
 /** 시연 핵심 메이트는 수기 오버라이드 — 인사이트 비교(COMPARE_TARGETS) 서사와 정합 */
-const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?: number; topCategories?: Partial<Record<Metric, MateCategoryRow[]>> }> = {
+const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?: number; topCategories?: Partial<Record<Metric, MateCategoryRow[]>>; assetBand?: string; portfolio?: { label: string; weight: number }[] }> = {
   'a-paris': {
     similarity: 0.86,
+    assetBand: '2,000만 이상',
+    portfolio: [
+      { label: '해외 ETF', weight: 0.4 },
+      { label: '국내 ETF', weight: 0.35 },
+      { label: '파킹·예금', weight: 0.25 },
+    ],
     budgetLeftPct: 52,
     budgetBand: '하루 1~2만원대',
     savingPct: 78,
@@ -193,6 +199,7 @@ const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?:
   },
   'a-bear': {
     similarity: 0.78,
+    assetBand: '1,500만~2,000만',
     budgetLeftPct: 34,
     budgetBand: '하루 2~3만원대',
     savingPct: 48,
@@ -205,7 +212,7 @@ export const MATE_PROFILES: MateProfile[] = Object.values(AUTHORS).map((author) 
   const base = generate(author)
   const over = OVERRIDES[author.id]
   if (!over) return base
-  const { similarity, topCategories, ...metrics } = over
+  const { similarity, topCategories, assetBand, portfolio, ...metrics } = over
   const merged: MateProfile = {
     ...base,
     similarity: similarity ?? base.similarity,
@@ -216,18 +223,27 @@ export const MATE_PROFILES: MateProfile[] = Object.values(AUTHORS).map((author) 
   merged.views = {
     ...base.views,
     budget: {
-      ...base.views.budget,
       daily: { leftPct: merged.metrics.budgetLeftPct, band: merged.metrics.budgetBand },
+      weekly: {
+        leftPct: Math.max(10, merged.metrics.budgetLeftPct - 6),
+        band: merged.metrics.budgetLeftPct > 40 ? '주 7~10만원대' : '주 10~15만원대',
+      },
+      monthly: {
+        leftPct: Math.max(10, merged.metrics.budgetLeftPct - 9),
+        band: merged.metrics.budgetLeftPct > 40 ? '월 40~60만원대' : '월 60~80만원대',
+      },
     },
     saving: {
       ...base.views.saving,
       goalPct: merged.metrics.savingPct,
       goalLabel: merged.metrics.savingGoal,
       paceBand: paceBandOf(merged.metrics.savingPct),
+      assetBand: assetBand ?? base.views.saving.assetBand,
     },
     invest: {
       ...base.views.invest,
       returnPct: merged.metrics.investReturnPct,
+      portfolio: portfolio ?? base.views.invest.portfolio,
     },
   }
   return merged
