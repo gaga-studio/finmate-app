@@ -16,6 +16,8 @@ interface Props {
   xLabels?: string[]
   /** 범례 라벨 [실선, 점선] — 기본은 원금 vs 평가 용도 */
   labels?: [string, string]
+  /** 라인 색 [실선, 점선] — 지정하면 두 선이 다른 색으로 그려진다 (기본 currentColor 단색) */
+  colors?: [string, string]
 }
 
 function toLine(pts: Pt[]): string {
@@ -26,7 +28,11 @@ function toLine(pts: Pt[]): string {
  * 원금 vs 평가액 비교 차트 — 두 선이 벌어지는 틈이 곧 수익.
  * 월 단위 직선 폴리라인(꺾임 = 월별 변화), 공용 스케일 + 범례·축 라벨.
  */
-export function CompareChart({ value, principal, width = 216, height = 110, xLabels, labels = ['평가액', '원금'] }: Props) {
+export function CompareChart({ value, principal, width = 216, height = 110, xLabels, labels = ['평가액', '원금'], colors }: Props) {
+  const valueColor = colors?.[0] ?? 'currentColor'
+  const principalColor = colors?.[1] ?? 'currentColor'
+  // 색 구분 모드에서는 점선도 또렷하게
+  const principalOpacity = colors ? 0.8 : 0.35
   const pad = 8
   const plotTop = LEGEND_H
   const plotBottom = height - (xLabels ? X_LABEL_H : 0)
@@ -57,13 +63,13 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
       {/* 범례 — 라벨 길이에 맞춰 두 번째 항목 위치를 계산 */}
       <g fontSize={9} fontWeight={600} fill="currentColor">
-        <line x1={0} y1={5} x2={16} y2={5} stroke="currentColor" strokeWidth={3} strokeLinecap="round" />
+        <line x1={0} y1={5} x2={16} y2={5} stroke={valueColor} strokeWidth={3} strokeLinecap="round" />
         <text x={20} y={8}>{labels[0]}</text>
         {(() => {
           const x2 = 20 + labels[0].length * 9.5 + 9
           return (
             <>
-              <line x1={x2} y1={5} x2={x2 + 16} y2={5} stroke="currentColor" strokeWidth={2.5} strokeOpacity={0.4} strokeDasharray="3 4" strokeLinecap="round" />
+              <line x1={x2} y1={5} x2={x2 + 16} y2={5} stroke={principalColor} strokeWidth={2.5} strokeOpacity={principalOpacity} strokeDasharray="3 4" strokeLinecap="round" />
               <text x={x2 + 20} y={8} opacity={0.6}>{labels[1]}</text>
             </>
           )
@@ -85,7 +91,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
 
       <motion.path
         d={gapArea}
-        fill="currentColor"
+        fill={valueColor}
         opacity={0.12}
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.12 }}
@@ -96,8 +102,8 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
       <motion.path
         d={toLine(principalPts)}
         fill="none"
-        stroke="currentColor"
-        strokeOpacity={0.35}
+        stroke={principalColor}
+        strokeOpacity={principalOpacity}
         strokeWidth={2.5}
         strokeDasharray="4 6"
         strokeLinecap="round"
@@ -110,7 +116,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
       <motion.path
         d={toLine(valuePts)}
         fill="none"
-        stroke="currentColor"
+        stroke={valueColor}
         strokeWidth={3.5}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
@@ -126,7 +132,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
           cy={p.y}
           r={3.2}
           fill="var(--color-elevated, white)"
-          stroke="currentColor"
+          stroke={valueColor}
           strokeWidth={2.4}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -139,7 +145,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         cx={last.x}
         cy={last.y}
         r={5}
-        fill="currentColor"
+        fill={valueColor}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.75, type: 'spring', stiffness: 300, damping: 18 }}
@@ -149,7 +155,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         cy={last.y}
         r={5}
         fill="none"
-        stroke="currentColor"
+        stroke={valueColor}
         strokeWidth={2}
         initial={{ scale: 1, opacity: 0.6 }}
         animate={{ scale: 2.4, opacity: 0 }}

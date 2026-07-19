@@ -59,6 +59,21 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
+  // 시연 핵심: 맥북 200만 — 투영 그래프가 실시간으로 꺾이고 예상 리포트로 이어진다
+  {
+    id: 'macbook',
+    match: /맥북|m5|노트북/i,
+    replies: [
+      {
+        role: 'ai',
+        text: '맥북 M5 프로 200만원, 지금 그래프에 바로 반영해봤어요 💻',
+        chart: { kind: 'sim-macbook' },
+      },
+      { role: 'ai', text: '12월 예상 1,637만원 → 1,437만원 · 그래도 우상향은 지켜져요' },
+      { role: 'ai', text: '맥북을 샀을 때 이번 달 예상 리포트는 이렇게 나와요!' },
+      { role: 'ai', widget: { type: 'report', variant: 'macbook' } },
+    ],
+  },
   {
     id: 'sim-shoes',
     match: /운동화|살까/,
@@ -73,21 +88,6 @@ const SCENARIOS: Scenario[] = [
         text: '그래서, 어떻게 할래요?',
         widget: { type: 'options', options: ['산다!', '참는다!'] },
       },
-    ],
-  },
-  // 시연 핵심: 맥북 200만 — 투영 그래프가 실시간으로 꺾이고 예상 리포트로 이어진다
-  {
-    id: 'macbook',
-    match: /맥북|m5|노트북/i,
-    replies: [
-      {
-        role: 'ai',
-        text: '맥북 M5 프로 200만원, 지금 그래프에 바로 반영해봤어요 💻',
-        chart: { kind: 'sim-macbook' },
-      },
-      { role: 'ai', text: '12월 예상 1,637만원 → 1,437만원 · 그래도 우상향은 지켜져요' },
-      { role: 'ai', text: '맥북을 샀을 때 이번 달 예상 리포트는 이렇게 나와요!' },
-      { role: 'ai', widget: { type: 'report', variant: 'macbook' } },
     ],
   },
   {

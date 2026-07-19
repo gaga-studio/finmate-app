@@ -10,7 +10,8 @@ import { MY_ASSETS } from './domain'
 export type InsightChartState =
   | { kind: 'projection' }
   | { kind: 'compare'; targetId: string }
-  | { kind: 'sim-macbook' }
+  /** 맥북 반영 투영 — 비교 중이었다면 targetId를 이어받아 메이트 선을 유지한다 */
+  | { kind: 'sim-macbook'; targetId?: string }
   | { kind: 'sim-saving'; monthly: number }
 
 export type InsightWidget =
