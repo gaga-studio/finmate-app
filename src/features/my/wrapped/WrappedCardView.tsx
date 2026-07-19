@@ -8,7 +8,6 @@ export interface WrappedCardData {
   subline: string
   metric: Metric
   artSrc?: string
-  stats: { label: string; value: string }[]
   top3?: { key: string; label: string; value: string }[]
   top3Title?: string
 }
@@ -27,11 +26,11 @@ const CARD_BG: Record<Metric, string> = {
 export function WrappedCardView({ data }: { data: WrappedCardData }) {
   return (
     <div
-      className="relative aspect-[9/16] w-full overflow-hidden"
+      className="relative flex aspect-[9/16] w-full flex-col overflow-hidden"
       style={{ background: CARD_BG[data.metric] }}
     >
-      {/* 상단 이미지 영역 — 스포티파이 Wrapped처럼 상단만 차지 */}
-      <div className="relative h-[42%] w-full">
+      {/* 상단 이미지 영역 — 정사각형, 스포티파이 Wrapped처럼 상단만 차지 */}
+      <div className="relative aspect-square w-full">
         <ArtOrGradient src={data.artSrc} palette={data.metric} className="h-full w-full">
           {/* 배지 가독용 얕은 상단 스크림 */}
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/35 to-transparent" />
@@ -45,31 +44,21 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
       </div>
 
       {/* 하단 플랫 컬러 영역 — 큰 타이포 */}
-      <div className="flex h-[58%] flex-col p-5 pt-4 text-white">
-        <p className="whitespace-pre-line break-keep text-[25px] font-extrabold leading-snug">
+      <div className="flex min-h-0 flex-1 flex-col px-5 pb-4 pt-3.5 text-white">
+        <p className="whitespace-pre-line break-keep text-[22px] font-extrabold leading-snug">
           {data.headline}
         </p>
-        <p className="mt-1.5 text-[13px] font-medium text-white/85">{data.subline}</p>
+        <p className="mt-1 text-[12.5px] font-medium text-white/85">{data.subline}</p>
 
         <div className="flex-1" />
 
-        {/* 지표 요약 */}
-        <div className="grid grid-cols-3 gap-2">
-          {data.stats.map((s) => (
-            <div key={s.label} className="rounded-2xl bg-white/14 px-2 py-2.5 text-center backdrop-blur-md">
-              <p className="text-[16px] font-extrabold leading-none">{s.value}</p>
-              <p className="mt-1 text-[10px] font-semibold text-white/75">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
         {data.top3 && (
-          <div className="mt-2.5 rounded-2xl bg-white/12 p-3">
+          <div className="rounded-2xl bg-white/12 p-3">
             <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-white/75">
               {data.top3Title}
             </p>
             {data.top3.map((row, i) => (
-              <div key={row.key} className="flex items-center gap-2 py-1 text-[13px] font-semibold">
+              <div key={row.key} className="flex items-center gap-2 py-[3px] text-[13px] font-semibold">
                 <span className="w-4 text-white/70">{i + 1}</span>
                 <span className="flex-1 truncate">{row.label}</span>
                 <span className="font-bold">{row.value}</span>
@@ -78,7 +67,7 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
           </div>
         )}
 
-        <p className="mt-3 text-center text-[12px] font-extrabold tracking-tight text-white/70">
+        <p className="mt-2 text-center text-[11px] font-extrabold tracking-tight text-white/70">
           finmate
         </p>
       </div>

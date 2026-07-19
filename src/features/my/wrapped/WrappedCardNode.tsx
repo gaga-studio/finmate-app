@@ -20,7 +20,6 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
   ref,
 ) {
   const w = getWrapped(metric, period)
-  const returnPct = w.invest.returnPct
 
   return (
     <div ref={ref} className={className}>
@@ -32,11 +31,6 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
           subline: w.subline,
           metric,
           artSrc: ART.wrapped[w.artKey],
-          stats: [
-            { label: '예산 남음', value: `${Math.round(w.budget.pct * 100)}%` },
-            { label: '저축 목표', value: `${Math.round(w.saving.pct * 100)}%` },
-            { label: '수익률', value: `${returnPct >= 0 ? '+' : ''}${returnPct.toFixed(1)}%` },
-          ],
           top3: top3Rows(metric, w),
           top3Title: TOP3_TITLE[metric],
         }}

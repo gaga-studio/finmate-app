@@ -54,7 +54,6 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
               subline: story.subline,
               metric: story.metric,
               artSrc: ART.wrapped[story.artKey],
-              stats: story.stats,
             }}
           />
         </motion.div>
