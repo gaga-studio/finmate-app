@@ -121,11 +121,6 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
-      {/* 지표 소제목 — 캐러셀과 함께 전환 */}
-      <h2 className="px-6 pb-1.5 text-title font-extrabold text-ink">
-        {metric === 'budget' ? '예산' : metric === 'saving' ? '저축' : '투자'}
-      </h2>
-
       <MetricCarousel
         metric={metric}
         period={period}
