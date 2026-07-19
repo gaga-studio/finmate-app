@@ -8,9 +8,11 @@ interface Props {
   height?: number
   /** 재드로잉 트리거용 — 기간 전환 시 바꿔주면 처음부터 다시 그린다 */
   drawKey?: string
+  /** 각 포인트에 도트 마커 — 구간(월)별 변화를 강조할 때 */
+  markers?: boolean
 }
 
-export function LineChart({ points, width = 220, height = 120, drawKey }: Props) {
+export function LineChart({ points, width = 220, height = 120, drawKey, markers }: Props) {
   const gradId = useId()
   const pts = seriesToPts(points, width, height, 8)
   const line = smoothPath(pts)
@@ -43,6 +45,22 @@ export function LineChart({ points, width = 220, height = 120, drawKey }: Props)
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.9, ease: [0.3, 0, 0.2, 1] }}
         />
+        {/* 구간 마커 — 선 드로잉을 따라 순차 등장 */}
+        {markers &&
+          pts.slice(0, -1).map((p, i) => (
+            <motion.circle
+              key={i}
+              cx={p.x}
+              cy={p.y}
+              r={3.5}
+              fill="var(--color-elevated, white)"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.15 + (i / pts.length) * 0.9, type: 'spring', stiffness: 300, damping: 20 }}
+            />
+          ))}
         {/* 끝점 펄스 */}
         <motion.circle
           cx={last.x}

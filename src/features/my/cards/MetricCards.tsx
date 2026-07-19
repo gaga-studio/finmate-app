@@ -70,7 +70,7 @@ export function SavingCard({ view }: { view: SavingView }) {
   return (
     <CardShell title="저축 자산" metricClass={METRIC_TEXT.saving}>
       <div className="pt-3">
-        <LineChart points={journey.points} width={216} height={104} drawKey="saving-asset" />
+        <LineChart points={journey.points} width={216} height={104} drawKey="saving-asset" markers />
       </div>
       <p className="mt-2 text-display font-extrabold leading-none">
         <AnimatedNumber value={journey.current} format={(v) => formatKrwCompact(Math.round(v))} />

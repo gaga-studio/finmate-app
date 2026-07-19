@@ -82,15 +82,13 @@ export function getSavingMonthBars(): SavingBar[] {
   return bars
 }
 
-/** 자산 뷰: 3월 시작 잔액부터 현재까지의 누적 여정 곡선 (월당 3포인트 보간) */
+/** 자산 뷰: 3월 시작 잔액부터 현재까지의 누적 여정 — 월 경계 포인트만 두어 달마다 꺾인다 */
 export function getSavingJourney(): { points: number[]; current: number; gained: number } {
   const points: number[] = [SAVING_START_BALANCE]
   let balance = SAVING_START_BALANCE
   for (const h of [...SAVING_MONTHLY_HISTORY, { month: 7, amount: currentMonthSaving() }]) {
-    for (let step = 1; step <= 3; step++) {
-      points.push(Math.round(balance + (h.amount * step) / 3))
-    }
     balance += h.amount
+    points.push(balance)
   }
   return { points, current: balance, gained: balance - SAVING_START_BALANCE }
 }
