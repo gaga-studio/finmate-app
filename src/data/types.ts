@@ -110,11 +110,6 @@ export interface FeedGroup {
   members: number
 }
 
-export interface StoryStat {
-  label: string
-  value: string
-}
-
 /** 오늘의 스토리 — 다른 유저가 공유한 Wrapped 카드 (익명 닉네임) */
 export interface Story {
   id: string
@@ -123,8 +118,6 @@ export interface Story {
   period: Period
   headline: string
   subline: string
-  /** 작성자 카드의 지표 요약 3종 (수기) */
-  stats: StoryStat[]
   artKey: `${Metric}-${Period}`
   likes: number
   groupIds: string[]
