@@ -110,8 +110,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView): Row[] {
       key: w.id,
       leading: w.emoji,
       title: w.title,
-      sub: formatKrwCompact(w.price),
-      trailing: <span className="text-saving">{Math.round(w.savedPct * 100)}%</span>,
+      trailing: formatKrwCompact(w.price),
     }))
   }
   return HOLDINGS.map((h) => ({

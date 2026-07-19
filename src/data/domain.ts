@@ -64,16 +64,16 @@ export const ASSET_SERIES: number[] = (() => {
 })()
 
 /**
- * 위시 리스트 — 진행률 내림차순 유지.
- * 파리 관련은 저축 목표(45%)가 담당하므로 넣지 않고,
+ * 위시 리스트 — 항목별 진행률 같은 건 없다(누가 항목마다 돈을 모으나).
+ * 파리 관련은 저축 목표가 담당하므로 넣지 않고,
  * 운동화·맥북 에어는 이미 구매해서 제외(맥북 프로가 다음 꿈).
  */
 export const WISHLIST: WishItem[] = [
-  { id: 'w1', title: '여행 캐리어', price: 320_000, savedPct: 0.65, emoji: '🧳' },
-  { id: 'w2', title: '에어팟 프로', price: 359_000, savedPct: 0.4, emoji: '🎧' },
-  { id: 'w3', title: '필름 카메라', price: 240_000, savedPct: 0.25, emoji: '📷' },
-  { id: 'w4', title: '애플워치', price: 590_000, savedPct: 0.1, emoji: '⌚️' },
-  { id: 'w5', title: '맥북 프로', price: 2_390_000, savedPct: 0.08, emoji: '💻' },
+  { id: 'w1', title: '여행 캐리어', price: 320_000, emoji: '🧳' },
+  { id: 'w2', title: '에어팟 프로', price: 359_000, emoji: '🎧' },
+  { id: 'w3', title: '필름 카메라', price: 240_000, emoji: '📷' },
+  { id: 'w4', title: '애플워치', price: 590_000, emoji: '⌚️' },
+  { id: 'w5', title: '맥북 프로', price: 2_390_000, emoji: '💻' },
 ]
 
 export const MISSIONS: Mission[] = [

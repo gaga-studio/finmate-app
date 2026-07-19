@@ -80,7 +80,7 @@ function savingTop3(view: SavingView): { key: string; label: string; value: stri
     return WISHLIST.slice(0, 3).map((item) => ({
       key: item.id,
       label: `${item.emoji} ${item.title}`,
-      value: `${Math.round(item.savedPct * 100)}%`,
+      value: formatKrwCompact(item.price),
     }))
   }
   if (view === 'monthly') {
@@ -109,7 +109,7 @@ function top3Rows(metric: Metric, w: WrappedSummary): { key: string; label: stri
     return WISHLIST.slice(0, 3).map((item) => ({
       key: item.id,
       label: `${item.emoji} ${item.title}`,
-      value: `${Math.round(item.savedPct * 100)}%`,
+      value: formatKrwCompact(item.price),
     }))
   }
   return HOLDINGS.slice(0, 3).map((h) => ({
