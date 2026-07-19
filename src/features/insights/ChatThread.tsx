@@ -5,7 +5,13 @@ import { ChevronDown, ChevronRight } from 'lucide-react'
 import { formatKrw } from '../../shared/format/krw'
 import { getDailySummary } from '../../data/selectors'
 import { QUIZ, RECOMMENDED_MISSIONS } from '../../data/domain'
-import { SAVING_SLIDER, makeSavingProjection, type InsightMsg, type InsightWidget } from '../../data/insights'
+import {
+  HABIT_MISSION,
+  SAVING_SLIDER,
+  makeSavingProjection,
+  type InsightMsg,
+  type InsightWidget,
+} from '../../data/insights'
 import { snappy } from '../../shared/motion/springs'
 
 interface Props {
@@ -172,6 +178,7 @@ function Widget({
   if (widget.type === 'mission') return <MissionWidget missionId={widget.missionId} readOnly={readOnly} />
   if (widget.type === 'options') return <OptionsWidget options={widget.options} onOption={onOption} readOnly={readOnly} />
   if (widget.type === 'compare-picker') return <ComparePickerWidget onComparePick={onComparePick} readOnly={readOnly} />
+  if (widget.type === 'mission-accept') return <MissionAcceptWidget onAccept={onOption} readOnly={readOnly} />
   if (widget.type === 'report') return <ReportWidget variant={widget.variant} onReport={onReport} readOnly={readOnly} />
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -427,6 +434,40 @@ function QuizWidget({ quizId, readOnly }: { quizId: string; readOnly?: boolean }
           <p className="mt-1 text-caption font-medium leading-relaxed text-ink-soft">{quiz.explanation}</p>
         </motion.div>
       )}
+    </div>
+  )
+}
+
+/** 습관 미션 제안 — 수락하면 예상 리포트 단계로 이어진다 */
+function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) => void; readOnly?: boolean }) {
+  const [accepted, setAccepted] = useState(false)
+
+  return (
+    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="mission-accept">
+      <div className="flex items-center gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-point text-[20px]">
+          {HABIT_MISSION.emoji}
+        </span>
+        <div className="min-w-0">
+          <p className="text-body font-bold text-ink">{HABIT_MISSION.title}</p>
+          <p className="text-caption font-medium text-ink-soft">
+            {HABIT_MISSION.reason} · +{HABIT_MISSION.reward}P
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        disabled={readOnly || accepted}
+        onClick={() => {
+          setAccepted(true)
+          onAccept('미션 수락!')
+        }}
+        className={`mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl py-2 text-body font-bold ${
+          accepted ? 'bg-ink/6 text-ink-faint' : 'bg-accent text-white'
+        }`}
+      >
+        {accepted ? '수락 완료 ✓' : '미션 수락'}
+      </button>
     </div>
   )
 }

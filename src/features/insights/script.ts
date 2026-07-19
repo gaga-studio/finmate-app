@@ -77,7 +77,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
-  // 습관 따라하기 — 내 선이 메이트 기울기를 따라가고, 이어서 예상 리포트
+  // 습관 따라하기 — 내 선이 메이트 기울기를 따라가고, 습관 미션 제안으로 잇는다
   {
     id: 'apply-habit',
     match: /^시뮬레이션 적용해보기$/,
@@ -87,7 +87,20 @@ const SCENARIOS: Scenario[] = [
         text: '메이트의 저축 습관을 그래프에 얹어봤어요 ✨',
         chart: { kind: 'sim-macbook', habit: true },
       },
-      { role: 'ai', text: '맥북을 샀을 때 이번 달 예상 리포트는 이렇게 나와요!' },
+      {
+        role: 'ai',
+        text: '이 습관, 그대로 미션으로 만들어봤어요',
+        widget: { type: 'mission-accept' },
+      },
+    ],
+  },
+  // 미션 수락 → 예상 리포트 제공
+  {
+    id: 'accept-mission',
+    match: /^미션 수락!?$/,
+    replies: [
+      { role: 'ai', text: '미션 등록 완료! 매달 자동으로 체크해드릴게요 ✅' },
+      { role: 'ai', text: '미션까지 반영한 7월 예상 리포트가 도착했어요!' },
       { role: 'ai', widget: { type: 'report', variant: 'macbook' } },
     ],
   },
