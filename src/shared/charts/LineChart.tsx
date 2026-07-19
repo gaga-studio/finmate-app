@@ -49,9 +49,9 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
             { y: minY, v: min, x: width - 2, anchor: 'end' as const },
           ].map(({ y, v, x, anchor }) => (
             <g key={v}>
-              <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.12} strokeWidth={1} strokeDasharray="3 4" />
+              <line x1={0} y1={y} x2={width} y2={y} stroke="currentColor" strokeOpacity={0.18} strokeWidth={1} strokeDasharray="3 4" />
               {/* 그리드가 차트 상단에 붙으면 라벨을 선 아래로 내려 잘림을 막는다 */}
-              <text x={x} y={y < 14 ? y + 12 : y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.55}>
+              <text x={x} y={y < 14 ? y + 12 : y - 4} textAnchor={anchor} fontSize={9} fontWeight={600} fill="currentColor" opacity={0.8}>
                 {formatKrwCompact(v)}
               </text>
             </g>
@@ -132,7 +132,7 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
             fontSize={9.5}
             fontWeight={i === xLabels.length - 1 ? 800 : 600}
             fill="currentColor"
-            opacity={i === xLabels.length - 1 ? 0.85 : 0.45}
+            opacity={i === xLabels.length - 1 ? 0.95 : 0.7}
           >
             {label}
           </text>
