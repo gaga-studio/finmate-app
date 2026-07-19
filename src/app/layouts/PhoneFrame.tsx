@@ -8,7 +8,8 @@ import type { ReactNode } from 'react'
 export function PhoneFrame({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh sm:flex sm:items-center sm:justify-center sm:py-6">
-      <div className="relative mx-auto min-h-dvh w-full max-w-[430px] overflow-hidden bg-surface sm:min-h-0 sm:h-[880px] sm:max-h-[92dvh] sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-ink/90">
+      {/* 데스크톱 프레임은 실제 아이폰 비율(430:932, 19.5:9) 고정 */}
+      <div className="relative mx-auto min-h-dvh w-full max-w-[430px] overflow-hidden bg-surface sm:aspect-[430/932] sm:h-[min(932px,92dvh)] sm:min-h-0 sm:w-auto sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-ink/90">
         {children}
       </div>
     </div>
