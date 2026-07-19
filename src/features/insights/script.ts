@@ -11,7 +11,6 @@ export const INITIAL_REPLIES: Reply[] = [
   { role: 'ai', widget: { type: 'summary' } },
   {
     role: 'ai',
-    text: '뭐부터 볼까요?',
     widget: {
       type: 'options',
       options: ['메이트/그룹 비교'],
@@ -23,7 +22,7 @@ export const INITIAL_REPLIES: Reply[] = [
 export function compareDoneReplies(targetId: string): Reply[] {
   return [
     { role: 'ai', text: '시뮬레이션이 완성되었어요! ✨', chart: { kind: 'compare', targetId } },
-    { role: 'ai', text: '혹시 소비나 저축 계획이 있으신가요?\n말해주시면 그래프에 바로 얹어볼게요' },
+    { role: 'ai', widget: { type: 'options', options: ['이어서하기'] } },
   ]
 }
 
@@ -59,6 +58,14 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
+  // 비교 완성 뒤 이어서하기 → 소비/저축 계획 질문
+  {
+    id: 'continue',
+    match: /^이어서하기$/,
+    replies: [
+      { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?\n말해주시면 그래프에 바로 얹어볼게요' },
+    ],
+  },
   // 시연 핵심: 맥북 200만 — 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다
   {
     id: 'macbook',
@@ -72,7 +79,7 @@ const SCENARIOS: Scenario[] = [
       { role: 'ai', text: '12월 예상 1,637만원 → 1,437만원 · 그래도 우상향은 지켜져요' },
       {
         role: 'ai',
-        text: '메이트의 저축 습관을 따라해볼 수 있어요',
+        text: '만약 메이트의 저축 습관을 따라해본다면\n어떻게 될지 보여줄 수 있어요',
         widget: { type: 'options', options: ['시뮬레이션 적용해보기'] },
       },
     ],
@@ -86,6 +93,11 @@ const SCENARIOS: Scenario[] = [
         role: 'ai',
         text: '메이트의 저축 습관을 그래프에 얹어봤어요 ✨',
         chart: { kind: 'sim-macbook', habit: true },
+      },
+      {
+        role: 'ai',
+        text: '세 가지 시뮬레이션, 버튼으로 언제든 다시 볼 수 있어요',
+        widget: { type: 'scenario-switch' },
       },
       {
         role: 'ai',

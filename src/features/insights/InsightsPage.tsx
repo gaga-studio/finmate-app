@@ -103,6 +103,7 @@ export function InsightsPage() {
           onSlider={chat.setSavingMonthly}
           onReport={(variant) => setReport({ variant })}
           onComparePick={(kind) => !viewing && setCompareOpen({ filter: kind })}
+          onScenario={chat.applyScenario}
           readOnly={viewing}
         />
 

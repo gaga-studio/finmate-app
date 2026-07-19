@@ -27,11 +27,13 @@ interface Props {
   onReport: (variant?: 'macbook') => void
   /** 메이트/그룹 선택지 → 해당 종류만 담긴 비교 바텀시트 열기 */
   onComparePick: (kind: 'mate' | 'group') => void
+  /** 시나리오 버튼 → 그래프만 전환 */
+  onScenario: (kind: 'base' | 'macbook' | 'habit') => void
   /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
   readOnly?: boolean
 }
 
-export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, onComparePick, readOnly }: Props) {
+export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, onComparePick, onScenario, readOnly }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -55,6 +57,7 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
             onSlider={onSlider}
             onReport={onReport}
             onComparePick={onComparePick}
+            onScenario={onScenario}
             readOnly={readOnly}
           />
         ))}
@@ -72,6 +75,7 @@ function Bubble({
   onSlider,
   onReport,
   onComparePick,
+  onScenario,
   readOnly,
 }: {
   msg: InsightMsg
@@ -81,6 +85,7 @@ function Bubble({
   onSlider: (monthly: number) => void
   onReport: (variant?: 'macbook') => void
   onComparePick: (kind: 'mate' | 'group') => void
+  onScenario: (kind: 'base' | 'macbook' | 'habit') => void
   readOnly?: boolean
 }) {
   if (msg.role === 'user') {
@@ -118,6 +123,7 @@ function Bubble({
             onSlider={onSlider}
             onReport={onReport}
             onComparePick={onComparePick}
+            onScenario={onScenario}
             readOnly={readOnly}
           />
         )}
@@ -162,6 +168,7 @@ function Widget({
   onSlider,
   onReport,
   onComparePick,
+  onScenario,
   readOnly,
 }: {
   widget: InsightWidget
@@ -170,6 +177,7 @@ function Widget({
   onSlider: (monthly: number) => void
   onReport: (variant?: 'macbook') => void
   onComparePick: (kind: 'mate' | 'group') => void
+  onScenario: (kind: 'base' | 'macbook' | 'habit') => void
   readOnly?: boolean
 }) {
   if (widget.type === 'summary') return <SummaryCard />
@@ -179,6 +187,7 @@ function Widget({
   if (widget.type === 'options') return <OptionsWidget options={widget.options} onOption={onOption} readOnly={readOnly} />
   if (widget.type === 'compare-picker') return <ComparePickerWidget onComparePick={onComparePick} readOnly={readOnly} />
   if (widget.type === 'mission-accept') return <MissionAcceptWidget onAccept={onOption} readOnly={readOnly} />
+  if (widget.type === 'scenario-switch') return <ScenarioSwitchWidget onScenario={onScenario} readOnly={readOnly} />
   if (widget.type === 'report') return <ReportWidget variant={widget.variant} onReport={onReport} readOnly={readOnly} />
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -434,6 +443,44 @@ function QuizWidget({ quizId, readOnly }: { quizId: string; readOnly?: boolean }
           <p className="mt-1 text-caption font-medium leading-relaxed text-ink-soft">{quiz.explanation}</p>
         </motion.div>
       )}
+    </div>
+  )
+}
+
+/** 시나리오 3버튼 — 그래프만 전환하는 토글, 몇 번이고 다시 볼 수 있다 */
+function ScenarioSwitchWidget({
+  onScenario,
+  readOnly,
+}: {
+  onScenario: (kind: 'base' | 'macbook' | 'habit') => void
+  readOnly?: boolean
+}) {
+  const [active, setActive] = useState<'base' | 'macbook' | 'habit'>('habit')
+  const items = [
+    { kind: 'base' as const, label: '그대로' },
+    { kind: 'macbook' as const, label: '맥북 반영' },
+    { kind: 'habit' as const, label: '습관 적용' },
+  ]
+  return (
+    <div className="flex flex-wrap gap-1.5" data-testid="scenario-switch">
+      {items.map(({ kind, label }) => (
+        <button
+          key={kind}
+          type="button"
+          disabled={readOnly}
+          onClick={() => {
+            setActive(kind)
+            onScenario(kind)
+          }}
+          className={`rounded-full px-3.5 py-2 text-body font-bold ${
+            active === kind
+              ? 'bg-accent text-white'
+              : 'border border-accent/35 bg-elevated text-accent shadow-soft'
+          }`}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   )
 }
