@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState, type ReactNode } from 'react'
+import { StatusBar } from '../../shared/ui/StatusBar'
 
 /** 프레임 비율 — 초기 프레임과 동일한 430×880 */
 const FRAME_W = 430
@@ -51,6 +52,7 @@ export function PhoneFrame({ children }: { children: ReactNode }) {
               : undefined
           }
         >
+          <StatusBar />
           {children}
         </div>
       </div>
