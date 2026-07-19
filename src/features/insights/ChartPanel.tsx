@@ -178,21 +178,23 @@ function renderState(state: InsightChartState) {
     }
   }
 
-  // 기본: 평소 습관 기반 미래 6개월 투영 — 현재 총자산을 크게
+  // 기본: 평소 습관 기반 미래 6개월 투영 — 현재 → 12월 예상을 한 줄로
   return {
     title: '총자산 시뮬레이션',
-    caption: `지금 습관대로면 12월엔 ${formatKrwCompact(my.curve[my.curve.length - 1])} (+${formatKrwCompact(my.totalGain)})`,
+    caption: `지금 습관대로면 6개월 뒤 +${formatKrwCompact(my.totalGain)}`,
     metricClass: 'text-saving',
     chart: (
       <div className="flex flex-col items-center">
-        <p className="text-display font-extrabold leading-none text-ink">
+        <p className="text-title font-extrabold leading-none text-ink">
           {formatKrwCompact(my.curve[0])}
+          <span className="mx-1.5 text-ink-faint">→</span>
+          <span className="text-saving">{formatKrwCompact(my.curve[my.curve.length - 1])}</span>
         </p>
-        <div className="mt-1.5">
+        <div className="mt-2">
           <LineChart
             points={my.curve}
             width={CHART_W}
-            height={102}
+            height={108}
             drawKey="habit-projection"
             markers
             xLabels={PROJECTION_MONTHS}
