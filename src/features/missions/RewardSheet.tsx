@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom'
+import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { motion } from 'motion/react'
 import { dramatic } from '../../shared/motion/springs'
 import { REWARD_ITEMS } from '../../data/domain'
@@ -11,7 +12,7 @@ interface Props {
 /** 포인트 상점 — 교환 가능 여부만 보여주는 정적 바텀시트 */
 export function RewardSheet({ points, onClose }: Props) {
   return createPortal(
-    <div className="fixed inset-0 z-[60]">
+    <div className="absolute inset-0 z-[60]">
       <motion.div
         className="absolute inset-0 bg-black/45"
         initial={{ opacity: 0 }}
@@ -66,6 +67,6 @@ export function RewardSheet({ points, onClose }: Props) {
         </div>
       </motion.div>
     </div>,
-    document.body,
+    overlayTarget(),
   )
 }

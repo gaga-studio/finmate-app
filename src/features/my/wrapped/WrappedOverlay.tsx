@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { overlayTarget } from '../../../shared/ui/overlayTarget'
 import { motion } from 'motion/react'
 import { Download, Share2, X } from 'lucide-react'
 import { WrappedCardNode } from './WrappedCardNode'
@@ -40,7 +41,7 @@ export function WrappedOverlay({ metric, period, savingView, investView, onClose
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50">
+    <div className="absolute inset-0 z-50">
       {/* dim 배경 */}
       <motion.div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -104,7 +105,7 @@ export function WrappedOverlay({ metric, period, savingView, investView, onClose
         </motion.p>
       )}
     </div>,
-    document.body,
+    overlayTarget(),
   )
 }
 
