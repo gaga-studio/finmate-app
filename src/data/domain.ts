@@ -43,12 +43,13 @@ export const NET_WORTH_HISTORY: number[] = [
   139_800_000, 140_400_000, 141_050_000, 141_500_000, 142_180_000, 142_576_000,
 ]
 
+/** 보유 종목 — 합계 1,326,000 = 평가액 정합. 스페이스X(2026 상장 설정)가 수익률 1위. */
 export const HOLDINGS: Holding[] = [
-  { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 412_000, returnPct: 14.2 },
-  { ticker: 'KODEX 200', name: 'KODEX 200', value: 355_000, returnPct: 8.9 },
-  { ticker: '005930', name: '삼성전자', value: 248_000, returnPct: 6.1 },
-  { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 190_000, returnPct: 17.8 },
-  { ticker: 'ACE 금현물', name: 'ACE KRX금현물', value: 121_000, returnPct: 4.3 },
+  { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 400_000, returnPct: 14.2 },
+  { ticker: 'KODEX 200', name: 'KODEX 200', value: 330_000, returnPct: 8.9 },
+  { ticker: 'SPACEX', name: '스페이스X', value: 268_000, returnPct: 34.5 },
+  { ticker: '005930', name: '삼성전자', value: 212_000, returnPct: 6.1 },
+  { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 116_000, returnPct: 17.8 },
 ]
 
 /** 투자 평가액 월별 추이(2~7월) — 끝값 = HOLDINGS 합계 */
@@ -87,12 +88,12 @@ export interface StockNews {
   changePct: number
 }
 
-/** 뉴스 뷰 오른쪽 카드 — 핫한 주식 뉴스 요약 */
+/** 뉴스 뷰 오른쪽 카드 — 내가 보유 중인 종목의 핫한 뉴스만 */
 export const STOCK_NEWS: StockNews[] = [
-  { id: 'nw1', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
-  { id: 'nw2', name: 'SK하이닉스', summary: '반도체 슈퍼사이클 전망에', changePct: 5.2 },
-  { id: 'nw3', name: '테슬라', summary: '실적 부담 우려로', changePct: -2.3 },
-  { id: 'nw4', name: '카카오', summary: '플랫폼 규제 이슈로', changePct: -1.8 },
+  { id: 'nw1', name: '스페이스X', summary: '스타십 상업 발사 성공에', changePct: 6.8 },
+  { id: 'nw2', name: '삼성전자', summary: 'HBM4 공급 계약 기대감에', changePct: 3.1 },
+  { id: 'nw3', name: 'TIGER 미국S&P500', summary: '미국 증시 사상 최고치에', changePct: 0.9 },
+  { id: 'nw4', name: 'KODEX 200', summary: '외국인 차익 실현 매물에', changePct: -0.6 },
 ]
 
 /** 총자산 일별 곡선(90일) — 완만한 우상향 + 시드 노이즈 */
