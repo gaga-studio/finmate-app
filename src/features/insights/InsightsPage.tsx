@@ -55,7 +55,7 @@ export function InsightsPage() {
         </button>
       </header>
 
-      <ChartPanel state={chat.chart} onCompareOpen={() => !viewing && setCompareOpen({})} />
+      <ChartPanel state={chat.chart} />
 
       {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
       <div className="flex items-center justify-between px-5 pb-1 pt-3">

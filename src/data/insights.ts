@@ -64,13 +64,19 @@ export interface HabitProjection {
  * 현재 플레이스홀더 근거: 이번 달 실측 현금 흐름(저축 39.39만 + 투자 적립 8만
  * = 월 +47.39만)이 유지된다고 가정한 선형 투영. 시작점은 현재 총자산 1,400만.
  */
+/** 월별 흐름의 출렁임 패턴 — 합이 정확히 5.00이라 6개월 총증가는 monthlyFlow×5로 보존된다 */
+const WOBBLE = [1.1, 0.8, 1.18, 0.89, 1.03]
+
 export function getHabitProjection(): HabitProjection {
   const start = MY_ASSETS.reduce((s, a) => s + a.value, 0)
   const monthKey = `${DEMO_TODAY.getFullYear()}-${String(DEMO_TODAY.getMonth() + 1).padStart(2, '0')}`
   const monthlyFlow = TRANSACTIONS.filter(
     (t) => t.date.startsWith(monthKey) && (t.category === 'saving' || t.category === 'invest'),
   ).reduce((s, t) => s + -t.amount, 0)
-  const curve = Array.from({ length: 6 }, (_, i) => start + monthlyFlow * i)
+  const curve = [start]
+  for (const w of WOBBLE) curve.push(curve[curve.length - 1] + Math.round(monthlyFlow * w))
+  // 반올림 오차 보정 — 끝값은 정확히 start + monthlyFlow×5
+  curve[curve.length - 1] = start + monthlyFlow * 5
   return { curve, monthlyFlow, totalGain: monthlyFlow * 5 }
 }
 
@@ -117,8 +123,12 @@ export interface CompareTarget {
   curve: number[]
 }
 
-const flat = (start: number, step: number): number[] =>
-  Array.from({ length: 6 }, (_, i) => start + step * i)
+/** 시작값 + 월별 증가분으로 곡선 생성 — 증가폭이 달라 자연스러운 꺾임이 생긴다 */
+const steps = (start: number, incs: number[]): number[] => {
+  const curve = [start]
+  for (const inc of incs) curve.push(curve[curve.length - 1] + inc)
+  return curve
+}
 
 /** 그래프 우상단 '비교' 버튼의 선택지 — 메이트 3 + 그룹 4 (피드 데이터와 동일 인물·그룹) */
 export const COMPARE_TARGETS: CompareTarget[] = [
@@ -129,7 +139,8 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     label: '파리지앤느',
     sub: '저축 상위 9% · 유사도 86%',
     summary: '기울기가 무섭다 — 저축 상위 9%의 속도',
-    curve: flat(13_200_000, 600_000),
+    // 나(월 ~47만)보다 확연히 가파른 월 70만~110만 — 낮게 출발해 크게 추월
+    curve: steps(13_000_000, [700_000, 1_050_000, 800_000, 1_100_000, 850_000]),
   },
   {
     id: 'mate-tuna',
@@ -138,7 +149,7 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     label: '절약왕참치',
     sub: '소비방어 상위 12% · 유사도 91%',
     summary: '월급 200으로 이 기울기 — 소비방어의 힘',
-    curve: flat(9_800_000, 380_000),
+    curve: steps(9_800_000, [300_000, 430_000, 340_000, 460_000, 370_000]),
   },
   {
     id: 'mate-bear',
@@ -147,7 +158,7 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     label: '곰손재테크',
     sub: 'ETF 적립 6개월차 · 유사도 78%',
     summary: '자동이체 마스터, 꾸준함의 곡선',
-    curve: flat(12_400_000, 420_000),
+    curve: steps(12_400_000, [380_000, 470_000, 390_000, 480_000, 380_000]),
   },
   ...FEED_GROUPS.map((g) => ({
     id: g.id,
@@ -161,12 +172,12 @@ export const COMPARE_TARGETS: CompareTarget[] = [
         : `${g.label} 평균보다 내 기울기가 가팔라요`,
     curve:
       g.id === 'g-income'
-        ? flat(13_140_000, 350_000)
+        ? steps(13_140_000, [330_000, 400_000, 310_000, 410_000, 300_000])
         : g.id === 'g-spend'
-          ? flat(12_900_000, 300_000)
+          ? steps(12_900_000, [270_000, 350_000, 280_000, 360_000, 240_000])
           : g.id === 'g-region'
-            ? flat(11_800_000, 330_000)
-            : flat(13_500_000, 460_000),
+            ? steps(11_800_000, [300_000, 380_000, 310_000, 390_000, 270_000])
+            : steps(13_500_000, [420_000, 520_000, 430_000, 530_000, 400_000]),
   })),
 ]
 
