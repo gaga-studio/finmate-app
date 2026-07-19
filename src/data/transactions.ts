@@ -38,8 +38,14 @@ const NARRATIVE: Transaction[] = [
   { id: 'n-lunch-today', date: '2026-07-18', merchant: '한솥도시락', amount: -5200, category: 'food' },
   { id: 'n-bus-today', date: '2026-07-18', merchant: '버스', amount: -1500, category: 'transport' },
   { id: 'n-save-today', date: '2026-07-18', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
+  // 7월 저축 다양화 — 월간 뷰의 "수입에서 한 전체 저축"의 근거
+  { id: 'n-emergency', date: '2026-07-05', merchant: '비상금 통장', amount: -200000, category: 'saving', memo: '월급날 자동이체' },
+  { id: 'n-housing', date: '2026-07-02', merchant: '청약 납입', amount: -100000, category: 'saving', memo: '13회차' },
+  // 소득 출처 다양화 — 월간 뷰 오른쪽 카드의 순위 근거
   { id: 'n-salary', date: '2026-07-10', merchant: '월급', amount: 2150000, category: 'income' },
   { id: 'n-allow', date: '2026-07-03', merchant: '알바비', amount: 380000, category: 'income' },
+  { id: 'n-carrot', date: '2026-07-12', merchant: '당근마켓 판매', amount: 45000, category: 'income', memo: '안 입는 패딩' },
+  { id: 'n-interest', date: '2026-07-15', merchant: '예금 이자', amount: 12400, category: 'income' },
   { id: 'n-etf', date: '2026-07-13', merchant: 'TIGER 미국S&P500 매수', amount: -50000, category: 'invest', memo: '첫 소액 투자' },
 ]
 

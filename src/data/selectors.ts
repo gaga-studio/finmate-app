@@ -1,9 +1,11 @@
 import {
   ASSET_SERIES,
   BUDGET_LIMIT,
+  MY_ASSETS,
+  NET_WORTH_HISTORY,
   SAVING_GOAL,
   SAVING_MONTHLY_HISTORY,
-  SAVING_START_BALANCE,
+  type AssetItem,
 } from './domain'
 import { getPeriodRange, keysInRange } from './dates'
 import { TRANSACTIONS } from './transactions'
@@ -71,7 +73,7 @@ function currentMonthSaving(): number {
     .reduce((sum, t) => sum + -t.amount, 0)
 }
 
-/** 월간 뷰: 목표 시작(3월)부터의 월별 저축 막대 — 이번 달은 실측 */
+/** 월간 뷰: 월별 전체 저축 막대(수입에서 한 저축 전부) — 이번 달은 실측 */
 export function getSavingMonthBars(): SavingBar[] {
   const bars: SavingBar[] = SAVING_MONTHLY_HISTORY.map((h) => ({
     label: `${h.month}월`,
@@ -82,15 +84,36 @@ export function getSavingMonthBars(): SavingBar[] {
   return bars
 }
 
-/** 자산 뷰: 3월 시작 잔액부터 현재까지의 누적 여정 — 월 경계 포인트만 두어 달마다 꺾인다 */
-export function getSavingJourney(): { points: number[]; current: number; gained: number } {
-  const points: number[] = [SAVING_START_BALANCE]
-  let balance = SAVING_START_BALANCE
-  for (const h of [...SAVING_MONTHLY_HISTORY, { month: 7, amount: currentMonthSaving() }]) {
-    balance += h.amount
-    points.push(balance)
+export interface IncomeSource {
+  merchant: string
+  total: number
+  count: number
+}
+
+/** 월간 뷰 오른쪽 카드: 이번 달 소득 출처 순위 */
+export function getIncomeSources(): IncomeSource[] {
+  const sums = new Map<string, IncomeSource>()
+  for (const t of inRange('monthly')) {
+    if (t.category !== 'income') continue
+    const cur = sums.get(t.merchant) ?? { merchant: t.merchant, total: 0, count: 0 }
+    cur.total += t.amount
+    cur.count += 1
+    sums.set(t.merchant, cur)
   }
-  return { points, current: balance, gained: balance - SAVING_START_BALANCE }
+  return [...sums.values()].sort((a, b) => b.total - a.total)
+}
+
+/** 이번 달 총수입 */
+export function getMonthlyIncome(): number {
+  return getIncomeSources().reduce((sum, s) => sum + s.total, 0)
+}
+
+/** 자산 뷰: 총자산 — 구성 순위 + 월별 추이 곡선 */
+export function getNetWorth(): { assets: AssetItem[]; total: number; points: number[]; monthGain: number } {
+  const assets = [...MY_ASSETS].sort((a, b) => b.value - a.value)
+  const total = assets.reduce((sum, a) => sum + a.value, 0)
+  const points = NET_WORTH_HISTORY
+  return { assets, total, points, monthGain: total - points[points.length - 2] }
 }
 
 export interface InvestSummary {

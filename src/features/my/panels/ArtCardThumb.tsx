@@ -2,19 +2,20 @@ import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import { ArtOrGradient } from '../../../shared/ui/ArtOrGradient'
 import { ART } from '../../../data/art-manifest'
-import { WRAPPED } from '../../../data/wrapped'
-import type { Metric, Period } from '../myState'
+import { SAVING_CARDS, WRAPPED } from '../../../data/wrapped'
+import type { Metric, Period, SavingView } from '../myState'
 
 interface Props {
   period: Period
   metric: Metric
+  savingView: SavingView
   onOpen: () => void
 }
 
 /** Wrapped 공유 카드의 썸네일 — layoutId로 오버레이 확대의 출발점이 된다 */
-export function ArtCardThumb({ period, metric, onOpen }: Props) {
-  // 저축은 뷰 축(목표/월간/자산)이라 파리(월간) 카드로 고정
-  const content = metric === 'saving' ? WRAPPED.saving.monthly : WRAPPED[metric][period]
+export function ArtCardThumb({ period, metric, savingView, onOpen }: Props) {
+  // 저축은 뷰별 카드(목표=파리 / 월간=1위 소득 / 자산=1위 자산)로 갈아입는다
+  const content = metric === 'saving' ? SAVING_CARDS[savingView] : WRAPPED[metric][period]
   return (
     <motion.button
       type="button"

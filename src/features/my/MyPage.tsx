@@ -28,11 +28,22 @@ const TINT: Record<Metric, string> = {
   invest: 'from-invest/18 via-invest/6',
 }
 
-/** "?card=budget-daily" → {metric, period} — 지표/기간 유니온에 '-'가 없어 split이 안전하다 */
-function parseCardParam(raw: string | null): { metric: Metric; period: Period } | null {
+interface OpenCard {
+  metric: Metric
+  period: Period
+  savingView?: SavingView
+}
+
+/** "?card=budget-daily" 또는 저축 뷰 카드 "?card=saving-goal|monthly|asset" */
+function parseCardParam(raw: string | null): OpenCard | null {
   if (!raw) return null
   const [m, p] = raw.split('-')
-  if (!METRICS.includes(m as Metric) || !PERIODS.includes(p as Period)) return null
+  if (!METRICS.includes(m as Metric)) return null
+  if (m === 'saving') {
+    if (!SAVING_VIEWS.includes(p as SavingView)) return null
+    return { metric: 'saving', period: 'monthly', savingView: p as SavingView }
+  }
+  if (!PERIODS.includes(p as Period)) return null
   return { metric: m as Metric, period: p as Period }
 }
 
@@ -44,9 +55,9 @@ export function MyPage() {
 
   const openCard = parseCardParam(params.get('card'))
 
-  // 저축은 뷰 축이라 Wrapped는 월간 카드(파리)로 고정
+  // 저축은 뷰 축 — 현재 뷰의 카드(목표/소득/자산)가 열린다
   const openWrapped = () =>
-    setParams({ card: metric === 'saving' ? 'saving-monthly' : `${metric}-${period}` })
+    setParams({ card: metric === 'saving' ? `saving-${savingView}` : `${metric}-${period}` })
   const closeWrapped = () => {
     const next = new URLSearchParams(params)
     next.delete('card')
@@ -120,17 +131,22 @@ export function MyPage() {
       <section className="relative mt-4 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
         <div className="h-[248px]">
           {openCard === null && (
-            <ArtCardThumb period={period} metric={metric} onOpen={openWrapped} />
+            <ArtCardThumb period={period} metric={metric} savingView={savingView} onOpen={openWrapped} />
           )}
         </div>
         <div className="h-[248px]">
-          <LinkedListPanel metric={metric} period={period} />
+          <LinkedListPanel metric={metric} period={period} savingView={savingView} />
         </div>
       </section>
 
       <AnimatePresence>
         {openCard !== null && (
-          <WrappedOverlay metric={openCard.metric} period={openCard.period} onClose={closeWrapped} />
+          <WrappedOverlay
+            metric={openCard.metric}
+            period={openCard.period}
+            savingView={openCard.savingView}
+            onClose={closeWrapped}
+          />
         )}
       </AnimatePresence>
     </div>
