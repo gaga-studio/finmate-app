@@ -37,7 +37,7 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                 className="block w-full overflow-hidden rounded-2xl text-left shadow-soft"
               >
                 <ArtOrGradient
-                  src={ART.wrapped[s.artKey]}
+                  src={ART.stories[s.artKey]}
                   palette={s.metric}
                   className="aspect-[3/4] w-full"
                 >

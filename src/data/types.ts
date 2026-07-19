@@ -117,7 +117,7 @@ export interface StoryRow {
   value: string
 }
 
-/** 오늘의 스토리 — 다른 유저가 공유한 Wrapped 카드 (익명 닉네임) */
+/** 오늘의 스토리 — 다른 유저가 공유한 카드 (익명 닉네임) */
 export interface Story {
   id: string
   author: ProfileSummary
@@ -125,9 +125,12 @@ export interface Story {
   period: Period
   headline: string
   subline: string
-  /** 카드 하단 탑3 (지표별: 소비 탑3 / 위시 리스트 / 투자 종목) */
+  /** 카드 하단 탑3 */
   top3: StoryRow[]
-  artKey: `${Metric}-${Period}`
+  /** 탑3 블록 제목 — 없으면 지표 기본값(소비 탑 3/위시 리스트/투자 종목) */
+  top3Title?: string
+  /** ART.stories 키 */
+  artKey: string
   likes: number
   groupIds: string[]
   /** 정렬용 고정 데모 시각 (ISO) */

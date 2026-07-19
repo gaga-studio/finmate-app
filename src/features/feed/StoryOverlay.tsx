@@ -53,9 +53,9 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
               headline: story.headline,
               subline: story.subline,
               metric: story.metric,
-              artSrc: ART.wrapped[story.artKey],
+              artSrc: ART.stories[story.artKey],
               top3: story.top3.map((r) => ({ key: r.label, ...r })),
-              top3Title: TOP3_TITLE[story.metric],
+              top3Title: story.top3Title ?? TOP3_TITLE[story.metric],
             }}
           />
         </motion.div>
