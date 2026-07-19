@@ -7,6 +7,7 @@ import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
+import { UserAvatar } from '../../shared/profile/UserAvatar'
 import {
   INVEST_VIEWS,
   INVEST_VIEW_LABEL,
@@ -112,9 +113,7 @@ export function MyPage() {
             안녕, {USER.nickname}
           </h1>
         </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-elevated text-xl shadow-soft">
-          {USER.emoji}
-        </div>
+        <UserAvatar size={44} />
       </header>
 
       <MetricCarousel
