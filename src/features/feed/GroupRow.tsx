@@ -18,7 +18,8 @@ export function GroupRow({ selected, onSelect }: Props) {
         </button>
       </div>
 
-      <div className="mt-2.5 flex gap-2.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* pt/pb — 스크롤 컨테이너가 선택 링(box-shadow)을 자르지 않게 여백 확보 */}
+      <div className="mt-1.5 flex gap-2.5 overflow-x-auto px-5 pb-1.5 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FEED_GROUPS.map((g) => {
           const active = selected === g.id
           return (
