@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { PRESET_SESSIONS, type InsightChartState, type InsightMsg, type SavedSession } from '../../data/insights'
+import {
+  COMPARE_TARGETS,
+  PRESET_SESSIONS,
+  type InsightChartState,
+  type InsightMsg,
+  type SavedSession,
+} from '../../data/insights'
 import { DEMO_TODAY } from '../../data/demo'
-import { findReplies, INITIAL_REPLIES, type Reply } from './script'
+import { compareDoneReplies, findReplies, INITIAL_REPLIES, type Reply } from './script'
 
 /** 타이핑 인디케이터 노출 시간 / 버블 간 간격 (ms) — 촬영 리듬 고정 */
 const TYPING_MS = 700
@@ -69,6 +75,16 @@ export function useInsightChat() {
     setChart(targetId ? { kind: 'compare', targetId } : { kind: 'projection' })
   }, [])
 
+  /** 비교 시트에서 대상을 고름 — 차트 전환 + "시뮬레이션 완성" 채팅 발화 */
+  const completeCompare = useCallback(
+    (targetId: string) => {
+      const t = COMPARE_TARGETS.find((x) => x.id === targetId)
+      if (!t) return
+      respond(compareDoneReplies(t.id, t.label, t.summary))
+    },
+    [respond],
+  )
+
   /* ---- 저장·다시보기 ---- */
   const [sessions, setSessions] = useState<SavedSession[]>(PRESET_SESSIONS)
   const [viewing, setViewing] = useState<SavedSession | null>(null)
@@ -101,6 +117,7 @@ export function useInsightChat() {
     send,
     setSavingMonthly,
     setCompare,
+    completeCompare,
     sessions,
     viewing,
     saveSession,

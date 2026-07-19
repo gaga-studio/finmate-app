@@ -14,10 +14,23 @@ export const INITIAL_REPLIES: Reply[] = [
     text: '뭐부터 볼까요?',
     widget: {
       type: 'options',
-      options: ['만약 12만원 운동화를 산다면?', '저축을 늘리면 파리가 얼마나 빨라져?', '이번 달 리포트 만들어줘'],
+      options: ['메이트/그룹 비교', '200만원 맥북 사기', '리포트 생성'],
     },
   },
 ]
+
+/** 비교 시트에서 대상을 고르면 발화하는 완성 멘트 — useInsightChat.completeCompare가 사용 */
+export function compareDoneReplies(targetId: string, label: string, summary: string): Reply[] {
+  return [
+    { role: 'ai', text: '시뮬레이션이 완성되었어요! ✨', chart: { kind: 'compare', targetId } },
+    { role: 'ai', text: `나 vs ${label} — ${summary}` },
+    {
+      role: 'ai',
+      text: '이 위에 소비 계획도 얹어볼까요?',
+      widget: { type: 'chips', chips: ['나 이번달에 맥북 M5 프로 살거야'] },
+    },
+  ]
+}
 
 interface Scenario {
   id: string
@@ -53,9 +66,9 @@ const SCENARIOS: Scenario[] = [
   },
   {
     id: 'sim-shoes',
-    match: /운동화|만약|살까/,
+    match: /운동화|살까/,
     replies: [
-      { role: 'ai', text: '산다 vs 참는다, 그래프로 비교해봤어요 👟', chart: { kind: 'sim-shoes' } },
+      { role: 'ai', text: '산다 vs 참는다, 금융렌즈로 훑어봤어요 👟' },
       {
         role: 'ai',
         text: `사면 파리 출발 ${SIM_SCENARIO.lens.goalDelayDays}일 지연 · 이번 주 자유예산 ${SIM_SCENARIO.lens.freeBudgetPct}% 사용`,
@@ -65,6 +78,21 @@ const SCENARIOS: Scenario[] = [
         text: '그래서, 어떻게 할래요?',
         widget: { type: 'options', options: ['산다!', '참는다!'] },
       },
+    ],
+  },
+  // 시연 핵심: 맥북 200만 — 투영 그래프가 실시간으로 꺾이고 예상 리포트로 이어진다
+  {
+    id: 'macbook',
+    match: /맥북|m5|노트북/i,
+    replies: [
+      {
+        role: 'ai',
+        text: '맥북 M5 프로 200만원, 지금 그래프에 바로 반영해봤어요 💻',
+        chart: { kind: 'sim-macbook' },
+      },
+      { role: 'ai', text: '12월 예상 1,637만원 → 1,437만원 · 그래도 우상향은 지켜져요' },
+      { role: 'ai', text: '맥북을 샀을 때 이번 달 예상 리포트는 이렇게 나와요!' },
+      { role: 'ai', widget: { type: 'report', variant: 'macbook' } },
     ],
   },
   {
@@ -88,15 +116,11 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   {
-    id: 'mate',
-    match: /메이트|비교|또래|친구/,
+    id: 'compare',
+    match: /메이트|그룹|비교|또래|친구/,
     replies: [
-      {
-        role: 'ai',
-        text: '소득 유사 그룹 평균을 겹쳐봤어요',
-        chart: { kind: 'compare', targetId: 'g-income' },
-      },
-      { role: 'ai', text: '그래프 우상단 비교에서 다른 메이트·그룹도 골라볼 수 있어요 👆' },
+      { role: 'ai', text: '어떤 메이트/그룹과 비교하시겠어요? 👇' },
+      { role: 'ai', widget: { type: 'compare-picker' } },
     ],
   },
   {

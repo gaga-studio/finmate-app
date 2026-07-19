@@ -16,7 +16,7 @@ export function InsightsPage() {
   const [chipsOpen, setChipsOpen] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
   const [compareOpen, setCompareOpen] = useState(false)
-  const [reportOpen, setReportOpen] = useState(false)
+  const [report, setReport] = useState<{ variant?: 'macbook' } | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const toastTimer = useRef<number | undefined>(undefined)
 
@@ -97,7 +97,8 @@ export function InsightsPage() {
         onChip={insertTemplate}
         onOption={chat.send}
         onSlider={chat.setSavingMonthly}
-        onReport={() => setReportOpen(true)}
+        onReport={(variant) => setReport({ variant })}
+        onComparePick={() => !viewing && setCompareOpen(true)}
         readOnly={viewing}
       />
 
@@ -117,13 +118,15 @@ export function InsightsPage() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>{reportOpen && <ReportOverlay onClose={() => setReportOpen(false)} />}</AnimatePresence>
+      <AnimatePresence>
+        {report && <ReportOverlay variant={report.variant} onClose={() => setReport(null)} />}
+      </AnimatePresence>
 
       <AnimatePresence>
         {compareOpen && (
           <ComparePickerSheet
             selectedId={chat.chart.kind === 'compare' ? chat.chart.targetId : null}
-            onSelect={chat.setCompare}
+            onSelect={(id) => (id ? chat.completeCompare(id) : chat.setCompare(null))}
             onClose={() => setCompareOpen(false)}
           />
         )}

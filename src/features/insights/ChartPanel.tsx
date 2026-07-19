@@ -3,10 +3,11 @@ import { Users } from 'lucide-react'
 import { LineChart } from '../../shared/charts/LineChart'
 import { CompareChart } from '../../shared/charts/CompareChart'
 import { formatKrwCompact } from '../../shared/format/krw'
-import { SIM_SCENARIO } from '../../data/domain'
 import {
   COMPARE_TARGETS,
   getHabitProjection,
+  getMacbookSim,
+  MACBOOK,
   makeSavingProjection,
   PROJECTION_MONTHS,
   type InsightChartState,
@@ -79,18 +80,20 @@ function chartKey(state: InsightChartState): string {
 }
 
 function renderState(state: InsightChartState) {
-  if (state.kind === 'sim-shoes') {
+  if (state.kind === 'sim-macbook') {
+    const sim = getMacbookSim()
     return {
-      title: '산다 vs 참는다 · 12만원 운동화',
-      caption: '12주 자산 시뮬레이션',
+      title: `${MACBOOK.name} ${formatKrwCompact(MACBOOK.price)}이면`,
+      caption: `12월 ${formatKrwCompact(sim.endBase)} → ${formatKrwCompact(sim.endBought)}`,
       metricClass: 'text-budget',
       chart: (
         <CompareChart
-          value={SIM_SCENARIO.baseCurve}
-          principal={SIM_SCENARIO.altCurve}
-          labels={['참는다', '산다']}
+          value={sim.base}
+          principal={sim.bought}
+          labels={['그대로', '맥북 사면']}
           width={CHART_W}
           height={132}
+          xLabels={PROJECTION_MONTHS}
         />
       ),
     }

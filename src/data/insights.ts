@@ -10,7 +10,7 @@ import { MY_ASSETS } from './domain'
 export type InsightChartState =
   | { kind: 'projection' }
   | { kind: 'compare'; targetId: string }
-  | { kind: 'sim-shoes' }
+  | { kind: 'sim-macbook' }
   | { kind: 'sim-saving'; monthly: number }
 
 export type InsightWidget =
@@ -21,8 +21,10 @@ export type InsightWidget =
   | { type: 'chips'; chips: string[] }
   /** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송되는 1회용 버튼 */
   | { type: 'options'; options: string[] }
-  /** 리포트 생성 버튼 → 리포트 오버레이 */
-  | { type: 'report' }
+  /** 메이트/그룹 선택지 — 탭하면 비교 바텀시트가 열린다 */
+  | { type: 'compare-picker' }
+  /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
+  | { type: 'report'; variant?: 'macbook' }
 
 export interface InsightMsg {
   id: string
@@ -72,6 +74,31 @@ export function getHabitProjection(): HabitProjection {
 
 /** 투영 차트 x축 — 7월(지금)부터 6개월 */
 export const PROJECTION_MONTHS = ['7월', '8월', '9월', '10월', '11월', '12월']
+
+/** 시연 시나리오의 구매 대상 — 이번 달 일시불 가정 */
+export const MACBOOK = { name: '맥북 M5 프로', price: 2_000_000 } as const
+
+export interface MacbookSim {
+  /** 그대로 갔을 때 투영 */
+  base: number[]
+  /** 이번 달 맥북 구매 시 투영 — 전 구간 -200만 */
+  bought: number[]
+  /** 12월 예상 격차 표시용 */
+  endBase: number
+  endBought: number
+}
+
+/** "이번 달에 맥북 M5 프로 살거야" → 투영이 어떻게 꺾이는지 */
+export function getMacbookSim(): MacbookSim {
+  const { curve } = getHabitProjection()
+  const bought = curve.map((v) => v - MACBOOK.price)
+  return {
+    base: curve,
+    bought,
+    endBase: curve[curve.length - 1],
+    endBought: bought[bought.length - 1],
+  }
+}
 
 /* ---------- 메이트/그룹 선(線) 비교 ---------- */
 
@@ -171,8 +198,8 @@ export function makeSavingProjection(monthly: number): SavingProjection {
 
 /** 입력바 `+`와 폴백이 제안하는 추천 질문 */
 export const SUGGESTION_CHIPS = [
-  '만약 12만원 운동화를 산다면?',
-  '저축을 늘리면 파리가 얼마나 빨라져?',
+  '메이트/그룹 비교',
+  '나 이번달에 맥북 M5 프로 살거야',
   '이번 달 리포트 만들어줘',
   '금융 퀴즈 내줘',
 ] as const
@@ -185,12 +212,7 @@ export const PRESET_SESSIONS: SavedSession[] = [
     savedAt: '7월 21일',
     messages: [
       { id: 'ps1', role: 'user', text: '만약 12만원 운동화를 산다면?' },
-      {
-        id: 'ps2',
-        role: 'ai',
-        text: '산다 vs 참는다, 그래프로 비교해봤어요',
-        chart: { kind: 'sim-shoes' },
-      },
+      { id: 'ps2', role: 'ai', text: '산다 vs 참는다, 금융렌즈로 훑어봤어요 👟' },
       { id: 'ps3', role: 'ai', text: '사면 파리 출발 11일 지연 · 이번 주 자유예산 46% 사용 🎯' },
       { id: 'ps4', role: 'user', text: '그래도 살래!' },
       {
