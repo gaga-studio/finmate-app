@@ -24,6 +24,8 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
   const c = { x: 100, y: 92 }
   const r = 72
   const thickness = 12
+  // 작게 렌더되면(비교 미니 카드 등) 얇은 보조 눈금이 서브픽셀로 깨진다 — 주요 눈금만
+  const mini = width < 130
 
   const a0 = polar(c, r, START)
   const a1 = polar(c, r, START + SWEEP)
@@ -32,7 +34,7 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
   const needleDeg = -120 + SWEEP * Math.max(0, Math.min(1, pct))
 
   return (
-    <svg width={width} height={height} viewBox="0 0 200 152" aria-hidden>
+    <svg width={width} height={height} viewBox="0 0 200 152" shapeRendering="geometricPrecision" aria-hidden>
       {/* 트랙 */}
       <path
         d={arcPath}
@@ -54,12 +56,13 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
         transition={{ type: 'spring', stiffness: 60, damping: 18 }}
       />
 
-      {/* 눈금 — 20° 간격 13개, 0/25/50/75/100% 지점 강조 */}
+      {/* 눈금 — 20° 간격 13개(미니에선 주요 5개만), 0/25/50/75/100% 지점 강조 */}
       {Array.from({ length: 13 }, (_, i) => {
-        const deg = START + (i / 12) * SWEEP
         const major = i % 3 === 0
+        if (mini && !major) return null
+        const deg = START + (i / 12) * SWEEP
         const outer = polar(c, r - thickness / 2 - 3, deg)
-        const inner = polar(c, r - thickness / 2 - (major ? 11 : 7), deg)
+        const inner = polar(c, r - thickness / 2 - (major ? 11 : 8), deg)
         return (
           <line
             key={i}
@@ -68,8 +71,8 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
             x2={inner.x}
             y2={inner.y}
             stroke="currentColor"
-            strokeOpacity={major ? 0.5 : 0.22}
-            strokeWidth={major ? 2.4 : 1.6}
+            strokeOpacity={major ? 0.55 : 0.3}
+            strokeWidth={major ? (mini ? 3.2 : 2.6) : 2}
             strokeLinecap="round"
           />
         )
