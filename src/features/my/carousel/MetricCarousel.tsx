@@ -60,6 +60,41 @@ export function MetricCarousel({ metric, period, savingView, investView, onMetri
     if (METRICS[clamped] !== metric) onMetricChange(METRICS[clamped])
   }
 
+  // 데스크톱 가로 휠(트랙패드 스와이프)로도 지표 전환 — 최신 idx/snapTo는 ref로 참조
+  const wheelRef = useRef({ idx, snapTo })
+  wheelRef.current = { idx, snapTo }
+  useLayoutEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    let accum = 0
+    let cooling = false
+    let idleTimer: number | undefined
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+      if (cooling) return
+      accum += e.deltaX
+      window.clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(() => {
+        accum = 0
+      }, 200)
+      if (Math.abs(accum) > 60) {
+        const dir = accum > 0 ? 1 : -1
+        accum = 0
+        cooling = true
+        window.setTimeout(() => {
+          cooling = false
+        }, 450)
+        wheelRef.current.snapTo(wheelRef.current.idx + dir)
+      }
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => {
+      el.removeEventListener('wheel', onWheel)
+      window.clearTimeout(idleTimer)
+    }
+  }, [])
+
   return (
     <div
       ref={viewportRef}
