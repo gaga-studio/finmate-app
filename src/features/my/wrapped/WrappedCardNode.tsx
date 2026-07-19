@@ -41,10 +41,11 @@ export const WrappedCardNode = forwardRef<HTMLDivElement, Props>(function Wrappe
 
 function top3Rows(metric: Metric, w: WrappedSummary): { key: string; label: string; value: string }[] {
   if (metric === 'budget') {
-    return w.topSpending.slice(0, 3).map((c) => {
-      const meta = CATEGORY_META[c.category]
-      return { key: c.category, label: `${meta.emoji} ${meta.label}`, value: formatKrwCompact(c.total) }
-    })
+    return w.topPurchases.slice(0, 3).map((t) => ({
+      key: t.id,
+      label: `${CATEGORY_META[t.category].emoji} ${t.merchant}`,
+      value: formatKrwCompact(-t.amount),
+    }))
   }
   if (metric === 'saving') {
     return WISHLIST.slice(0, 3).map((item) => ({

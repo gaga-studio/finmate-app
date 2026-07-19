@@ -46,7 +46,7 @@ export const ASSET_SERIES: number[] = (() => {
 })()
 
 export const WISHLIST: WishItem[] = [
-  { id: 'w1', title: 'MacBook Air', price: 1_590_000, savedPct: 0.38, emoji: '💻' },
+  { id: 'w1', title: '맥북 프로', price: 2_390_000, savedPct: 0.12, emoji: '💻' },
   { id: 'w2', title: '파리 왕복 항공권', price: 890_000, savedPct: 0.72, emoji: '✈️' },
   { id: 'w3', title: '에어팟 프로', price: 359_000, savedPct: 0.21, emoji: '🎧' },
   { id: 'w4', title: '러닝화', price: 120_000, savedPct: 0.55, emoji: '👟' },

@@ -8,7 +8,7 @@ import {
 import { getPeriodRange, keysInRange } from './dates'
 import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
-import type { Category, Metric, Period, Transaction, WrappedContent } from './types'
+import type { Metric, Period, Transaction, WrappedContent } from './types'
 
 /** 모든 화면이 의존하는 기간별 파생 집계 — 전부 동기 순수함수. */
 
@@ -114,22 +114,12 @@ export function getInvestSeries(period: Period): InvestSummary {
   }
 }
 
-export interface CategorySum {
-  category: Category
-  total: number
-  count: number
-}
-
-export function getTopSpending(period: Period, n = 5): CategorySum[] {
-  const sums = new Map<Category, CategorySum>()
-  for (const t of inRange(period)) {
-    if (t.amount >= 0 || t.category === 'saving' || t.category === 'invest') continue
-    const cur = sums.get(t.category) ?? { category: t.category, total: 0, count: 0 }
-    cur.total += -t.amount
-    cur.count += 1
-    sums.set(t.category, cur)
-  }
-  return [...sums.values()].sort((a, b) => b.total - a.total).slice(0, n)
+/** 소비 탑 N: 카테고리 합산이 아니라 개별 구매 상위 — 커피/운동화/맥북 같은 스토리가 행으로 보인다 */
+export function getTopPurchases(period: Period, n = 5): Transaction[] {
+  return inRange(period)
+    .filter((t) => t.amount < 0 && t.category !== 'saving' && t.category !== 'invest')
+    .sort((a, b) => a.amount - b.amount)
+    .slice(0, n)
 }
 
 export function getDayLedger(dateKey: string): Transaction[] {
@@ -157,7 +147,7 @@ export interface WrappedSummary extends WrappedContent {
   budget: BudgetSummary
   saving: SavingSummary
   invest: InvestSummary
-  topSpending: CategorySum[]
+  topPurchases: Transaction[]
 }
 
 export function getWrapped(metric: Metric, period: Period): WrappedSummary {
@@ -167,6 +157,6 @@ export function getWrapped(metric: Metric, period: Period): WrappedSummary {
     budget: getBudget(period),
     saving: getSavingProgress(period),
     invest: getInvestSeries(period),
-    topSpending: getTopSpending(period),
+    topPurchases: getTopPurchases(period),
   }
 }
