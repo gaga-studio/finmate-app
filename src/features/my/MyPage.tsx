@@ -5,19 +5,16 @@ import { MetricCarousel } from './carousel/MetricCarousel'
 import { ArtCardThumb } from './panels/ArtCardThumb'
 import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
-import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import { UserAvatar } from '../../shared/profile/UserAvatar'
 import { PageTitle } from '../../shared/ui/PageTitle'
-import { snappy } from '../../shared/motion/springs'
+import { MetricTabs } from './MetricTabs'
+import { ViewChips } from './ViewChips'
 import {
   INVEST_VIEWS,
-  INVEST_VIEW_LABEL,
   METRICS,
   PERIODS,
-  PERIOD_LABEL,
   SAVING_VIEWS,
-  SAVING_VIEW_LABEL,
   nextInvestView,
   nextPeriod,
   nextSavingView,
@@ -122,34 +119,8 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
-      {/* 지표 밑줄 탭 — 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 (미션 탭과 동일 문법) */}
-      <div className="relative flex border-b border-line px-5">
-        {(
-          [
-            { value: 'budget', label: '소비', color: 'text-budget' },
-            { value: 'saving', label: '저축', color: 'text-saving' },
-            { value: 'invest', label: '투자', color: 'text-invest' },
-          ] as const
-        ).map(({ value, label, color }) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setMetric(value)}
-            className={`relative flex-1 pb-2.5 pt-1 text-section font-bold ${
-              metric === value ? color : 'text-ink-faint'
-            }`}
-          >
-            {label}
-            {metric === value && (
-              <motion.span
-                layoutId="my-metric-tab"
-                className="absolute inset-x-8 bottom-0 h-0.5 rounded-full bg-current"
-                transition={snappy}
-              />
-            )}
-          </button>
-        ))}
-      </div>
+      {/* 지표 밑줄 탭 — 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 */}
+      <MetricTabs metric={metric} onChange={setMetric} layoutId="my-metric-tab" />
 
       <div className="pt-2" />
 
@@ -172,28 +143,16 @@ export function MyPage() {
       />
 
       <div className="relative mt-2 flex justify-center">
-        {metric === 'saving' ? (
-          <SegmentedControl
-            id="period"
-            items={SAVING_VIEWS.map((v) => ({ value: v, label: SAVING_VIEW_LABEL[v] }))}
-            value={savingView}
-            onChange={setSavingView}
-          />
-        ) : metric === 'invest' ? (
-          <SegmentedControl
-            id="period"
-            items={INVEST_VIEWS.map((v) => ({ value: v, label: INVEST_VIEW_LABEL[v] }))}
-            value={investView}
-            onChange={setInvestView}
-          />
-        ) : (
-          <SegmentedControl
-            id="period"
-            items={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))}
-            value={period}
-            onChange={setPeriod}
-          />
-        )}
+        <ViewChips
+          id="period"
+          metric={metric}
+          period={period}
+          savingView={savingView}
+          investView={investView}
+          onPeriod={setPeriod}
+          onSavingView={setSavingView}
+          onInvestView={setInvestView}
+        />
       </div>
 
       <h2 className="mt-4 px-6 text-title font-extrabold text-ink">요약</h2>
