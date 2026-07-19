@@ -100,11 +100,37 @@ export interface ProfileSummary {
   similarity?: number
 }
 
-export type FeedItem =
-  | { id: string; kind: 'wrapped'; author: ProfileSummary; period: Period; headline: string; artKey: string }
-  | { id: string; kind: 'highlight'; author: ProfileSummary; text: string; stat: string }
-  | { id: string; kind: 'diary'; author: ProfileSummary; date: string; caption: string; artKey: string }
-  | { id: string; kind: 'fomo'; text: string; stat: string; cta: string }
+/** 피드 상단 "그룹 보기" 카드 */
+export interface FeedGroup {
+  id: string
+  emoji: string
+  label: string
+  /** 기준 수치 설명 (예: "월 소득 ±100만원") */
+  desc: string
+  members: number
+}
+
+export interface StoryStat {
+  label: string
+  value: string
+}
+
+/** 오늘의 스토리 — 다른 유저가 공유한 Wrapped 카드 (익명 닉네임) */
+export interface Story {
+  id: string
+  author: ProfileSummary
+  metric: Metric
+  period: Period
+  headline: string
+  subline: string
+  /** 작성자 카드의 지표 요약 3종 (수기) */
+  stats: StoryStat[]
+  artKey: `${Metric}-${Period}`
+  likes: number
+  groupIds: string[]
+  /** 정렬용 고정 데모 시각 (ISO) */
+  postedAt: string
+}
 
 export interface DiaryEntry {
   date: string
