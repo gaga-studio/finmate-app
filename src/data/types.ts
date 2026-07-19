@@ -52,7 +52,7 @@ export interface Mission {
   detail: string
   reward: string
   done: boolean
-  /** 탭 이동 대상 (예: "/growth#quiz") */
+  /** 탭 이동 대상 (예: "/insights#quiz") */
   linkTo?: string
 }
 
