@@ -9,6 +9,7 @@ import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import { UserAvatar } from '../../shared/profile/UserAvatar'
 import { PageTitle } from '../../shared/ui/PageTitle'
+import { snappy } from '../../shared/motion/springs'
 import {
   INVEST_VIEWS,
   INVEST_VIEW_LABEL,
@@ -121,19 +122,36 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
-      {/* 지표 토글 — 캐러셀 스와이프와 동일한 전환 */}
-      <div className="relative flex justify-center pb-2">
-        <SegmentedControl
-          id="metric"
-          items={[
-            { value: 'budget' as Metric, label: '소비' },
-            { value: 'saving' as Metric, label: '저축' },
-            { value: 'invest' as Metric, label: '투자' },
-          ]}
-          value={metric}
-          onChange={setMetric}
-        />
+      {/* 지표 밑줄 탭 — 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 (미션 탭과 동일 문법) */}
+      <div className="relative flex border-b border-line px-5">
+        {(
+          [
+            { value: 'budget', label: '소비', color: 'text-budget' },
+            { value: 'saving', label: '저축', color: 'text-saving' },
+            { value: 'invest', label: '투자', color: 'text-invest' },
+          ] as const
+        ).map(({ value, label, color }) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setMetric(value)}
+            className={`relative flex-1 pb-2.5 pt-1 text-section font-bold ${
+              metric === value ? color : 'text-ink-faint'
+            }`}
+          >
+            {label}
+            {metric === value && (
+              <motion.span
+                layoutId="my-metric-tab"
+                className="absolute inset-x-8 bottom-0 h-0.5 rounded-full bg-current"
+                transition={snappy}
+              />
+            )}
+          </button>
+        ))}
       </div>
+
+      <div className="pt-2" />
 
       <MetricCarousel
         metric={metric}
