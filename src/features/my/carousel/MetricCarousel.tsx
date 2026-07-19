@@ -13,6 +13,8 @@ interface Props {
   /** 스택 전환(위로 밀기·휠 다운 = 다음 / 아래로·휠 업 = 이전) — 순환 대상은 MyPage가 결정 */
   onStackNext: () => void
   onStackPrev: () => void
+  /** 카드 렌더 주입 — 생략 시 마이 탭 기본 카드. 메이트 프로필이 같은 구조로 다른 카드를 꽂는다 */
+  renderCard?: (m: Metric, period: Period, savingView: SavingView, investView: InvestView) => React.ReactNode
 }
 
 const CARD_H = 316
@@ -34,6 +36,7 @@ export function MetricCarousel({
   onMetricChange,
   onStackNext,
   onStackPrev,
+  renderCard,
 }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [vw, setVw] = useState(390)
@@ -189,7 +192,9 @@ export function MetricCarousel({
                   exit={{ y: 64, scale: 1.04, opacity: 0 }}
                   transition={snappy}
                 >
-                  {m === 'budget' ? (
+                  {renderCard ? (
+                    renderCard(m, period, savingView, investView)
+                  ) : m === 'budget' ? (
                     <BudgetCard period={period} />
                   ) : m === 'saving' ? (
                     <SavingCard view={savingView} />
