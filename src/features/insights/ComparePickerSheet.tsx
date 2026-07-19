@@ -1,0 +1,103 @@
+import { createPortal } from 'react-dom'
+import { motion } from 'motion/react'
+import { Check } from 'lucide-react'
+import { overlayTarget } from '../../shared/ui/overlayTarget'
+import { dramatic } from '../../shared/motion/springs'
+import { COMPARE_TARGETS } from '../../data/insights'
+
+interface Props {
+  /** 현재 그래프에 겹쳐진 대상 (없으면 null) */
+  selectedId: string | null
+  onSelect: (targetId: string | null) => void
+  onClose: () => void
+}
+
+/** 그래프 우상단 '비교' — 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
+export function ComparePickerSheet({ selectedId, onSelect, onClose }: Props) {
+  const mates = COMPARE_TARGETS.filter((t) => t.kind === 'mate')
+  const groups = COMPARE_TARGETS.filter((t) => t.kind === 'group')
+
+  const pick = (id: string) => {
+    onSelect(id === selectedId ? null : id)
+    onClose()
+  }
+
+  return createPortal(
+    <div className="absolute inset-0 z-[60]">
+      <motion.div
+        className="absolute inset-0 bg-black/45"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+      />
+      <motion.div
+        className="absolute inset-x-0 bottom-0 max-h-[72%] overflow-y-auto rounded-t-sheet bg-elevated px-6 pb-10 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={dramatic}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 0.5 }}
+        onDragEnd={(_, info) => {
+          if (info.offset.y > 90 || info.velocity.y > 700) onClose()
+        }}
+      >
+        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-ink/15" />
+        <h2 className="text-title font-extrabold text-ink">그래프 비교</h2>
+        <p className="mt-0.5 text-caption font-medium text-ink-soft">
+          메이트나 그룹을 고르면 내 그래프 위에 선으로 겹쳐져요 · 다시 누르면 해제
+        </p>
+
+        <Section title="메이트" items={mates} selectedId={selectedId} onPick={pick} />
+        <Section title="그룹 평균" items={groups} selectedId={selectedId} onPick={pick} />
+      </motion.div>
+    </div>,
+    overlayTarget(),
+  )
+}
+
+function Section({
+  title,
+  items,
+  selectedId,
+  onPick,
+}: {
+  title: string
+  items: typeof COMPARE_TARGETS
+  selectedId: string | null
+  onPick: (id: string) => void
+}) {
+  return (
+    <div className="mt-4">
+      <p className="text-caption font-bold text-ink-faint">{title}</p>
+      <div className="mt-1.5 flex flex-col">
+        {items.map((t) => {
+          const active = t.id === selectedId
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => onPick(t.id)}
+              className="flex items-center gap-3 py-2.5 text-left"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink/5 text-title">
+                {t.emoji}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-body font-bold text-ink">{t.label}</p>
+                <p className="mt-0.5 text-caption font-medium text-ink-soft">{t.sub}</p>
+              </div>
+              {active && (
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">
+                  <Check size={13} strokeWidth={3} />
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}

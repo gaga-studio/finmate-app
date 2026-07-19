@@ -13,13 +13,17 @@ interface Props {
   typing: boolean
   /** 칩 탭 → 입력창에 템플릿 삽입 */
   onChip: (text: string) => void
+  /** 추천옵션 탭 → 그 문장을 즉시 답변으로 전송 */
+  onOption: (text: string) => void
   /** 슬라이더 이동 → 상단 차트 갱신 */
   onSlider: (monthly: number) => void
+  /** 리포트 생성 버튼 → 리포트 오버레이 */
+  onReport: () => void
   /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
   readOnly?: boolean
 }
 
-export function ChatThread({ messages, typing, onChip, onSlider, readOnly }: Props) {
+export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, readOnly }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -39,7 +43,9 @@ export function ChatThread({ messages, typing, onChip, onSlider, readOnly }: Pro
             msg={m}
             showAvatar={m.role === 'ai' && messages[i - 1]?.role !== 'ai'}
             onChip={onChip}
+            onOption={onOption}
             onSlider={onSlider}
+            onReport={onReport}
             readOnly={readOnly}
           />
         ))}
@@ -53,13 +59,17 @@ function Bubble({
   msg,
   showAvatar,
   onChip,
+  onOption,
   onSlider,
+  onReport,
   readOnly,
 }: {
   msg: InsightMsg
   showAvatar: boolean
   onChip: (text: string) => void
+  onOption: (text: string) => void
   onSlider: (monthly: number) => void
+  onReport: () => void
   readOnly?: boolean
 }) {
   if (msg.role === 'user') {
@@ -89,7 +99,16 @@ function Bubble({
             {msg.text}
           </div>
         )}
-        {msg.widget && <Widget widget={msg.widget} onChip={onChip} onSlider={onSlider} readOnly={readOnly} />}
+        {msg.widget && (
+          <Widget
+            widget={msg.widget}
+            onChip={onChip}
+            onOption={onOption}
+            onSlider={onSlider}
+            onReport={onReport}
+            readOnly={readOnly}
+          />
+        )}
       </div>
     </motion.div>
   )
@@ -127,18 +146,24 @@ function TypingIndicator() {
 function Widget({
   widget,
   onChip,
+  onOption,
   onSlider,
+  onReport,
   readOnly,
 }: {
   widget: InsightWidget
   onChip: (text: string) => void
+  onOption: (text: string) => void
   onSlider: (monthly: number) => void
+  onReport: () => void
   readOnly?: boolean
 }) {
   if (widget.type === 'summary') return <SummaryCard />
   if (widget.type === 'slider') return <SliderWidget onSlider={onSlider} readOnly={readOnly} />
   if (widget.type === 'quiz') return <QuizWidget quizId={widget.quizId} readOnly={readOnly} />
   if (widget.type === 'mission') return <MissionWidget missionId={widget.missionId} readOnly={readOnly} />
+  if (widget.type === 'options') return <OptionsWidget options={widget.options} onOption={onOption} readOnly={readOnly} />
+  if (widget.type === 'report') return <ReportWidget onReport={onReport} readOnly={readOnly} />
   return (
     <div className="flex flex-wrap gap-1.5">
       {widget.chips.map((c) => (
@@ -152,6 +177,62 @@ function Widget({
         </button>
       ))}
     </div>
+  )
+}
+
+/** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송, 한 번 고르면 잠긴다 */
+function OptionsWidget({
+  options,
+  onOption,
+  readOnly,
+}: {
+  options: string[]
+  onOption: (text: string) => void
+  readOnly?: boolean
+}) {
+  const [picked, setPicked] = useState<string | null>(null)
+
+  return (
+    <div className="flex flex-col items-start gap-1.5" data-testid="options-widget">
+      {options.map((o) => (
+        <button
+          key={o}
+          type="button"
+          disabled={readOnly || picked !== null}
+          onClick={() => {
+            setPicked(o)
+            onOption(o)
+          }}
+          className={`rounded-full px-3.5 py-2 text-body font-bold transition-opacity ${
+            picked === o
+              ? 'bg-accent text-white'
+              : 'border border-accent/35 bg-elevated text-accent shadow-soft'
+          } ${picked !== null && picked !== o ? 'opacity-35' : ''}`}
+        >
+          {o}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+/** 리포트 생성 — 리포트 오버레이 화면을 연다 */
+function ReportWidget({ onReport, readOnly }: { onReport: () => void; readOnly?: boolean }) {
+  return (
+    <button
+      type="button"
+      disabled={readOnly}
+      onClick={onReport}
+      className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-elevated px-4 py-3 shadow-soft"
+      data-testid="report-widget"
+    >
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-[17px]">📋</span>
+      <span className="text-left">
+        <span className="block text-body font-bold text-ink">7월 리포트 보기</span>
+        <span className="block text-caption font-medium text-ink-soft">소비 · 저축 · 투자 한 장 정리</span>
+      </span>
+      <ChevronRight size={15} className="ml-1 text-ink-faint" />
+    </button>
   )
 }
 

@@ -5,10 +5,18 @@ import { SIM_SCENARIO } from '../../data/domain'
 /** id 없는 메시지 — 훅이 push할 때 id를 부여한다 */
 export type Reply = Omit<InsightMsg, 'id'>
 
-/** 첫 진입 시 AI가 자동으로 발화하는 시퀀스 */
+/** 첫 진입 시 AI가 자동으로 발화하는 시퀀스 — 총평 + 추천옵션 */
 export const INITIAL_REPLIES: Reply[] = [
   { role: 'ai', text: '지혜님, 오늘 하루 이렇게 정리했어요 👋' },
   { role: 'ai', widget: { type: 'summary' } },
+  {
+    role: 'ai',
+    text: '뭐부터 볼까요?',
+    widget: {
+      type: 'options',
+      options: ['만약 12만원 운동화를 산다면?', '저축을 늘리면 파리가 얼마나 빨라져?', '이번 달 리포트 만들어줘'],
+    },
+  },
 ]
 
 interface Scenario {
@@ -22,9 +30,30 @@ interface Scenario {
  * 응답 버블에 chart를 실으면 그 버블이 등장할 때 상단 그래프가 전환된다.
  */
 const SCENARIOS: Scenario[] = [
+  // 산다/참는다 즉답은 sim-shoes보다 먼저 매칭되어야 한다
+  {
+    id: 'buy',
+    match: /^산다!?$/,
+    replies: [
+      { role: 'ai', text: '오케이, 사는 대신 여기서 아껴봐요 ☕️' },
+      { role: 'ai', widget: { type: 'mission', missionId: 'r-cafe' } },
+    ],
+  },
+  {
+    id: 'pass',
+    match: /^참는다!?$/,
+    replies: [
+      { role: 'ai', text: '그 참을성이 파리를 앞당겨요 ✈️' },
+      {
+        role: 'ai',
+        text: '아낀 12만원, 저축으로 돌리면?',
+        widget: { type: 'chips', chips: ['저축을 늘리면 파리가 얼마나 빨라져?'] },
+      },
+    ],
+  },
   {
     id: 'sim-shoes',
-    match: /운동화|만약|산다|살까/,
+    match: /운동화|만약|살까/,
     replies: [
       { role: 'ai', text: '산다 vs 참는다, 그래프로 비교해봤어요 👟', chart: { kind: 'sim-shoes' } },
       {
@@ -33,9 +62,17 @@ const SCENARIOS: Scenario[] = [
       },
       {
         role: 'ai',
-        text: '결정 전에 30초 퀴즈 어때요?',
-        widget: { type: 'chips', chips: ['금융 퀴즈 내줘'] },
+        text: '그래서, 어떻게 할래요?',
+        widget: { type: 'options', options: ['산다!', '참는다!'] },
       },
+    ],
+  },
+  {
+    id: 'report',
+    match: /리포트|정리|결산/,
+    replies: [
+      { role: 'ai', text: '7월 한 달을 카드 한 장으로 정리했어요 📋' },
+      { role: 'ai', widget: { type: 'report' } },
     ],
   },
   {
@@ -54,13 +91,12 @@ const SCENARIOS: Scenario[] = [
     id: 'mate',
     match: /메이트|비교|또래|친구/,
     replies: [
-      { role: 'ai', text: '소비 유사 메이트 평균과 나란히 놓아봤어요', chart: { kind: 'mate' } },
-      { role: 'ai', text: '지혜님이 메이트 평균보다 +86만원 앞서는 중 🏆' },
       {
         role: 'ai',
-        text: '격차를 더 벌리고 싶다면?',
-        widget: { type: 'chips', chips: ['저축을 늘리면 파리가 얼마나 빨라져?'] },
+        text: '소득 유사 그룹 평균을 겹쳐봤어요',
+        chart: { kind: 'compare', targetId: 'g-income' },
       },
+      { role: 'ai', text: '그래프 우상단 비교에서 다른 메이트·그룹도 골라볼 수 있어요 👆' },
     ],
   },
   {
