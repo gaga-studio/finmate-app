@@ -380,3 +380,34 @@ export function getWrapped(metric: Metric, period: Period): WrappedSummary {
     topPurchases: getTopPurchases(period),
   }
 }
+
+/* ---------- 인사이트 탭: 오늘의 총평 ---------- */
+
+export interface DailySummary {
+  /** 오늘 소비 지출 합 */
+  spent: number
+  /** 예산 남은 비율 % (반올림) */
+  budgetLeftPct: number
+  /** 오늘 소비 1위 거래 */
+  top: Transaction
+  /** 오늘 저축액 */
+  savingDelta: number
+  /** 파리 목표 진행률 % */
+  savingPct: number
+  /** 총 투자 수익률 % */
+  investReturnPct: number
+}
+
+/** 오늘의 총평 카드 근거 수치 — 마이 탭과 같은 셀렉터에서 파생해 정합을 유지한다 */
+export function getDailySummary(): DailySummary {
+  const b = getBudget('daily')
+  const s = getSavingProgress('daily')
+  return {
+    spent: b.spent,
+    budgetLeftPct: Math.round(b.pct * 100),
+    top: getTopPurchases('daily', 1)[0],
+    savingDelta: s.delta,
+    savingPct: Math.round(s.pct * 100),
+    investReturnPct: getInvestStatus().returnPct,
+  }
+}

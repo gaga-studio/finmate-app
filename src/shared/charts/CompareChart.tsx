@@ -14,6 +14,8 @@ interface Props {
   height?: number
   /** 하단 x축 라벨 (포인트 수와 동일 길이) */
   xLabels?: string[]
+  /** 범례 라벨 [실선, 점선] — 기본은 원금 vs 평가 용도 */
+  labels?: [string, string]
 }
 
 function toLine(pts: Pt[]): string {
@@ -24,7 +26,7 @@ function toLine(pts: Pt[]): string {
  * 원금 vs 평가액 비교 차트 — 두 선이 벌어지는 틈이 곧 수익.
  * 월 단위 직선 폴리라인(꺾임 = 월별 변화), 공용 스케일 + 범례·축 라벨.
  */
-export function CompareChart({ value, principal, width = 216, height = 110, xLabels }: Props) {
+export function CompareChart({ value, principal, width = 216, height = 110, xLabels, labels = ['평가액', '원금'] }: Props) {
   const pad = 8
   const plotTop = LEGEND_H
   const plotBottom = height - (xLabels ? X_LABEL_H : 0)
@@ -53,12 +55,19 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
-      {/* 범례 */}
+      {/* 범례 — 라벨 길이에 맞춰 두 번째 항목 위치를 계산 */}
       <g fontSize={9} fontWeight={600} fill="currentColor">
         <line x1={0} y1={5} x2={16} y2={5} stroke="currentColor" strokeWidth={3} strokeLinecap="round" />
-        <text x={20} y={8}>평가액</text>
-        <line x1={58} y1={5} x2={74} y2={5} stroke="currentColor" strokeWidth={2.5} strokeOpacity={0.4} strokeDasharray="3 4" strokeLinecap="round" />
-        <text x={78} y={8} opacity={0.6}>원금</text>
+        <text x={20} y={8}>{labels[0]}</text>
+        {(() => {
+          const x2 = 20 + labels[0].length * 9.5 + 9
+          return (
+            <>
+              <line x1={x2} y1={5} x2={x2 + 16} y2={5} stroke="currentColor" strokeWidth={2.5} strokeOpacity={0.4} strokeDasharray="3 4" strokeLinecap="round" />
+              <text x={x2 + 20} y={8} opacity={0.6}>{labels[1]}</text>
+            </>
+          )
+        })()}
       </g>
 
       {/* y축: 최소/최대 그리드 + 금액 라벨 (최대=좌상단, 최소=우하단 빈 공간) */}
