@@ -7,7 +7,7 @@ export const DEMO_TODAY = new Date(2026, 6, 18, 21, 0, 0) // 2026-07-18 (토) 21
 export const USER = {
   nickname: '지혜',
   emoji: '🌊',
-  bio: '여행 가고 싶은 사회초년생',
+  bio: '여행 가고 싶은 대학생',
 } as const
 
 export function isDemoMode(): boolean {

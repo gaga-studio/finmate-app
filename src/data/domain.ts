@@ -30,17 +30,18 @@ export interface AssetItem {
   emoji: string
 }
 
+/** 대학생 페르소나 — 계좌·상품 위주, 합계 정확히 1,400만원 */
 export const MY_ASSETS: AssetItem[] = [
-  { id: 'as-home', title: '전세 보증금', value: 120_000_000, emoji: '🏠' },
-  { id: 'as-deposit', title: '예·적금', value: 11_000_000, emoji: '💰' },
-  { id: 'as-car', title: '중고차', value: 8_000_000, emoji: '🚗' },
+  { id: 'as-housing', title: '주택청약종합저축', value: 6_000_000, emoji: '🏠' },
+  { id: 'as-deposit', title: '정기적금', value: 3_200_000, emoji: '💰' },
   { id: 'as-paris', title: '파리 여행 통장', value: 2_250_000, emoji: '✈️' },
-  { id: 'as-invest', title: '투자 계좌', value: 1_326_000, emoji: '📈' },
+  { id: 'as-invest', title: '증권 계좌', value: 1_326_000, emoji: '📈' },
+  { id: 'as-parking', title: '파킹 통장', value: 1_224_000, emoji: '🏦' },
 ]
 
-/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(142,576,000)와 일치해야 한다 */
+/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(14,000,000)와 일치해야 한다 */
 export const NET_WORTH_HISTORY: number[] = [
-  139_800_000, 140_400_000, 141_050_000, 141_500_000, 142_180_000, 142_576_000,
+  12_650_000, 12_930_000, 13_180_000, 13_420_000, 13_660_000, 14_000_000,
 ]
 
 /** 보유 종목 — 합계 1,326,000 = 평가액 정합. 스페이스X(2026 상장 설정)가 수익률 1위. */
