@@ -63,6 +63,13 @@ export function MetricCarousel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
 
+  // 외부 전환(지표 토글 등) — metric prop이 바뀌면 캐러셀도 따라 슬라이드
+  useLayoutEffect(() => {
+    const target = -METRICS.indexOf(metric) * step
+    if (x.get() !== target) animate(x, target, snappy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metric])
+
   const snapTo = (target: number) => {
     const clamped = Math.max(0, Math.min(METRICS.length - 1, target))
     animate(x, -clamped * step, snappy)
