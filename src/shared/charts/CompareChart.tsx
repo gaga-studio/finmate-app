@@ -31,8 +31,9 @@ function toLine(pts: Pt[]): string {
 export function CompareChart({ value, principal, width = 216, height = 110, xLabels, labels = ['평가액', '원금'], colors }: Props) {
   const valueColor = colors?.[0] ?? 'currentColor'
   const principalColor = colors?.[1] ?? 'currentColor'
-  // 색 구분 모드에서는 점선도 또렷하게
-  const principalOpacity = colors ? 0.8 : 0.35
+  // 색 구분 모드(비교)에서는 두 번째 선도 실선+도트로 — 사용자 선과 같은 문법
+  const principalOpacity = colors ? 0.9 : 0.35
+  const principalDash = colors ? undefined : '3 4'
   const pad = 8
   const plotTop = LEGEND_H
   const plotBottom = height - (xLabels ? X_LABEL_H : 0)
@@ -69,7 +70,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
           const x2 = 20 + labels[0].length * 9.5 + 9
           return (
             <>
-              <line x1={x2} y1={5} x2={x2 + 16} y2={5} stroke={principalColor} strokeWidth={2.5} strokeOpacity={principalOpacity} strokeDasharray="3 4" strokeLinecap="round" />
+              <line x1={x2} y1={5} x2={x2 + 16} y2={5} stroke={principalColor} strokeWidth={2.5} strokeOpacity={principalOpacity} strokeDasharray={principalDash} strokeLinecap="round" />
               <text x={x2 + 20} y={8} opacity={0.6}>{labels[1]}</text>
             </>
           )
@@ -98,19 +99,36 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         transition={{ delay: 0.55, duration: 0.5 }}
       />
 
-      {/* 원금 점선 */}
+      {/* 두 번째 선 — 기본은 원금 점선, 색 구분 모드에선 메이트 실선 */}
       <motion.path
         d={toLine(principalPts)}
         fill="none"
         stroke={principalColor}
         strokeOpacity={principalOpacity}
-        strokeWidth={2.5}
-        strokeDasharray="4 6"
+        strokeWidth={colors ? 3 : 2.5}
+        strokeDasharray={colors ? undefined : '4 6'}
         strokeLinecap="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.9, ease: [0.3, 0, 0.2, 1] }}
       />
+
+      {/* 색 구분 모드: 메이트 선에도 월 도트 마커 */}
+      {colors &&
+        principalPts.map((p, i) => (
+          <motion.circle
+            key={`p-${i}`}
+            cx={p.x}
+            cy={p.y}
+            r={3}
+            fill="var(--color-elevated, white)"
+            stroke={principalColor}
+            strokeWidth={2.2}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.15 + (i / principalPts.length) * 0.9, type: 'spring', stiffness: 300, damping: 20 }}
+          />
+        ))}
 
       {/* 평가액 실선 */}
       <motion.path
