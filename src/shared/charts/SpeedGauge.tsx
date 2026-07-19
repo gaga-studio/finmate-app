@@ -1,4 +1,5 @@
-import { motion } from 'motion/react'
+import { useEffect } from 'react'
+import { animate, motion, useMotionValue, useTransform } from 'motion/react'
 import { dramatic } from '../motion/springs'
 
 interface Props {
@@ -31,7 +32,18 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
   const a1 = polar(c, r, START + SWEEP)
   const arcPath = `M ${a0.x} ${a0.y} A ${r} ${r} 0 1 1 ${a1.x} ${a1.y}`
 
+  // 바늘 각도 — CSS transform 대신 좌표를 직접 계산해 그린다.
+  // (transform-box 기반 회전은 축소 렌더·일부 브라우저에서 원점이 어긋난다)
   const needleDeg = -120 + SWEEP * Math.max(0, Math.min(1, pct))
+  const angle = useMotionValue(-120)
+  useEffect(() => {
+    const controls = animate(angle, needleDeg, dramatic)
+    return () => controls.stop()
+  }, [angle, needleDeg])
+  const tipX = useTransform(angle, (a) => polar(c, r - 16, a - 90).x)
+  const tipY = useTransform(angle, (a) => polar(c, r - 16, a - 90).y)
+  const tailX = useTransform(angle, (a) => polar(c, 10, a + 90).x)
+  const tailY = useTransform(angle, (a) => polar(c, 10, a + 90).y)
 
   return (
     <svg width={width} height={height} viewBox="0 0 200 152" shapeRendering="geometricPrecision" aria-hidden>
@@ -78,23 +90,16 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
         )
       })}
 
-      {/* 바늘 — 0%에서 목표치까지 오버슈트 스프링 회전 */}
-      <motion.g
-        initial={{ rotate: -120 }}
-        animate={{ rotate: needleDeg }}
-        transition={dramatic}
-        style={{ transformBox: 'view-box', transformOrigin: `${c.x}px ${c.y}px` }}
-      >
-        <line
-          x1={c.x}
-          y1={c.y + 10}
-          x2={c.x}
-          y2={c.y - r + 16}
-          stroke="currentColor"
-          strokeWidth={4}
-          strokeLinecap="round"
-        />
-      </motion.g>
+      {/* 바늘 — 0%에서 목표치까지 오버슈트 스프링, 좌표 보간이라 어떤 크기에서도 정확 */}
+      <motion.line
+        x1={tailX}
+        y1={tailY}
+        x2={tipX}
+        y2={tipY}
+        stroke="currentColor"
+        strokeWidth={4}
+        strokeLinecap="round"
+      />
       {/* 피벗 */}
       <circle cx={c.x} cy={c.y} r={7.5} fill="currentColor" />
       <circle cx={c.x} cy={c.y} r={3} fill="white" fillOpacity={0.9} />
