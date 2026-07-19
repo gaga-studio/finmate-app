@@ -156,21 +156,27 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         transition={{ delay: 1, duration: 1.6, repeat: Infinity, repeatDelay: 1.2 }}
       />
 
-      {/* x축: 월 라벨 */}
-      {xLabels?.map((label, i) => (
-        <text
-          key={label}
-          x={valuePts[i]?.x ?? 0}
-          y={height - 3}
-          textAnchor="middle"
-          fontSize={9.5}
-          fontWeight={i === xLabels.length - 1 ? 800 : 600}
-          fill="currentColor"
-          opacity={i === xLabels.length - 1 ? 0.85 : 0.45}
-        >
-          {label}
-        </text>
-      ))}
+      {/* x축: 월 라벨 — 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
+      {xLabels?.map((label, i) => {
+        const raw = valuePts[i]?.x ?? 0
+        const half = (label.length * 9) / 2
+        const anchor = raw - half < 1 ? 'start' : raw + half > width - 1 ? 'end' : 'middle'
+        const x = anchor === 'start' ? 1 : anchor === 'end' ? width - 1 : raw
+        return (
+          <text
+            key={label}
+            x={x}
+            y={height - 3}
+            textAnchor={anchor}
+            fontSize={9.5}
+            fontWeight={i === xLabels.length - 1 ? 800 : 600}
+            fill="currentColor"
+            opacity={i === xLabels.length - 1 ? 0.85 : 0.45}
+          >
+            {label}
+          </text>
+        )
+      })}
     </svg>
   )
 }
