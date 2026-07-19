@@ -2,6 +2,7 @@ import {
   ASSET_SERIES,
   BUDGET_LIMIT,
   HOLDINGS,
+  INVEST_PRINCIPAL_HISTORY,
   INVEST_VALUE_HISTORY,
   MY_ASSETS,
   NET_WORTH_HISTORY,
@@ -140,12 +141,28 @@ export function getInvestSeries(period: Period): InvestSummary {
   }
 }
 
-/** 현황 뷰: 평가액 월별 추이 (나의 자산과 같은 마커 곡선 형식) */
-export function getInvestStatus(): { points: number[]; total: number; monthPct: number } {
-  const points = INVEST_VALUE_HISTORY
-  const total = points[points.length - 1]
-  const prev = points[points.length - 2]
-  return { points, total, monthPct: Math.round(((total - prev) / prev) * 1000) / 10 }
+/** 현황 뷰: 원금 vs 평가액 — 벌어지는 틈이 수익 */
+export function getInvestStatus(): {
+  value: number[]
+  principal: number[]
+  total: number
+  principalTotal: number
+  profit: number
+  returnPct: number
+} {
+  const value = INVEST_VALUE_HISTORY
+  const principal = INVEST_PRINCIPAL_HISTORY
+  const total = value[value.length - 1]
+  const principalTotal = principal[principal.length - 1]
+  const profit = total - principalTotal
+  return {
+    value,
+    principal,
+    total,
+    principalTotal,
+    profit,
+    returnPct: Math.round((profit / principalTotal) * 1000) / 10,
+  }
 }
 
 export interface PortfolioSlice extends Holding {

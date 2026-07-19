@@ -38,7 +38,7 @@ export const INVEST_CARDS: Record<InvestView, ViewCardContent> = {
   status: {
     title: '7월의 투자',
     headline: '수익률 +12.7%,\n로켓이 궤도에 올랐다',
-    subline: '평가 132.6만원 · 이번 달 +12.7%',
+    subline: '원금 118만원 → 평가 133만원 (+12.7%)',
     artKey: 'invest-monthly',
   },
   portfolio: {

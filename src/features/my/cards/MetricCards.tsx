@@ -2,6 +2,7 @@ import { WaterGlass } from '../../../shared/charts/WaterGlass'
 import { SpeedGauge } from '../../../shared/charts/SpeedGauge'
 import { MiniBars } from '../../../shared/charts/MiniBars'
 import { LineChart } from '../../../shared/charts/LineChart'
+import { CompareChart } from '../../../shared/charts/CompareChart'
 import { Treemap } from '../../../shared/charts/Treemap'
 import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
 import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/format/krw'
@@ -100,13 +101,14 @@ export function InvestCard({ view }: { view: InvestView }) {
     return (
       <CardShell title="투자 현황" metricClass={METRIC_TEXT.invest}>
         <div className="pt-3">
-          <LineChart points={inv.points} width={216} height={104} drawKey="invest-status" markers />
+          <CompareChart value={inv.value} principal={inv.principal} width={216} height={110} />
         </div>
-        <p className={`mt-2 text-display font-extrabold leading-none ${inv.monthPct >= 0 ? 'text-rise' : 'text-fall'}`}>
-          <AnimatedNumber value={inv.monthPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
+        <p className={`mt-2 text-display font-extrabold leading-none ${inv.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
+          <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
         </p>
         <p className="mt-1.5 text-body font-medium text-ink-soft">
-          평가 금액 <b className="text-ink">{formatKrwCompact(inv.total)}</b>
+          원금 <b className="text-ink">{formatKrwCompact(inv.principalTotal)}</b> → 평가{' '}
+          <b className="text-ink">{formatKrwCompact(inv.total)}</b>
         </p>
       </CardShell>
     )
