@@ -48,7 +48,7 @@ function MissionRow({
   const body = (
     <div className="flex items-center gap-3 py-3">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-section">
-        {done ? <Check size={18} strokeWidth={3} className="text-point" /> : mission.emoji}
+        {done ? <Check size={18} strokeWidth={3} className="text-point-ink" /> : mission.emoji}
       </span>
       <div className="min-w-0 flex-1">
         <p className={`text-body font-semibold ${done ? 'text-ink-faint line-through' : 'text-ink'}`}>
@@ -57,7 +57,7 @@ function MissionRow({
         <MissionSub mission={mission} done={done} />
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        <span className={`text-body font-extrabold ${done ? 'text-point' : 'text-point/80'}`}>
+        <span className={`text-body font-extrabold ${done ? 'text-point-ink' : 'text-point-ink'}`}>
           +{mission.reward}P
         </span>
         {isQuiz && !done && <ChevronRight size={15} className="text-ink-faint" />}
@@ -77,7 +77,7 @@ function MissionRow({
 
 function MissionSub({ mission, done }: { mission: Mission; done: boolean }) {
   if (done) {
-    return <p className="text-caption font-medium text-point">완료! 포인트 적립됨</p>
+    return <p className="text-caption font-medium text-point-ink">완료! 포인트 적립됨</p>
   }
   if (mission.kind === 'quiz') {
     const p = getMissionProgress('quiz')
@@ -95,7 +95,7 @@ function MissionSub({ mission, done }: { mission: Mission; done: boolean }) {
     <div className="mt-1.5">
       <div className="h-1 overflow-hidden rounded-full bg-ink/8">
         <motion.div
-          className={`h-full rounded-full ${mission.kind === 'daily-budget' && p.pct >= 1 ? 'bg-danger' : 'bg-point'}`}
+          className={`h-full rounded-full ${mission.kind === 'daily-budget' && p.pct >= 1 ? 'bg-danger' : 'bg-point-ink'}`}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: p.pct }}
           transition={{ ...snappy, delay: 0.2 }}

@@ -28,7 +28,7 @@ export function StreakCard({ todayChecked, onCheckToday }: Props) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-section font-bold text-ink">예산을 지켜라</h2>
-          <span className="rounded-full bg-point/12 px-2 py-0.5 text-caption font-bold text-point">
+          <span className="rounded-full bg-point px-2 py-0.5 text-caption font-bold text-point-ink">
             🔥 {flame}연속
           </span>
         </div>
@@ -62,7 +62,7 @@ export function StreakCard({ todayChecked, onCheckToday }: Props) {
 
       {period === 'daily' && !todayChecked && (
         <p className="mt-3 text-caption font-medium text-ink-soft">
-          오늘 예산 안에 있어요 — 도트를 눌러 오늘을 지켜내세요! <b className="text-point">+50P</b>
+          오늘 예산 안에 있어요 — 도트를 눌러 오늘을 지켜내세요! <b className="text-point-ink">+50P</b>
         </p>
       )}
     </section>
@@ -77,11 +77,11 @@ function Dot({ dot, delay, onTap }: { dot: StreakDot; delay: number; onTap?: () 
       transition={{ ...snappy, delay }}
       className={`relative flex h-9 w-9 items-center justify-center rounded-full ${
         dot.status === 'pass'
-          ? 'bg-point text-white'
+          ? 'bg-point text-point-ink'
           : dot.status === 'fail'
             ? 'bg-ink/8 text-ink-faint'
             : dot.status === 'current'
-              ? 'bg-point/10 text-point ring-2 ring-point'
+              ? 'bg-point/50 text-point-ink ring-2 ring-point-ink'
               : 'border border-dashed border-line'
       }`}
     >
@@ -90,7 +90,7 @@ function Dot({ dot, delay, onTap }: { dot: StreakDot; delay: number; onTap?: () 
       {dot.status === 'current' && (
         <>
           <motion.span
-            className="absolute inset-0 rounded-full ring-2 ring-point"
+            className="absolute inset-0 rounded-full ring-2 ring-point-ink"
             animate={{ scale: [1, 1.45], opacity: [0.6, 0] }}
             transition={{ repeat: Infinity, duration: 1.6, repeatDelay: 0.6 }}
           />
@@ -103,7 +103,7 @@ function Dot({ dot, delay, onTap }: { dot: StreakDot; delay: number; onTap?: () 
   return (
     <div className="flex flex-col items-center gap-1.5">
       <span
-        className={`text-micro font-semibold ${dot.status === 'current' ? 'text-point' : 'text-ink-soft'}`}
+        className={`text-micro font-semibold ${dot.status === 'current' ? 'text-point-ink' : 'text-ink-soft'}`}
       >
         {dot.label}
       </span>

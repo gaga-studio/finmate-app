@@ -45,7 +45,7 @@ export function RecommendedList({ items, onAdopt }: Props) {
               <p className="text-body font-semibold text-ink">{r.title}</p>
               <p className="mt-0.5 truncate text-caption font-medium text-ink-soft">{r.reason}</p>
             </div>
-            <span className="shrink-0 text-body font-extrabold text-point/80">+{r.reward}P</span>
+            <span className="shrink-0 text-body font-extrabold text-point-ink">+{r.reward}P</span>
             <motion.button
               type="button"
               onClick={() => onAdopt(r)}
