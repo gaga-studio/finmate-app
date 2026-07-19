@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { motion } from 'motion/react'
 import { Heart, X } from 'lucide-react'
 import { TOP3_TITLE, WrappedCardView } from '../my/wrapped/WrappedCardView'
@@ -23,7 +24,7 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
   const [liked, setLiked] = useState(false)
 
   return createPortal(
-    <div className="fixed inset-0 z-50">
+    <div className="absolute inset-0 z-50">
       <motion.div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         initial={{ opacity: 0 }}
@@ -100,6 +101,6 @@ export function StoryOverlay({ story, onClose, onProfile }: Props) {
         </motion.div>
       </motion.div>
     </div>,
-    document.body,
+    overlayTarget(),
   )
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { motion } from 'motion/react'
 import { ProfileCard } from '../../shared/profile/ProfileCard'
 import { dramatic } from '../../shared/motion/springs'
@@ -15,7 +16,7 @@ export function ProfileSheet({ profile, onClose }: Props) {
   const [following, setFollowing] = useState(false)
 
   return createPortal(
-    <div className="fixed inset-0 z-[60]">
+    <div className="absolute inset-0 z-[60]">
       <motion.div
         className="absolute inset-0 bg-black/45"
         initial={{ opacity: 0 }}
@@ -49,6 +50,6 @@ export function ProfileSheet({ profile, onClose }: Props) {
         </button>
       </motion.div>
     </div>,
-    document.body,
+    overlayTarget(),
   )
 }
