@@ -123,10 +123,10 @@ export function DiaryPage() {
                           className="absolute inset-0 h-full w-full select-none object-cover"
                           style={{ objectPosition: '50% 18%' }}
                         />
-                        <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
+                        <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2.5 py-1 text-caption font-bold text-white backdrop-blur-sm">
                           {d.day}일 · 오늘
                         </span>
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5">
+                        <div className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-sm">
                           <TileAmounts income={d.income} spend={d.spend} onImage />
                         </div>
                       </motion.button>
@@ -139,10 +139,10 @@ export function DiaryPage() {
                           draggable={false}
                           className="absolute inset-0 h-full w-full select-none object-cover"
                         />
-                        <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
+                        <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2.5 py-1 text-caption font-bold text-white backdrop-blur-sm">
                           {d.day}일
                         </span>
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5">
+                        <div className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-sm">
                           <TileAmounts income={d.income} spend={d.spend} onImage />
                         </div>
                       </div>
@@ -173,11 +173,11 @@ function TileAmounts({ income, spend, onImage }: { income: number; spend: number
   return (
     <div className="flex flex-col">
       {income > 0 && (
-        <span className={`text-micro font-extrabold ${onImage ? 'text-white' : 'text-rise'}`}>
+        <span className={`text-micro font-extrabold ${onImage ? 'text-red-300' : 'text-rise'}`}>
           +{formatKrwCompact(income)}
         </span>
       )}
-      <span className={`text-micro font-bold ${onImage ? 'text-white/85' : 'text-fall'}`}>
+      <span className={`text-micro font-bold ${onImage ? 'text-white' : 'text-fall'}`}>
         {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
       </span>
     </div>
