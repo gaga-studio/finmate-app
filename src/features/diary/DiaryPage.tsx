@@ -126,9 +126,7 @@ export function DiaryPage() {
                         <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2.5 py-1 text-caption font-bold text-white backdrop-blur-sm">
                           {d.day}일 · 오늘
                         </span>
-                        <div className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-sm">
-                          <TileAmounts income={d.income} spend={d.spend} onImage />
-                        </div>
+                        <TileBadges income={d.income} spend={d.spend} />
                       </motion.button>
                     ) : DIARY_ART[d.day] ? (
                       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl shadow-soft">
@@ -142,9 +140,7 @@ export function DiaryPage() {
                         <span className="absolute left-2 top-2 rounded-full bg-black/50 px-2.5 py-1 text-caption font-bold text-white backdrop-blur-sm">
                           {d.day}일
                         </span>
-                        <div className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 backdrop-blur-sm">
-                          <TileAmounts income={d.income} spend={d.spend} onImage />
-                        </div>
+                        <TileBadges income={d.income} spend={d.spend} />
                       </div>
                     ) : (
                       <div className="flex aspect-[3/4] w-full flex-col justify-between rounded-2xl bg-ink/4 p-2.5">
@@ -169,15 +165,29 @@ export function DiaryPage() {
   )
 }
 
-function TileAmounts({ income, spend, onImage }: { income: number; spend: number; onImage?: boolean }) {
+/** 이미지 타일 하단 금액 — 소비는 좌측 하늘색, 수입은 우측 핑크색 뱃지 */
+function TileBadges({ income, spend }: { income: number; spend: number }) {
   return (
-    <div className="flex flex-col">
+    <>
+      <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-sky-300 backdrop-blur-sm">
+        {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
+      </span>
       {income > 0 && (
-        <span className={`text-micro font-extrabold ${onImage ? 'text-red-300' : 'text-rise'}`}>
+        <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-pink-300 backdrop-blur-sm">
           +{formatKrwCompact(income)}
         </span>
       )}
-      <span className={`text-micro font-bold ${onImage ? 'text-white' : 'text-fall'}`}>
+    </>
+  )
+}
+
+function TileAmounts({ income, spend }: { income: number; spend: number }) {
+  return (
+    <div className="flex flex-col">
+      {income > 0 && (
+        <span className="text-micro font-extrabold text-rise">+{formatKrwCompact(income)}</span>
+      )}
+      <span className="text-micro font-bold text-fall">
         {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
       </span>
     </div>
