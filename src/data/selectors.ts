@@ -199,16 +199,21 @@ export interface DiaryDay {
   spend: number
 }
 
-/** 다이어리 갤러리: 이번 달 1일~오늘을 최신순으로, 일별 수입/지출 (거래 파생) */
+/** 다이어리 갤러리: 이번 달 1일~오늘을 최신순으로, 일별 수입/소비 지출 (저축·투자 이체 제외) */
 export function getDiaryDays(): { days: DiaryDay[]; totalIncome: number; totalSpend: number } {
-  const activity = getMonthActivity()
-  const days = [...activity.entries()]
-    .map(([dateKey, a]) => ({
-      dateKey,
-      day: Number(dateKey.slice(-2)),
-      income: a.earned,
-      spend: a.spent,
-    }))
+  const { startKey, endKey } = getPeriodRange('monthly')
+  const byDay = new Map<string, { income: number; spend: number }>()
+  for (const key of keysInRange({ startKey, endKey, label: '' })) {
+    byDay.set(key, { income: 0, spend: 0 })
+  }
+  for (const t of TRANSACTIONS) {
+    const cell = byDay.get(t.date)
+    if (!cell) continue
+    if (t.amount > 0) cell.income += t.amount
+    else if (t.category !== 'saving' && t.category !== 'invest') cell.spend += -t.amount
+  }
+  const days = [...byDay.entries()]
+    .map(([dateKey, a]) => ({ dateKey, day: Number(dateKey.slice(-2)), ...a }))
     .sort((a, b) => b.day - a.day)
   return {
     days,
