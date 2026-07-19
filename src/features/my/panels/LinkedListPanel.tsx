@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { ListRow } from '../../../shared/ui/ListRow'
+import { snappy } from '../../../shared/motion/springs'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, WISHLIST } from '../../../data/domain'
 import { getTopSpending } from '../../../data/selectors'
@@ -20,7 +21,7 @@ export function LinkedListPanel({ metric, period }: { metric: Metric; period: Pe
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={`${metric}-${period}`}
-          className="flex-1"
+          className="flex flex-1 flex-col justify-evenly"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0, transition: { staggerChildren: 0.04 } }}
           exit={{ opacity: 0, y: -8 }}
@@ -30,9 +31,9 @@ export function LinkedListPanel({ metric, period }: { metric: Metric; period: Pe
               key={row.key}
               initial={{ opacity: 0, x: 14 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.05 + i * 0.045, type: 'spring', stiffness: 300, damping: 26 }}
+              transition={{ delay: 0.05 + i * 0.045, ...snappy }}
             >
-              <ListRow leading={row.leading} title={row.title} sub={row.sub} trailing={row.trailing} />
+              <ListRow dense leading={row.leading} title={row.title} sub={row.sub} trailing={row.trailing} />
             </motion.div>
           ))}
         </motion.div>
