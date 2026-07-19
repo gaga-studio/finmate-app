@@ -20,7 +20,7 @@ export function LinkedListPanel({ metric, period }: { metric: Metric; period: Pe
       <p className="mb-1 text-[14px] font-bold text-ink">{PANEL_TITLE[metric]}</p>
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
-          key={`${metric}-${period}`}
+          key={metric === 'saving' ? 'saving' : `${metric}-${period}`}
           className="flex flex-1 flex-col justify-evenly"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0, transition: { staggerChildren: 0.04 } }}

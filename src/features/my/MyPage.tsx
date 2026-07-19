@@ -7,7 +7,18 @@ import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { DEMO_TODAY, USER } from '../../data/demo'
-import { METRICS, PERIODS, PERIOD_LABEL, type Metric, type Period } from './myState'
+import {
+  METRICS,
+  PERIODS,
+  PERIOD_LABEL,
+  SAVING_VIEWS,
+  SAVING_VIEW_LABEL,
+  nextPeriod,
+  nextSavingView,
+  type Metric,
+  type Period,
+  type SavingView,
+} from './myState'
 
 const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -28,11 +39,14 @@ function parseCardParam(raw: string | null): { metric: Metric; period: Period } 
 export function MyPage() {
   const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
+  const [savingView, setSavingView] = useState<SavingView>('goal')
   const [params, setParams] = useSearchParams()
 
   const openCard = parseCardParam(params.get('card'))
 
-  const openWrapped = () => setParams({ card: `${metric}-${period}` })
+  // 저축은 뷰 축이라 Wrapped는 월간 카드(파리)로 고정
+  const openWrapped = () =>
+    setParams({ card: metric === 'saving' ? 'saving-monthly' : `${metric}-${period}` })
   const closeWrapped = () => {
     const next = new URLSearchParams(params)
     next.delete('card')
@@ -78,17 +92,29 @@ export function MyPage() {
       <MetricCarousel
         metric={metric}
         period={period}
+        savingView={savingView}
         onMetricChange={setMetric}
-        onPeriodChange={setPeriod}
+        onStackNext={() =>
+          metric === 'saving' ? setSavingView(nextSavingView(savingView)) : setPeriod(nextPeriod(period))
+        }
       />
 
       <div className="relative mt-2 flex justify-center">
-        <SegmentedControl
-          id="period"
-          items={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))}
-          value={period}
-          onChange={setPeriod}
-        />
+        {metric === 'saving' ? (
+          <SegmentedControl
+            id="period"
+            items={SAVING_VIEWS.map((v) => ({ value: v, label: SAVING_VIEW_LABEL[v] }))}
+            value={savingView}
+            onChange={setSavingView}
+          />
+        ) : (
+          <SegmentedControl
+            id="period"
+            items={PERIODS.map((p) => ({ value: p, label: PERIOD_LABEL[p] }))}
+            value={period}
+            onChange={setPeriod}
+          />
+        )}
       </div>
 
       <section className="relative mt-4 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
