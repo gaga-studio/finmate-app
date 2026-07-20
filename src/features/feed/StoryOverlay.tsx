@@ -76,7 +76,7 @@ export function StoryOverlay({ story, onClose }: Props) {
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className={`flex h-12 items-center gap-2 rounded-full pl-2 pr-5 text-title font-extrabold backdrop-blur-md ${
+            className={`flex h-11 items-center gap-2 rounded-full pl-2 pr-4 text-body font-bold backdrop-blur-md ${
               expanded ? 'bg-white text-ink' : 'bg-white/20 text-white'
             }`}
           >
