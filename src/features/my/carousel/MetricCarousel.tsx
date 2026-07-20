@@ -17,7 +17,7 @@ interface Props {
   renderCard?: (m: Metric, period: Period, savingView: SavingView, investView: InvestView) => React.ReactNode
 }
 
-const CARD_H = 316
+const CARD_H = 348
 const LIFT_MAX = 130
 const LIFT_THRESHOLD = 70
 const AXIS_LOCK = 12
@@ -51,7 +51,7 @@ export function MetricCarousel({
     return () => ro.disconnect()
   }, [])
 
-  const cardW = vw - 104
+  const cardW = vw - 88
   const step = cardW + 16
   const idx = METRICS.indexOf(metric)
 
