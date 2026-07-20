@@ -84,7 +84,7 @@ function MissionSub({ mission, done }: { mission: Mission; done: boolean }) {
     const p = getMissionProgress('quiz')
     return (
       <p className="mt-0.5 text-caption font-medium text-ink-soft">
-        {p.current} / {p.target} 문제 · 탭해서 마저 풀기
+        {p.current} / {p.target} 문제 · 탭해서 {p.current > 0 ? '마저 풀기' : '풀기'}
       </p>
     )
   }

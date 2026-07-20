@@ -77,7 +77,7 @@ const SCENARIOS: Scenario[] = [
       },
       {
         role: 'ai',
-        text: '월 10만원씩 3개월이면 30만원 달성!\n3개월 뒤 미국 S&P500 ETF 첫 매수 자금이 생겨요.',
+        text: '월 10만원씩 3개월 뒤,\nETF 30만원 첫 시도 자금 획득! 🎉',
       },
       {
         role: 'ai',

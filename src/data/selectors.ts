@@ -359,7 +359,8 @@ export function getMissionProgress(kind: Mission['kind']): MissionProgress {
     const current = getBudget('daily').spent
     return { current, target, pct: Math.min(1, current / target), unit: 'krw', inverted: true }
   }
-  return { current: 1, target: 3, pct: 1 / 3, unit: 'count' }
+  // quiz — 추천에서 새로 담는 미션이라 0부터 시작
+  return { current: 0, target: 3, pct: 0, unit: 'count' }
 }
 
 export interface WrappedSummary extends WrappedContent {

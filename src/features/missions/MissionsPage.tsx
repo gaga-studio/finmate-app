@@ -50,7 +50,7 @@ export function MissionsPage() {
   const completeQuiz = () => {
     if (quizDone) return
     setQuizDone(true)
-    earn(60, '금융 퀴즈 완료! +60P')
+    earn(60, 'ETF 퀴즈 완료! +60P')
   }
 
   const openQuiz = () => {
@@ -62,7 +62,7 @@ export function MissionsPage() {
     setRecommended((list) => list.filter((r) => r.id !== item.id))
     setMissions((list) => [
       ...list,
-      { id: item.id, emoji: item.emoji, title: item.title, reward: item.reward, kind: 'simple' },
+      { id: item.id, emoji: item.emoji, title: item.title, reward: item.reward, kind: item.kind ?? 'simple' },
     ])
     setToast(`'${item.title}' 미션 시작!`)
     if (toastTimer.current) clearTimeout(toastTimer.current)
