@@ -4,6 +4,8 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { ChevronLeft, Sparkles, Users } from 'lucide-react'
 import { getMateListRows, getMateProfile } from '../../data/mates'
+import { STORIES } from '../../data/social'
+import { ART } from '../../data/art-manifest'
 import { ProfileCard } from '../../shared/profile/ProfileCard'
 import { MetricCarousel } from '../my/carousel/MetricCarousel'
 import { LinkedListPanel } from '../my/panels/LinkedListPanel'
@@ -53,6 +55,11 @@ export function MateProfilePage() {
 
   // 지혜 쪽 LinkedListPanel과 대칭 — 지표+뷰 9가지를 함께 갈아입는다
   const mateList = getMateListRows(mate, metric, period, savingView, investView)
+
+  // 마이 탭 하단 아트 카드 자리 — 이 메이트가 올린 스토리 이미지 재활용 (지표 일치 우선)
+  const story =
+    STORIES.find((s) => s.author.id === mate.id && s.metric === metric) ??
+    STORIES.find((s) => s.author.id === mate.id)
 
   return (
     <div ref={rootRef} className="relative min-h-full pb-8">
@@ -214,14 +221,28 @@ export function MateProfilePage() {
               />
             </div>
 
-            {/* 메이트의 공개 탑3 — 스토리 대신 프로필의 핵심 정보로 크게 노출 */}
-            <section className="mt-3 px-5">
-              <MateListCard
-                title={mateList.title}
-                metricClass={METRIC_TEXT[metric]}
-                items={mateList.items.map((r) => ({ emoji: r.emoji, label: r.label, value: r.band }))}
-                featured
-              />
+            {/* 하단 2열 — 마이 탭처럼 좌 이미지 카드, 우 리스트 카드 */}
+            <section className="mt-3 grid grid-cols-[1fr_1.15fr] gap-3 px-5">
+              <div className="clay-card relative h-[232px] overflow-hidden rounded-card">
+                {story && (
+                  <img
+                    src={ART.stories[story.artKey]}
+                    alt=""
+                    draggable={false}
+                    className="absolute inset-0 h-full w-full select-none object-cover"
+                  />
+                )}
+                <span className="absolute left-2.5 top-2.5 rounded-full bg-black/50 px-2.5 py-1 text-caption font-bold text-white backdrop-blur-sm">
+                  메이트의 스토리
+                </span>
+              </div>
+              <div className="h-[232px]">
+                <MateListCard
+                  title={mateList.title}
+                  metricClass={METRIC_TEXT[metric]}
+                  items={mateList.items.map((r) => ({ emoji: r.emoji, label: r.label, value: r.band }))}
+                />
+              </div>
             </section>
           </motion.div>
         )}
@@ -248,6 +269,15 @@ export function MateProfilePage() {
           {comparing ? <Sparkles size={16} /> : <Users size={16} />}
           {comparing ? '분석 비교' : '나와 비교하기'}
         </motion.button>
+        {comparing && (
+          <button
+            type="button"
+            onClick={() => setComparing(false)}
+            className="clay-pressed flex h-12 items-center rounded-[18px] bg-point/45 px-4 text-body font-bold text-ink"
+          >
+            프로필로
+          </button>
+        )}
       </div>
 
       <AnimatePresence>
@@ -262,56 +292,39 @@ function MateListCard({
   metricClass,
   items,
   dense,
-  featured,
 }: {
   title: string
   metricClass: string
   items: ListItem[]
   dense?: boolean
-  featured?: boolean
 }) {
   return (
-    <div
-      className={`clay-card flex h-full flex-col rounded-card ${
-        featured ? 'min-h-[196px] px-4 py-3.5' : 'px-3.5 py-3'
-      }`}
-    >
-      <p className={`${featured ? 'mb-2 text-section font-bold' : 'mb-1 text-section font-bold'} text-ink`}>
-        {title}
-      </p>
+    <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
+      <p className="mb-1 text-section font-bold text-ink">{title}</p>
       {/* 뷰 전환 시 지혜 쪽 패널과 같은 갈아입기 모션 */}
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div
           key={`${title}-${items.map((r) => r.label).join('|')}`}
-          className={`flex flex-1 flex-col ${featured ? 'gap-2' : 'justify-evenly'}`}
+          className="flex flex-1 flex-col justify-evenly"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={snappy}
         >
           {items.map((row, i) => (
-            <div
-              key={row.label}
-              className={`grid items-center ${
-                featured
-                  ? 'grid-cols-[36px_minmax(0,1fr)_minmax(82px,auto)] gap-2.5 rounded-[14px] bg-white/45 px-2.5 py-2.5 shadow-soft'
-                  : 'grid-cols-[28px_minmax(0,1fr)_auto] gap-2'
-              }`}
-            >
+            <div key={row.label} className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2">
               <span
                 className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 font-extrabold text-ink-soft ${
-                  featured ? 'h-9 w-9 text-body' : dense ? 'h-7 w-7 text-body' : 'h-8 w-8 text-body'
+                  dense ? 'h-7 w-7 text-body' : 'h-8 w-8 text-body'
                 }`}
               >
                 {i + 1}
               </span>
-              <span className={`min-w-0 flex-1 truncate font-semibold text-ink ${featured ? 'text-section' : 'text-body'}`}>
+              <span className="min-w-0 flex-1 truncate text-body font-semibold text-ink">
                 {row.label}
               </span>
               <span
-                className={`shrink-0 text-right font-extrabold tabular-nums ${
-                  featured ? 'text-[17px] leading-tight' : 'text-body'
-                } ${row.valueClass ?? metricClass}`}
+                className={`shrink-0 text-body font-bold ${row.valueClass ?? metricClass}`}
               >
                 {row.value}
               </span>
