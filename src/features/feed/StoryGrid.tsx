@@ -52,8 +52,8 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                     <Heart size={10} strokeWidth={2.4} fill="currentColor" />
                     {s.likes}
                   </span>
-                  <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-micro font-bold leading-tight text-white">
-                    {s.headline.split('\n')[0].replace(/[,.]$/, '')}…
+                  <p className="absolute inset-x-0 bottom-0 whitespace-pre-line bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-micro font-bold leading-tight text-white">
+                    {s.headline}
                   </p>
                 </ArtOrGradient>
               </motion.button>
