@@ -208,7 +208,7 @@ function CardShell({
       <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-title font-bold text-ink">{title}</p>
       </div>
-      <div className="flex flex-1 flex-col items-center justify-center px-5 pb-5 pt-2">{children}</div>
+      <div className="flex flex-1 flex-col items-center justify-center px-5 pb-3 pt-1">{children}</div>
     </div>
   )
 }
