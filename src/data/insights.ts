@@ -311,7 +311,7 @@ export const DETAIL_CARDS: Record<'card' | 'benefit', DetailCardContent> = {
   benefit: {
     tag: '추천 혜택',
     title: '하나증권 첫 거래 이벤트',
-    sub: '계좌 개설하면 ETF 첫 매수 준비 끝!',
+    sub: '첫 거래 우대로 ETF 수수료 아끼기',
     rows: [
       { emoji: '📊', text: '국내·해외 ETF 수수료 평생 우대' },
       { emoji: '🎁', text: '신규 고객 투자지원금 2만원' },

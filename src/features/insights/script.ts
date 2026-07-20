@@ -81,7 +81,7 @@ const SCENARIOS: Scenario[] = [
     id: 'etf-step-benefit',
     match: /^다음 추천도 보여줘$/,
     replies: [
-      { role: 'ai', text: '2️⃣ 모은 30만원으로 바로 매수하려면\n계좌도 미리 준비해요!' },
+      { role: 'ai', text: '2️⃣ ETF는 수수료 싸움이에요 —\n첫 거래 우대 계좌면 더 유리해요!' },
       { role: 'ai', widget: { type: 'detail-card', variant: 'benefit' } },
       { role: 'ai', widget: { type: 'options', options: ['마지막 추천은?'] } },
     ],
@@ -92,7 +92,7 @@ const SCENARIOS: Scenario[] = [
     replies: [
       {
         role: 'ai',
-        text: '3️⃣ 제일 중요한 실천 —\n30만원 모으기, 미션으로 만들어뒀어요',
+        text: '3️⃣ 제일 중요한 실천 —\n30만원 모으기, 미션으로 준비해뒀어요.\n미션 탭에서 담아주세요!',
         widget: { type: 'mission', missionId: 'r-etf' },
       },
     ],
@@ -102,7 +102,7 @@ const SCENARIOS: Scenario[] = [
     id: 'etf-goal',
     match: /ETF|etf|30만원|삼십만원|첫\s*시도|첫\s*투자/i,
     replies: [
-      { role: 'ai', text: '지금 자금 없이 바로 시작하는 건\n위험해 보여요 ⚠️' },
+      { role: 'ai', text: '가진 돈을 헐어서 시작하는 것보다,\n전용 자금을 따로 모으는 게 안전해요 ⚠️' },
       {
         role: 'ai',
         text: '먼저 30만원부터 모아볼까요?\n월 10만원씩 3개월이면\nETF 첫 시도 자금이 생겨요 🎉',
