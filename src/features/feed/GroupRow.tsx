@@ -38,11 +38,11 @@ export function GroupRow({ selected, onSelect }: Props) {
               }`}
             >
               <span
-                className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
+                className={`flex h-12 w-12 items-center justify-center rounded-full text-lg ${
                   active ? 'bg-saving/15 text-saving' : 'bg-point/55'
                 }`}
               >
-                <EmojiIcon emoji={g.emoji} size={27} className="text-accent" />
+                <EmojiIcon emoji={g.emoji} size={42} className="text-accent" />
               </span>
               <p className="mt-2 text-body font-bold leading-tight text-ink">{g.label}</p>
               <p className="mt-0.5 truncate text-micro text-ink-soft">{g.desc}</p>

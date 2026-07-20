@@ -275,8 +275,8 @@ function MissionHistory() {
         <div className="mt-2 flex flex-col">
           {PAST_MISSIONS.map((m) => (
             <div key={m.id} className="flex items-center gap-3 border-b border-line/60 py-3 last:border-b-0">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-point/55 text-section">
-                <EmojiIcon emoji={m.emoji} size={27} className="text-point-ink" />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-point/55 text-section">
+                <EmojiIcon emoji={m.emoji} size={36} className="text-point-ink" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-body font-semibold text-ink">{m.title}</p>
