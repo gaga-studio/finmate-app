@@ -290,9 +290,9 @@ export const PRESET_SESSIONS: SavedSession[] = [
 
 /** "ETF 시도 해보고 싶어" 답변의 추천 행동 3가지 — 클릭하면 각 상세 응답으로 */
 export const ETF_ACTIONS = [
-  { emoji: '💳', title: '카드 추천', desc: '사회초년생에게 딱 맞는 카드를 추천해드려요!' },
-  { emoji: '🎁', title: '혜택 추천', desc: '지금 받을 수 있는 청년 혜택을 알려드릴게요!' },
-  { emoji: '🎯', title: '절약 미션', desc: '30만원 절약 플랜을 만들어서 꾸준히 모아보세요!' },
+  { emoji: '🎯', title: '절약 미션', desc: '매일 조금씩 아껴서 30만원을 모아보세요!' },
+  { emoji: '💳', title: '카드 추천', desc: '새는 돈을 잡아주는 지출 관리 카드가 있어요!' },
+  { emoji: '🎁', title: '혜택 추천', desc: 'ETF 첫 거래 전 챙길 혜택을 알려드려요!' },
 ] as const
 
 export interface DetailCardContent {
@@ -303,29 +303,29 @@ export interface DetailCardContent {
   cta: string
 }
 
-/** 카드/혜택 상세 카드 콘텐츠 */
+/** 카드/혜택 상세 카드 콘텐츠 — 하나금융 계열, 30만원 목표 스케일에 맞춤 */
 export const DETAIL_CARDS: Record<'card' | 'benefit', DetailCardContent> = {
   card: {
     tag: '추천 카드',
-    title: '신한카드 Deep Dream (체크)',
-    sub: '연회비 0원',
+    title: '하나카드 영하나 플러스 (체크)',
+    sub: '연회비 0원 · 소비를 한 장으로',
     rows: [
-      { emoji: '🏠', text: '전월실적 30만원 이상 시' },
-      { emoji: '🏪', text: '모든 가맹점 0.2% 적립' },
-      { emoji: '🚌', text: '교통/편의점/커피 0.5% 적립' },
-      { emoji: '🌐', text: '해외 이용 수수료 면제' },
+      { emoji: '👀', text: '지출이 한눈에 — 소비 관리 시작' },
+      { emoji: '🚌', text: '전월실적 20만원 이상 시 대중교통·통신 캐시백' },
+      { emoji: '☕️', text: '편의점·커피 5% 할인' },
+      { emoji: '📱', text: '하나원큐 앱에서 바로 발급' },
     ],
     cta: '카드 자세히 보기',
   },
   benefit: {
     tag: '추천 혜택',
-    title: '청년도약계좌',
-    sub: '월 최대 70만원 납입 시 5년 만기 최대 5,000만원 마련!',
+    title: '하나증권 첫 거래 이벤트',
+    sub: '계좌 개설하면 ETF 첫 매수 준비 끝!',
     rows: [
-      { emoji: '🧑', text: '가입 대상 · 만 19세 ~ 34세 청년' },
-      { emoji: '🏛️', text: '정부 기여금 · 소득 구간별 차등 지원' },
-      { emoji: '📱', text: '신청 방법 · 은행 앱 또는 서민금융진흥원' },
+      { emoji: '📊', text: '국내·해외 ETF 수수료 평생 우대' },
+      { emoji: '🎁', text: '신규 고객 투자지원금 2만원' },
+      { emoji: '📱', text: '하나원큐로 3분 만에 계좌 개설' },
     ],
-    cta: '자세히 보기',
+    cta: '이벤트 자세히 보기',
   },
 }
