@@ -163,7 +163,7 @@ function CompareSaving({ mate, view }: { mate: MateProfile; view: SavingView }) 
         <p className="text-caption font-medium text-ink-soft">이번 달 +{formatKrwCompact(nw.monthGain)}</p>
       </Col>
       <Col>
-        <p className="text-[22px] font-extrabold leading-tight">{s.assetBand}</p>
+        <p className="whitespace-nowrap text-[20px] font-extrabold leading-tight">{s.assetBand}</p>
         <p className="text-caption font-medium text-ink-soft">총자산 구간</p>
       </Col>
     </CompareShell>

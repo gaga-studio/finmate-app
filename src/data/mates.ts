@@ -92,7 +92,7 @@ function pick3(rng: () => number, pool: MateCategoryRow[]): MateCategoryRow[] {
   return shuffled.slice(0, 3)
 }
 
-const ASSET_BANDS = ['500만~1,000만', '1,000만~1,500만', '1,500만~2,000만', '2,000만 이상']
+const ASSET_BANDS = ['500~1,000만', '1,000~1,500만', '1,500~2,000만', '2,000만 이상']
 
 function paceBandOf(goalPct: number): string {
   return goalPct >= 70 ? '월 50만원 이상' : goalPct >= 45 ? '월 30~50만원' : '월 10~30만원'
@@ -199,7 +199,7 @@ const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?:
   },
   'a-bear': {
     similarity: 0.78,
-    assetBand: '1,500만~2,000만',
+    assetBand: '1,500~2,000만',
     budgetLeftPct: 34,
     budgetBand: '하루 2~3만원대',
     savingPct: 48,
