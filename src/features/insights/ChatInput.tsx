@@ -16,7 +16,7 @@ interface Props {
 
 export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, onChip, disabled }: Props) {
   return (
-    <div className="border-t border-line/70 px-3 pb-3 pt-2">
+    <div className="border-t border-line/70 bg-white/75 px-3 pb-3 pt-2 backdrop-blur-sm">
       <AnimatePresence>
         {chipsOpen && (
           <motion.div
@@ -59,9 +59,9 @@ export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, o
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="만약 …"
+          placeholder="내용을 입력해주세요"
           disabled={disabled}
-          className="h-10 min-w-0 flex-1 rounded-full bg-white/80 px-4 text-body font-medium text-ink shadow-soft outline-none ring-1 ring-line/70 placeholder:text-ink-faint focus:ring-2 focus:ring-saving/45 disabled:opacity-50"
+          className="h-10 min-w-0 flex-1 rounded-full bg-white px-4 text-body font-medium text-ink shadow-sm outline-none ring-1 ring-line/80 placeholder:text-ink-faint focus:ring-2 focus:ring-saving/45 disabled:opacity-50"
         />
         <button
           type="submit"

@@ -117,8 +117,8 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               <div className="mb-1 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
                 <p className="text-caption font-extrabold text-ink">나</p>
                 <p className="text-micro font-bold text-ink-faint">vs</p>
-                <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={18} className="text-accent" /> {mate.nickname}
+                <p className="flex min-w-0 items-center justify-center gap-1 text-body font-extrabold text-ink">
+                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={20} className="text-accent" /> <span className="truncate">{mate.nickname}</span>
                 </p>
               </div>
               {rows.map((r) => (

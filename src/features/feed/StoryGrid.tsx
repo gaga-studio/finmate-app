@@ -48,11 +48,11 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                 </ArtOrGradient>
               </motion.button>
             )}
-            <div className="mt-1.5 flex items-center gap-1 px-0.5">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/5 text-micro">
-                <EmojiIcon emoji={s.author.emoji} avatarId={s.author.id} size={16} className="text-ink-soft" />
+            <div className="mt-1.5 flex items-center gap-1.5 px-0.5">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/5 text-caption">
+                <EmojiIcon emoji={s.author.emoji} avatarId={s.author.id} size={20} className="text-ink-soft" />
               </span>
-              <span className="min-w-0 flex-1 truncate text-micro font-semibold text-ink-soft">
+              <span className="min-w-0 flex-1 truncate text-body font-extrabold text-ink-soft">
                 {s.author.nickname}
               </span>
               <span className="flex shrink-0 items-center gap-0.5 text-micro font-semibold text-ink-soft">

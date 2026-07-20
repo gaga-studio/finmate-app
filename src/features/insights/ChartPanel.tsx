@@ -18,8 +18,8 @@ import { snappy } from '../../shared/motion/springs'
 
 const CHART_W = 330
 
-/** 비교 계열 라인 색 — 나는 파란선, 메이트/그룹은 빨간선 */
-const COMPARE_COLORS: [string, string] = ['var(--color-budget)', 'var(--color-rise)']
+/** 비교 계열 라인 색 — 기존 총자산 선은 유지하고, 메이트/그룹 선만 빨간색으로 추가 */
+const COMPARE_COLORS: [string, string] = ['var(--color-saving)', 'var(--color-rise)']
 
 /** 받침 유무에 따른 이/가 조사 */
 function iGa(word: string): string {
@@ -41,7 +41,7 @@ export function ChartPanel({ state }: Props) {
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.p
             key={title}
-            className="text-section font-bold text-ink"
+            className="text-[17px] font-bold leading-snug text-ink"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -211,16 +211,26 @@ function renderState(state: InsightChartState) {
 
   // 기본: 평소 습관 기반 미래 6개월 투영 — 현재 → 12월 예상을 한 줄로
   return {
-    title: '총자산 시뮬레이션',
+    title: '총자산',
     caption: `지금 습관대로면 6개월 뒤 +${formatKrwCompact(my.totalGain)}`,
     metricClass: 'text-saving',
     chart: (
       <div className="flex flex-col items-center">
-        <p className="text-title font-extrabold leading-none text-ink">
-          {formatKrwCompact(my.curve[0])}
-          <span className="mx-1.5 text-ink-faint">→</span>
-          <span className="text-saving">{formatKrwCompact(my.curve[my.curve.length - 1])}</span>
-        </p>
+        <div className="flex items-end gap-5">
+          <div className="text-center">
+            <p className="text-caption font-bold text-ink-faint">현재</p>
+            <p className="mt-0.5 text-title font-extrabold leading-none text-ink">
+              {formatKrwCompact(my.curve[0])}
+            </p>
+          </div>
+          <div className="h-8 w-px bg-line" />
+          <div className="text-center">
+            <p className="text-caption font-bold text-ink-faint">12월 예상</p>
+            <p className="mt-0.5 text-title font-extrabold leading-none text-saving">
+              {formatKrwCompact(my.curve[my.curve.length - 1])}
+            </p>
+          </div>
+        </div>
         <div className="mt-2">
           <LineChart
             points={my.curve}

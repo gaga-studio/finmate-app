@@ -9,9 +9,26 @@ import {
 import { DEMO_TODAY } from '../../data/demo'
 import { compareDoneReplies, findReplies, INITIAL_REPLIES, type Reply } from './script'
 
-/** 타이핑 인디케이터 노출 시간 / 버블 간 간격 (ms) — 촬영 리듬 고정 */
-const TYPING_MS = 700
-const GAP_MS = 500
+/** AI 답변 리듬 — 길이와 위젯 여부에 따라 조금씩 달라져 채팅처럼 보이게 한다 */
+const THINKING_START_MS = 280
+const MIN_TYPING_MS = 620
+const MAX_TYPING_MS = 1850
+const BETWEEN_BUBBLES_MS = 420
+
+function clamp(n: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, n))
+}
+
+function typingDuration(reply: Reply, index: number) {
+  if (!reply.text) return 180
+  const textLength = reply.text?.length ?? 0
+  const chartBonus = reply.chart ? 240 : 0
+  return clamp(MIN_TYPING_MS + textLength * 24 + chartBonus + index * 70, MIN_TYPING_MS, MAX_TYPING_MS)
+}
+
+function bubbleGap(reply: Reply) {
+  return reply.text ? BETWEEN_BUBBLES_MS : 120
+}
 
 export function useInsightChat() {
   const [messages, setMessages] = useState<InsightMsg[]>([])
@@ -41,17 +58,29 @@ export function useInsightChat() {
     }
   }, [])
 
-  /** AI 응답 시퀀스 — 타이핑 도트 후 버블이 순차 등장 */
+  /** AI 응답 시퀀스 — 생각하는 틈, 타이핑, 버블 간 호흡을 순차 예약 */
   const respond = useCallback(
     (replies: Reply[]) => {
-      setTyping(true)
+      let elapsed = THINKING_START_MS
       replies.forEach((r, i) => {
+        if (r.text) {
+          timers.current.push(
+            window.setTimeout(() => {
+              setTyping(true)
+            }, elapsed),
+          )
+        }
+
+        elapsed += typingDuration(r, i)
+
         timers.current.push(
           window.setTimeout(() => {
             push(r)
-            if (i === replies.length - 1) setTyping(false)
-          }, TYPING_MS + i * GAP_MS),
+            if (r.text) setTyping(false)
+          }, elapsed),
         )
+
+        elapsed += bubbleGap(r)
       })
     },
     [push],
