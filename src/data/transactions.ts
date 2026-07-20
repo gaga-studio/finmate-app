@@ -37,7 +37,7 @@ const NARRATIVE: Transaction[] = [
   { id: 'n-coffee-today', date: '2026-07-23', merchant: '스타벅스', amount: -7200, category: 'cafe', memo: '아메리카노 외 1' },
   { id: 'n-lunch-today', date: '2026-07-23', merchant: '한솥도시락', amount: -5200, category: 'food' },
   { id: 'n-bus-today', date: '2026-07-23', merchant: '버스', amount: -1500, category: 'transport' },
-  { id: 'n-save-today', date: '2026-07-23', merchant: '파리 여행 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
+  { id: 'n-save-today', date: '2026-07-23', merchant: '파리 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
   // 7월 저축 다양화 — 월간 뷰의 "수입에서 한 전체 저축"의 근거
   { id: 'n-emergency', date: '2026-07-05', merchant: '비상금 통장', amount: -200000, category: 'saving', memo: '월급날 자동이체' },
   { id: 'n-housing', date: '2026-07-02', merchant: '청약 납입', amount: -100000, category: 'saving', memo: '13회차' },
@@ -76,7 +76,7 @@ function generate(): Transaction[] {
     }
     // 주 2회 정도 소액 저축, 격주 투자 — 오늘은 내러티브 거래만 (수치 고정 원칙)
     if ((d.getDay() === 1 || d.getDay() === 4) && key !== todayKey) {
-      out.push({ id: `s-${key}`, date: key, merchant: '파리 여행 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
+      out.push({ id: `s-${key}`, date: key, merchant: '파리 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
     }
     if (d.getDay() === 5 && i % 14 < 7 && key !== todayKey) {
       out.push({ id: `i-${key}`, date: key, merchant: '카카오 소액 매수', amount: -30000, category: 'invest' })

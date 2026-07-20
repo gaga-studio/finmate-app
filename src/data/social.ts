@@ -10,7 +10,7 @@ export const FEED_GROUPS: FeedGroup[] = [
   { id: 'g-income', emoji: '💼', label: '소득 유사', desc: '월 소득 ±100만원', members: 1570 },
   { id: 'g-spend', emoji: '🧾', label: '소비 유사', desc: '월 소비 70만원대', members: 514 },
   { id: 'g-region', emoji: '🏙️', label: '서울 20대', desc: '같은 지역 · 또래', members: 21 },
-  { id: 'g-follow', emoji: '⭐️', label: '팔로잉', desc: '내가 팔로우한 메이트', members: 10 },
+  { id: 'g-follow', emoji: '⭐️', label: '팔로잉', desc: '팔로잉 메이트', members: 10 },
 ]
 
 export const AUTHORS = {
@@ -24,7 +24,7 @@ export const AUTHORS = {
   paris: { id: 'a-paris', nickname: '파리지앤느', emoji: '🥐', bio: '파리행 적금 61%', badges: ['저축 상위 9%'] },
   keys: { id: 'a-keys', nickname: '내집마련중', emoji: '🔑', bio: '5년 적금 만기', badges: ['청약 60회차'] },
   tuna: { id: 'a-tuna', nickname: '절약왕참치', emoji: '🐟', bio: '월급 200 자취생', badges: ['소비방어 상위 12%', '3주 연속 미션'] },
-  bear: { id: 'a-bear', nickname: '곰손재테크', emoji: '🐻', bio: 'ETF 적립 6개월차', badges: ['자동이체 마스터'] },
+  bear: { id: 'a-bear', nickname: '곰손재테크', emoji: '🐻', bio: 'ETF 적립 6개월차', badges: ['#자동이체 마스터'] },
   raccoon: { id: 'a-raccoon', nickname: '월급루팡아님', emoji: '🦝', bio: '사회초년생 2년차', badges: ['첫 청약 납입'] },
 } satisfies Record<string, ProfileSummary>
 

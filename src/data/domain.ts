@@ -42,9 +42,9 @@ export interface AssetItem {
 
 /** 대학생 페르소나 — 계좌·상품 위주, 합계 정확히 1,400만원 */
 export const MY_ASSETS: AssetItem[] = [
-  { id: 'as-housing', title: '주택청약종합저축', value: 6_000_000, emoji: '🏠' },
+  { id: 'as-housing', title: '주택청약', value: 6_000_000, emoji: '🏠' },
   { id: 'as-deposit', title: '정기적금', value: 3_200_000, emoji: '💰' },
-  { id: 'as-paris', title: '파리 여행 통장', value: 2_250_000, emoji: '✈️' },
+  { id: 'as-paris', title: '파리 통장', value: 2_250_000, emoji: '✈️' },
   { id: 'as-invest', title: '증권 계좌', value: 1_326_000, emoji: '📈' },
   { id: 'as-parking', title: '파킹 통장', value: 1_224_000, emoji: '🏦' },
 ]
