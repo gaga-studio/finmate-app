@@ -17,6 +17,11 @@ interface Props {
 export function StoryGrid({ stories, openId, onOpen }: Props) {
   return (
     <div className="mt-2.5 grid grid-cols-3 gap-2.5 px-5">
+      {stories.length === 0 && (
+        <p className="col-span-3 py-10 text-center text-body font-medium text-ink-soft">
+          이 조건을 모두 만족하는 스토리가 없어요
+        </p>
+      )}
       <AnimatePresence mode="popLayout" initial={false}>
         {stories.map((s) => (
           <motion.div
