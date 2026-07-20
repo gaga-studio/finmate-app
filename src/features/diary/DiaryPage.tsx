@@ -7,7 +7,6 @@ import { getDayDominant, getDiaryDays } from '../../data/selectors'
 import { SegmentedControl } from '../../shared/ui/SegmentedControl'
 import { formatKrwCompact } from '../../shared/format/krw'
 import { snappy } from '../../shared/motion/springs'
-import { PageTitle } from '../../shared/ui/PageTitle'
 
 type DiarySort = 'latest' | 'oldest'
 
@@ -22,7 +21,6 @@ export function DiaryPage() {
   return (
     <div className="relative min-h-full pb-6">
       <header className="relative flex items-center justify-between px-5 pb-3 pt-14">
-        <PageTitle>기록</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
@@ -81,8 +79,8 @@ export function DiaryPage() {
           >
             {/* 월 요약 */}
             <p className="mt-1 text-center text-caption font-semibold text-ink-soft">
-              기록 {days.length}일 · 수입 <b className="text-pink-500">+{formatKrwCompact(totalIncome)}</b> ·
-              지출 <b className="text-sky-500">-{formatKrwCompact(totalSpend)}</b>
+              기록 {days.length}일 · 수입 <b className="text-rise">+{formatKrwCompact(totalIncome)}</b> ·
+              지출 <b className="text-fall">-{formatKrwCompact(totalSpend)}</b>
             </p>
 
             {/* 정렬 토글 */}
@@ -167,15 +165,15 @@ export function DiaryPage() {
   )
 }
 
-/** 이미지 타일 하단 금액 — 소비는 좌측 하늘색, 수입은 우측 핑크색 뱃지 */
+/** 이미지 타일 하단 금액 — 전역 등락 색과 같은 톤으로 표시 */
 function TileBadges({ income, spend }: { income: number; spend: number }) {
   return (
     <>
-      <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-sky-300 backdrop-blur-sm">
+      <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-fall backdrop-blur-sm">
         {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
       </span>
       {income > 0 && (
-        <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-pink-300 backdrop-blur-sm">
+        <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-rise backdrop-blur-sm">
           +{formatKrwCompact(income)}
         </span>
       )}

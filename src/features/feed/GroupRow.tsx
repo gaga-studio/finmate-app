@@ -33,20 +33,20 @@ export function GroupRow({ selected, onToggle }: Props) {
               key={g.id}
               type="button"
               onClick={() => onToggle(g.id)}
-              className={`w-[108px] shrink-0 rounded-card px-3 py-3 text-left transition-all active:scale-[0.98] ${
-                active ? 'clay-pressed bg-saving/15 ring-2 ring-saving' : 'clay-card'
+              className={`w-[108px] shrink-0 rounded-card border px-3 py-3 text-left transition-all active:scale-[0.98] ${
+                active ? 'border-saving bg-point ring-1 ring-saving/25' : 'border-line bg-white shadow-soft'
               }`}
             >
               <span
                 className={`flex h-12 w-12 items-center justify-center rounded-full text-lg ${
-                  active ? 'bg-saving/15 text-saving' : 'bg-point/55'
+                  active ? 'bg-saving/10 text-saving' : 'bg-ink/5'
                 }`}
               >
                 <EmojiIcon emoji={g.emoji} size={42} className="text-accent" />
               </span>
               <p className="mt-2 text-body font-bold leading-tight text-ink">{g.label}</p>
               <p className="mt-0.5 truncate text-micro text-ink-soft">{g.desc}</p>
-              <p className="mt-1 text-caption font-semibold text-saving">
+              <p className="mt-1 text-caption font-semibold text-ink-faint">
                 {g.members.toLocaleString()}명
               </p>
             </button>
