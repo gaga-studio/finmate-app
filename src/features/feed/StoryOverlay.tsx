@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
@@ -80,7 +81,7 @@ export function StoryOverlay({ story, onClose }: Props) {
             }`}
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-body">
-              {story.author.emoji}
+              <EmojiIcon emoji={story.author.emoji} size={14} />
             </span>
             {story.author.nickname}
           </button>

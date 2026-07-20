@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
@@ -87,7 +88,7 @@ function Section({
               className="flex items-center gap-3 py-2.5 text-left"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink/5 text-title">
-                {t.emoji}
+                <EmojiIcon emoji={t.emoji} size={18} className="text-accent" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-body font-bold text-ink">{t.label}</p>

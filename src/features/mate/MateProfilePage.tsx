@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
@@ -256,8 +257,8 @@ function MateListCard({
         {items.map((row, i) => (
           <div key={row.label} className="flex items-center gap-2">
             <span className="w-3.5 text-caption font-extrabold text-ink-faint">{i + 1}</span>
-            <span className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 ${dense ? 'h-7 w-7 text-caption' : 'h-8 w-8 text-body'}`}>
-              {row.emoji}
+            <span className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 ${dense ? 'h-7 w-7' : 'h-8 w-8'}`}>
+              <EmojiIcon emoji={row.emoji} size={dense ? 13 : 15} className="text-ink-soft" />
             </span>
             <span className={`min-w-0 flex-1 truncate font-semibold text-ink ${dense ? 'text-caption' : 'text-body'}`}>
               {row.label}
@@ -286,10 +287,12 @@ function CompareView({ mate, metric }: { mate: MateProfile; metric: Metric }) {
   return (
     <div data-testid="compare-columns">
       <div className="mb-2 grid grid-cols-2 gap-2.5 text-center">
-        <p className="text-body font-extrabold text-ink">
-          {mate.emoji} {mate.nickname}
+        <p className="flex items-center justify-center gap-1.5 text-body font-extrabold text-ink">
+          <EmojiIcon emoji={mate.emoji} size={15} className="text-accent" /> {mate.nickname}
         </p>
-        <p className="text-body font-extrabold text-ink">🙋‍♀️ 지혜</p>
+        <p className="flex items-center justify-center gap-1.5 text-body font-extrabold text-ink">
+          <EmojiIcon emoji="🙋‍♀️" size={15} className="text-accent" /> 지혜
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-2.5" data-metric={metric}>

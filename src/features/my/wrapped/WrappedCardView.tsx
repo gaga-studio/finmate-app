@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../../shared/ui/EmojiIcon'
 import { ArtOrGradient } from '../../../shared/ui/ArtOrGradient'
 import type { Metric } from '../../../data/types'
 
@@ -85,7 +86,7 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
             {data.top3.map((row, i) => (
               <div key={row.key} className="flex items-center gap-2 py-[3px] text-body font-semibold">
                 <span className="w-4 text-white/70">{i + 1}</span>
-                <span className="flex-1 truncate">{row.label}</span>
+                <span className="flex flex-1 items-center gap-1.5 truncate"><LabelIcon label={row.label} /></span>
                 <span className="font-bold">{row.value}</span>
               </div>
             ))}
@@ -97,5 +98,17 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
         </p>
       </div>
     </div>
+  )
+}
+
+/** "☕️ 카페" 형태 라벨 — 앞 이모지를 lucide 아이콘으로 */
+function LabelIcon({ label }: { label: string }) {
+  const m = label.match(/^(\p{Extended_Pictographic}\uFE0F?)\s+(.*)$/u)
+  if (!m) return <>{label}</>
+  return (
+    <>
+      <EmojiIcon emoji={m[1]} size={13} className="shrink-0 opacity-90" />
+      <span className="truncate">{m[2]}</span>
+    </>
   )
 }

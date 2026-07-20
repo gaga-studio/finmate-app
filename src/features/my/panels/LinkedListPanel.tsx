@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { ListRow } from '../../../shared/ui/ListRow'
+import { EmojiIcon } from '../../../shared/ui/EmojiIcon'
 import { snappy } from '../../../shared/motion/springs'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, STOCK_NEWS, WISHLIST } from '../../../data/domain'
@@ -11,13 +12,6 @@ const SAVING_PANEL_TITLE: Record<SavingView, string> = {
   goal: '위시 리스트',
   monthly: '소득 출처',
   asset: '자산 구성',
-}
-
-const INCOME_EMOJI: Record<string, string> = {
-  월급: '💼',
-  알바비: '🧾',
-  '당근마켓 판매': '🥕',
-  '예금 이자': '🏦',
 }
 
 const INVEST_PANEL_TITLE: Record<InvestView, string> = {
@@ -96,7 +90,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
       return {
         key: t.id,
         leading: rank(i),
-        title: `${meta.emoji} ${t.merchant}`,
+        title: t.merchant,
         sub: t.memo ?? meta.label,
         trailing: <span className="text-budget">{formatKrwCompact(-t.amount)}</span>,
       }
@@ -107,7 +101,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
       return getIncomeSources().map((s, i) => ({
         key: s.merchant,
         leading: rank(i),
-        title: `${INCOME_EMOJI[s.merchant] ?? '💵'} ${s.merchant}`,
+        title: s.merchant,
         sub: `${s.count}건`,
         trailing: <span className="text-saving">{formatKrwCompact(s.total)}</span>,
       }))
@@ -116,13 +110,13 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
       return getNetWorth().assets.map((a, i) => ({
         key: a.id,
         leading: rank(i),
-        title: `${a.emoji} ${a.title}`,
+        title: a.title,
         trailing: <span className="text-saving">{formatKrwCompact(a.value)}</span>,
       }))
     }
     return WISHLIST.map((w) => ({
       key: w.id,
-      leading: w.emoji,
+      leading: <EmojiIcon emoji={w.emoji} size={13} className="text-saving" />,
       title: w.title,
       trailing: <span className="text-saving">{formatKrwCompact(w.price)}</span>,
     }))
@@ -139,7 +133,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
   if (investView === 'news') {
     return STOCK_NEWS.map((n) => ({
       key: n.id,
-      leading: '📰',
+      leading: <EmojiIcon emoji="📰" size={13} className="text-invest" />,
       title: n.name,
       sub: n.summary,
       trailing: (

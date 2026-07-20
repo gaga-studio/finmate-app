@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
@@ -96,8 +97,8 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               <div className="mb-1 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-center">
                 <p className="text-caption font-extrabold text-ink">나</p>
                 <p className="text-micro font-bold text-ink-faint">vs</p>
-                <p className="text-caption font-extrabold text-ink">
-                  {mate.emoji} {mate.nickname}
+                <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
+                  <EmojiIcon emoji={mate.emoji} size={12} className="text-accent" /> {mate.nickname}
                 </p>
               </div>
               {rows.map((r) => (

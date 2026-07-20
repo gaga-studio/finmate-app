@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { createPortal } from 'react-dom'
 import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { motion } from 'motion/react'
@@ -44,7 +45,7 @@ export function RewardSheet({ points, onClose }: Props) {
             return (
               <div key={item.id} className="flex items-center gap-3 py-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-title">
-                  {item.emoji}
+                  <EmojiIcon emoji={item.emoji} size={17} className="text-point-ink" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-body font-semibold text-ink">{item.title}</p>
