@@ -122,10 +122,12 @@ export function MyPage() {
       {/* 지표 밑줄 탭 — 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 */}
       <MetricTabs metric={metric} onChange={setMetric} layoutId="my-metric-tab" />
 
-      <div className="pt-2" />
+      <div className="pt-1" />
 
       <MetricCarousel
         metric={metric}
+        cardH={344}
+        sideInset={84}
         period={period}
         savingView={savingView}
         investView={investView}
@@ -155,9 +157,7 @@ export function MyPage() {
         />
       </div>
 
-      <h2 className="mt-4 px-6 text-title font-extrabold text-ink">요약</h2>
-
-      <section className="relative mt-2 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-6">
+      <section className="relative mt-3 grid grid-cols-[1fr_1.15fr] gap-3 px-5 pb-2">
         <div className="h-[248px]">
           {openCard === null && (
             <ArtCardThumb
