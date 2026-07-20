@@ -30,9 +30,9 @@ import {
 const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토']
 
 const TINT: Record<Metric, string> = {
-  budget: 'from-budget/18 via-budget/6',
-  saving: 'from-saving/18 via-saving/6',
-  invest: 'from-invest/18 via-invest/6',
+  budget: 'from-budget/22 via-budget/8',
+  saving: 'from-saving/18 via-saving/7',
+  invest: 'from-invest/20 via-invest/8',
 }
 
 interface OpenCard {
@@ -93,13 +93,13 @@ export function MyPage() {
   }, [metric])
 
   return (
-    <div className="relative min-h-full">
+    <div className="relative min-h-full bg-gradient-to-b from-[var(--active-soft)] via-surface to-surface" data-metric={metric}>
       {/* 지표별 배경 틴트 — 그라디언트 3장 크로스페이드 */}
       {(Object.keys(TINT) as Metric[]).map((m) => (
         <motion.div
           key={m}
           aria-hidden
-          className={`pointer-events-none absolute inset-x-0 top-0 h-[440px] bg-gradient-to-b ${TINT[m]} to-transparent`}
+          className={`pointer-events-none absolute inset-x-0 top-0 h-[620px] bg-gradient-to-b ${TINT[m]} to-transparent`}
           initial={false}
           animate={{ opacity: metric === m ? 1 : 0 }}
           transition={{ duration: 0.45 }}

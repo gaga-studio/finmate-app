@@ -69,7 +69,7 @@ export function ReportOverlay({ variant, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+            className="clay-card flex h-9 w-9 items-center justify-center rounded-full text-ink transition-transform active:scale-95"
             aria-label="리포트 닫기"
           >
             <X size={16} />
@@ -77,7 +77,7 @@ export function ReportOverlay({ variant, onClose }: Props) {
         </div>
 
         {/* 총자산 + 다음 달 투영 */}
-        <div className="mt-4 rounded-card bg-elevated px-5 py-4 shadow-float">
+        <div className="clay-card mt-4 rounded-card px-5 py-4">
           <p className="text-body font-bold text-ink-soft">총자산</p>
           <p className="mt-1 text-display font-extrabold leading-none text-ink">
             {formatKrwCompact(nw.total)}
@@ -89,7 +89,7 @@ export function ReportOverlay({ variant, onClose }: Props) {
         </div>
 
         {/* 소비 */}
-        <section className="mt-3 rounded-card bg-elevated px-5 py-4 shadow-float" data-metric="budget">
+        <section className="clay-card mt-3 rounded-card px-5 py-4" data-metric="budget">
           <div className="flex items-baseline justify-between">
             <p className="text-section font-bold text-ink">소비{macbook ? ' (예상)' : ''}</p>
             {overBudget ? (
@@ -111,13 +111,13 @@ export function ReportOverlay({ variant, onClose }: Props) {
         </section>
 
         {/* 저축 */}
-        <section className="mt-3 rounded-card bg-elevated px-5 py-4 shadow-float">
+        <section className="clay-card mt-3 rounded-card px-5 py-4">
           <div className="flex items-baseline justify-between">
             <p className="text-section font-bold text-ink">저축</p>
             <p className="text-body font-bold text-saving">파리까지 {Math.round(saving.pct * 100)}%</p>
           </div>
           <p className="mt-1 text-title font-extrabold text-ink">+{formatKrw(saving.delta)}</p>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-ink/6">
+          <div className="clay-pressed mt-2 h-2 overflow-hidden rounded-full bg-point/45">
             <motion.div
               className="h-full rounded-full bg-saving"
               initial={{ width: 0 }}
@@ -131,7 +131,7 @@ export function ReportOverlay({ variant, onClose }: Props) {
         </section>
 
         {/* 투자 */}
-        <section className="mt-3 rounded-card bg-elevated px-5 py-4 shadow-float">
+        <section className="clay-card mt-3 rounded-card px-5 py-4">
           <div className="flex items-baseline justify-between">
             <p className="text-section font-bold text-ink">투자</p>
             <p className={`text-body font-bold ${invest.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
@@ -146,8 +146,8 @@ export function ReportOverlay({ variant, onClose }: Props) {
         </section>
 
         {/* 다음 달 한 줄 제안 */}
-        <div className="mt-3 rounded-card bg-accent/8 px-5 py-4">
-          <p className="text-caption font-bold text-accent">{macbook ? 'AI 제안' : '8월 제안'}</p>
+        <div className="clay-card mt-3 rounded-card px-5 py-4">
+          <p className="text-caption font-bold text-saving">{macbook ? 'AI 제안' : '8월 제안'}</p>
           <p className="mt-1 text-body font-bold leading-relaxed text-ink">
             {macbook ? (
               <>

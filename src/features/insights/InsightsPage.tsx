@@ -43,14 +43,14 @@ export function InsightsPage() {
   const viewing = chat.viewing !== null
 
   return (
-    // 페이지는 고정(TabLayout이 overflow-hidden) — 입력바가 탭바(62px+안전영역) 바로 위에 붙는다
-    <div className="relative flex h-full flex-col pb-[calc(62px+env(safe-area-inset-bottom,0px))]">
+    // 페이지는 고정(TabLayout이 overflow-hidden) — 입력바가 말랑한 탭바 바로 위에 붙는다
+    <div className="relative flex h-full flex-col pb-[calc(78px+env(safe-area-inset-bottom,0px))]">
       <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
         <PageTitle>인사이트</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+          className="clay-card flex h-10 w-10 items-center justify-center rounded-full text-ink transition-transform active:scale-95"
           aria-label="알림"
         >
           <Bell size={18} />
@@ -60,13 +60,13 @@ export function InsightsPage() {
       <ChartPanel state={chat.chart} />
 
       {/* AI 채팅 카드 — 시뮬 카드와 구분되는 옅은 틴트의 두 번째 카드 */}
-      <div className="mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card bg-accent/6 ring-1 ring-line/60">
+      <div className="clay-card mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card">
         {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
         <div className="flex items-center justify-between px-3.5 pb-1 pt-3">
           <button
             type="button"
             onClick={() => setPanelOpen(true)}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+            className="clay-pressed flex h-8 w-8 items-center justify-center rounded-full bg-point/50 text-ink"
             aria-label="저장된 대화"
           >
             <Menu size={15} />
@@ -76,7 +76,7 @@ export function InsightsPage() {
             <button
               type="button"
               onClick={chat.newChat}
-              className="flex h-8 items-center gap-1 rounded-full bg-accent px-3 text-caption font-bold text-white shadow-soft"
+              className="clay-cta flex h-8 items-center gap-1 rounded-[16px] px-3 text-caption font-bold"
             >
               <RotateCcw size={12} />
               새 대화
@@ -87,7 +87,7 @@ export function InsightsPage() {
               onClick={() => {
                 if (chat.saveSession()) showToast('오늘의 대화를 저장했어요')
               }}
-              className="flex h-8 items-center gap-1 rounded-full bg-elevated px-3 text-caption font-bold text-ink shadow-soft"
+              className="clay-pressed flex h-8 items-center gap-1 rounded-[16px] bg-point/50 px-3 text-caption font-bold text-ink"
             >
               <Bookmark size={13} />
               저장

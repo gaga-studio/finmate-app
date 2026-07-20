@@ -55,16 +55,15 @@ export const NET_WORTH_HISTORY: number[] = [
 ]
 
 /**
- * 보유 종목 — 합계 1,326,000 = 평가액 정합. 수익률은 2026-07-17 실제 시장 반영:
- * 코스피는 급락에도 연초 대비 큰 플러스(KODEX 200 1위), 스페이스X는
- * 6/12 IPO($135) 후 $123까지 밀려 마이너스.
+ * 보유 종목 — 합계 1,326,000 = 평가액 정합.
+ * 사용자는 아직 ETF를 직접 매수해본 적 없는 설정이라 개별주·비상장만 보유한다.
  */
 export const HOLDINGS: Holding[] = [
-  { ticker: 'TIGER S&P500', name: 'TIGER 미국S&P500', value: 400_000, returnPct: 11.8 },
-  { ticker: 'KODEX 200', name: 'KODEX 200', value: 330_000, returnPct: 19.6 },
-  { ticker: 'SPACEX', name: '스페이스X', value: 268_000, returnPct: -8.9 },
-  { ticker: '005930', name: '삼성전자', value: 212_000, returnPct: 4.2 },
-  { ticker: 'KODEX 미국나스닥', name: 'KODEX 미국나스닥100', value: 116_000, returnPct: 14.6 },
+  { ticker: '005930', name: '삼성전자', value: 420_000, returnPct: 4.2 },
+  { ticker: '035720', name: '카카오', value: 280_000, returnPct: -3.1 },
+  { ticker: '035420', name: 'NAVER', value: 246_000, returnPct: 6.8 },
+  { ticker: 'SPACEX', name: '스페이스X', value: 230_000, returnPct: -8.9 },
+  { ticker: '373220', name: 'LG에너지솔루션', value: 150_000, returnPct: 2.4 },
 ]
 
 /** 투자 평가액 월별 추이(2~7월) — 6월 고점 후 7월 급락장 반영, 끝값 = HOLDINGS 합계 */
@@ -74,7 +73,7 @@ export const INVEST_VALUE_HISTORY: number[] = [
 
 /**
  * 누적 투입 원금(2~7월, 단조 증가) — 최종 1,176,500이라 총 수익률이 정확히 +12.7%.
- * 7월 신규 투입 +80,000 = TIGER 5만(7/20) + KODEX 3만 거래와 정합.
+ * 7월 신규 투입 +80,000 = 삼성전자 5만(7/20) + 카카오 3만 거래와 정합.
  */
 export const INVEST_PRINCIPAL_HISTORY: number[] = [
   850_000, 900_000, 950_000, 1_030_000, 1_096_500, 1_176_500,
@@ -107,12 +106,12 @@ export interface StockNews {
   changePct: number
 }
 
-/** 뉴스 뷰 오른쪽 카드 — 2026-07-17 실제 시장 반영, 반도체(삼성·하이닉스)가 메인 */
+/** 뉴스 뷰 오른쪽 카드 — ETF 첫 시도 전, 사용자가 보유/관심 중인 개별주 중심 */
 export const STOCK_NEWS: StockNews[] = [
   { id: 'nw1', name: '삼성전자', summary: '오늘 2분기 실적 발표, HBM 주목', changePct: -7.8 },
-  { id: 'nw2', name: 'SK하이닉스', summary: '나스닥 이중상장 뒤 차익 매물에', changePct: -6.4 },
+  { id: 'nw2', name: 'NAVER', summary: 'AI 검색 서비스 개편 기대감', changePct: 1.6 },
   { id: 'nw3', name: '스페이스X', summary: '스타십 시험발사 중단 여파로', changePct: -3.2 },
-  { id: 'nw4', name: 'TIGER 미국S&P500', summary: 'AI 고평가 논란에 미국도 조정', changePct: -1.2 },
+  { id: 'nw4', name: '카카오', summary: '플랫폼 규제 우려에 변동성 확대', changePct: -2.1 },
 ]
 
 /** 총자산 일별 곡선(90일) — 완만한 우상향 + 시드 노이즈 */
@@ -149,14 +148,15 @@ export const STREAK_CHECK_REWARD = 50
 /** 진행 중인 미션 — 진행률은 셀렉터 파생(getMissionProgress) */
 export const MISSIONS: Mission[] = [
   { id: 'm-save', emoji: '✈️', title: '이번 주 저축 5만원 추가', reward: 120, kind: 'saving' },
-  { id: 'm-budget', emoji: '🎯', title: '일 소비예산 10% 줄이기', reward: 80, kind: 'daily-budget' },
-  { id: 'm-quiz', emoji: '🧠', title: '금융 퀴즈 풀기', reward: 60, kind: 'quiz' },
+  { id: 'm-budget', emoji: '🎯', title: '일 소비 예산 5% 줄이기', reward: 80, kind: 'daily-budget' },
+  { id: 'm-quiz', emoji: '🧠', title: '매일 투자 관련 O/X 퀴즈', reward: 60, kind: 'quiz' },
 ]
 
 /** 추천 미션 — 해체분석에서 나온 근거를 함께 보여준다 */
 export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
+  { id: 'r-etf', emoji: '📈', title: 'ETF 첫 시도 자금 30만원 모으기', reason: '월 10만원씩 3개월 플랜', reward: 150 },
   { id: 'r-cafe', emoji: '☕️', title: '일주일 카페 2회 이하', reason: '이번 달 카페 8회 · 34,400원', reward: 80 },
-  { id: 'r-quiz', emoji: '📉', title: '물타기 전 투자 퀴즈', reason: '스페이스X -8.9% 보유 중', reward: 60 },
+  { id: 'r-quiz', emoji: '📉', title: 'ETF 시작 전 투자 퀴즈', reason: '첫 ETF 매수 전 기본기 체크', reward: 60 },
   { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
 ]
 
@@ -173,7 +173,7 @@ export const PAST_MISSIONS: PastMission[] = [
   { id: 'pm1', emoji: '🎯', title: '일 소비예산 지키기 7일', completedAt: '7월 21일', reward: 100 },
   { id: 'pm2', emoji: '✈️', title: '파리 통장 3회 저축', completedAt: '7월 16일', reward: 120 },
   { id: 'pm3', emoji: '🧠', title: '금융 퀴즈 3연속 정답', completedAt: '7월 12일', reward: 90 },
-  { id: 'pm4', emoji: '📉', title: '첫 소액 투자 시작', completedAt: '7월 8일', reward: 150 },
+  { id: 'pm4', emoji: '📉', title: '첫 개별주 소액 투자', completedAt: '7월 8일', reward: 150 },
   { id: 'pm5', emoji: '🍱', title: '일주일 배달 2회 이하', completedAt: '7월 3일', reward: 80 },
 ]
 

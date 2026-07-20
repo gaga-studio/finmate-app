@@ -31,7 +31,7 @@ export function FeedPage() {
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+          className="clay-card flex h-10 w-10 items-center justify-center rounded-full text-ink transition-transform active:scale-95"
           aria-label="알림"
         >
           <Bell size={18} />
@@ -39,7 +39,7 @@ export function FeedPage() {
       </header>
 
       {/* 그룹 찾아보기 검색바 (정적) */}
-      <div className="mx-5 mt-2 flex items-center gap-2 rounded-full bg-elevated px-4 py-2.5 shadow-soft">
+      <div className="clay-card mx-5 mt-2 flex items-center gap-2 rounded-full px-4 py-2.5">
         <Search size={16} className="text-ink-faint" />
         <span className="text-body font-medium text-ink-faint">그룹 찾아보기</span>
       </div>

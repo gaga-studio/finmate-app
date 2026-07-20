@@ -197,7 +197,7 @@ function Widget({
           key={c}
           type="button"
           onClick={() => !readOnly && onChip(c)}
-          className="rounded-full border border-accent/30 bg-accent/8 px-3 py-1.5 text-caption font-bold text-accent"
+          className="rounded-full border border-saving/30 bg-point/65 px-3 py-1.5 text-caption font-bold text-saving"
         >
           {c}
         </button>
@@ -231,8 +231,8 @@ function OptionsWidget({
           }}
           className={`rounded-full px-3.5 py-2 text-body font-bold transition-opacity ${
             picked === o
-              ? 'bg-accent text-white'
-              : 'border border-accent/35 bg-elevated text-accent shadow-soft'
+              ? 'clay-cta'
+              : 'clay-card text-saving'
           } ${picked !== null && picked !== o ? 'opacity-35' : ''}`}
         >
           {o}
@@ -262,7 +262,7 @@ function ComparePickerWidget({
           type="button"
           disabled={readOnly}
           onClick={() => onComparePick(kind)}
-          className="rounded-full border border-accent/35 bg-elevated px-3.5 py-2 text-body font-bold text-accent shadow-soft"
+          className="clay-card rounded-full px-3.5 py-2 text-body font-bold text-saving"
         >
           {label}
         </button>
@@ -287,10 +287,10 @@ function ReportWidget({
       type="button"
       disabled={readOnly}
       onClick={() => onReport(variant)}
-      className="flex items-center gap-2 rounded-2xl rounded-tl-md bg-elevated px-4 py-3 shadow-soft"
+      className="clay-card flex items-center gap-2 rounded-2xl rounded-tl-md px-4 py-3"
       data-testid="report-widget"
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent/10 text-[17px]">
+      <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-point/65 text-[17px]">
         {macbook ? '💻' : '📋'}
       </span>
       <span className="text-left">
@@ -329,11 +329,11 @@ function SummaryCard() {
   ]
 
   return (
-    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="daily-summary">
+    <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid="daily-summary">
       <div className="flex flex-col gap-2.5">
         {lines.map((l, i) => (
           <div key={l.emoji} className="flex items-start gap-2.5">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/6 text-micro font-extrabold text-ink-soft">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-point/65 text-micro font-extrabold text-point-ink">
               {i + 1}
             </span>
             <div>
@@ -357,7 +357,7 @@ function SummaryCard() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="mt-2.5 flex items-center gap-0.5 text-caption font-bold text-accent"
+        className="mt-2.5 flex items-center gap-0.5 text-caption font-bold text-saving"
       >
         {open ? '접기' : '자세히'}
         <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -475,8 +475,8 @@ function ScenarioSwitchWidget({
           }}
           className={`rounded-full px-3.5 py-2 text-body font-bold ${
             active === kind
-              ? 'bg-accent text-white'
-              : 'border border-accent/35 bg-elevated text-accent shadow-soft'
+              ? 'clay-cta'
+              : 'clay-card text-saving'
           }`}
         >
           {label}
@@ -491,7 +491,7 @@ function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) 
   const [accepted, setAccepted] = useState(false)
 
   return (
-    <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="mission-accept">
+    <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid="mission-accept">
       <div className="flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-point">
           <EmojiIcon emoji={HABIT_MISSION.emoji} size={29} className="text-point-ink" />
@@ -511,7 +511,7 @@ function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) 
           onAccept('미션 수락!')
         }}
         className={`mt-2.5 flex w-full items-center justify-center gap-1 rounded-xl py-2 text-body font-bold ${
-          accepted ? 'bg-ink/6 text-ink-faint' : 'bg-accent text-white'
+          accepted ? 'clay-pressed bg-point/45 text-ink-faint' : 'clay-cta'
         }`}
       >
         {accepted ? '수락 완료 ✓' : '미션 수락'}

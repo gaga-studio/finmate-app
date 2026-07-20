@@ -15,7 +15,7 @@ interface Props {
 /** 진행 중인 미션 — 진행률은 거래 파생, 퀴즈는 탭 완료형 */
 export function MissionList({ missions, quizDone, onQuizComplete }: Props) {
   return (
-    <section className="mx-5 mt-3 rounded-card bg-elevated p-5 shadow-float">
+    <section className="clay-card mx-5 mt-3 rounded-card p-5">
       <h2 className="text-title font-extrabold text-ink">진행 중인 미션</h2>
       <AnimatePresence mode="popLayout" initial={false}>
         {missions.map((m) => (
@@ -48,7 +48,7 @@ function MissionRow({
 
   const body = (
     <div className="flex items-center gap-3 py-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-section">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-point/55 text-section">
         {done ? <Check size={18} strokeWidth={3} className="text-point-ink" /> : <EmojiIcon emoji={mission.emoji} size={27} className="text-point-ink" />}
       </span>
       <div className="min-w-0 flex-1">
@@ -94,7 +94,7 @@ function MissionSub({ mission, done }: { mission: Mission; done: boolean }) {
   const p = getMissionProgress(mission.kind)
   return (
     <div className="mt-1.5">
-      <div className="h-1 overflow-hidden rounded-full bg-ink/8">
+      <div className="clay-pressed h-1.5 overflow-hidden rounded-full bg-point/45">
         <motion.div
           className={`h-full rounded-full ${mission.kind === 'daily-budget' && p.pct >= 1 ? 'bg-danger' : 'bg-point-ink'}`}
           initial={{ scaleX: 0 }}

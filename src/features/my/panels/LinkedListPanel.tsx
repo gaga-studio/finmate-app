@@ -39,7 +39,7 @@ export function LinkedListPanel({
   investView: InvestView
 }) {
   return (
-    <div className="flex h-full flex-col rounded-card bg-elevated px-3.5 py-3 shadow-float">
+    <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
       <p className="mb-1 text-section font-bold text-ink">{panelTitle(metric, savingView, investView)}</p>
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.div

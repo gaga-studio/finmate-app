@@ -15,20 +15,20 @@ export function TabBar() {
   const { pathname } = useLocation()
 
   return (
-    <nav className="absolute inset-x-0 bottom-0 z-40 border-t border-line bg-elevated/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl">
-      <div className="flex items-stretch">
+    <nav className="absolute inset-x-0 bottom-0 z-40 px-3 pb-[calc(10px+env(safe-area-inset-bottom))]">
+      <div className="clay-card flex items-stretch rounded-[1.65rem] px-1 py-1 backdrop-blur-xl">
         {TABS.map(({ to, label, Icon }) => {
           const active = pathname.startsWith(to)
           return (
             <NavLink
               key={to}
               to={to}
-              className="relative flex flex-1 flex-col items-center gap-1 py-2.5"
+              className="relative flex flex-1 flex-col items-center gap-1 rounded-[1.35rem] py-2.5 transition-transform active:scale-[0.98]"
             >
               {active && (
                 <motion.span
                   layoutId="tab-pill"
-                  className="absolute inset-x-3 inset-y-1 rounded-2xl bg-accent/12"
+                  className="clay-pressed absolute inset-x-1.5 inset-y-1 rounded-[1.25rem] bg-accent/12"
                   transition={snappy}
                 />
               )}
