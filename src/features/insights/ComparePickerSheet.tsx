@@ -1,4 +1,5 @@
 import { EmojiIcon } from '../../shared/ui/EmojiIcon'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { Check } from 'lucide-react'
@@ -17,12 +18,25 @@ interface Props {
 
 /** 비교 시트 — 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
 export function ComparePickerSheet({ selectedId, filter, onSelect, onClose }: Props) {
+  const [localSelectedId, setLocalSelectedId] = useState<string | null>(selectedId)
+  const closeTimer = useRef<number | null>(null)
   const mates = COMPARE_TARGETS.filter((t) => t.kind === 'mate')
   const groups = COMPARE_TARGETS.filter((t) => t.kind === 'group')
 
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) window.clearTimeout(closeTimer.current)
+    }
+  }, [])
+
   const pick = (id: string) => {
-    onSelect(id === selectedId ? null : id)
-    onClose()
+    const nextId = id === localSelectedId ? null : id
+    setLocalSelectedId(nextId)
+    if (closeTimer.current) window.clearTimeout(closeTimer.current)
+    closeTimer.current = window.setTimeout(() => {
+      onSelect(nextId)
+      onClose()
+    }, 180)
   }
 
   return createPortal(
@@ -55,8 +69,8 @@ export function ComparePickerSheet({ selectedId, filter, onSelect, onClose }: Pr
           고르면 내 그래프 위에 선으로 겹쳐져요 · 다시 누르면 해제
         </p>
 
-        {filter !== 'group' && <Section title="메이트" items={mates} selectedId={selectedId} onPick={pick} />}
-        {filter !== 'mate' && <Section title="그룹 평균" items={groups} selectedId={selectedId} onPick={pick} />}
+        {filter !== 'group' && <Section title="메이트" items={mates} selectedId={localSelectedId} onPick={pick} />}
+        {filter !== 'mate' && <Section title="그룹 평균" items={groups} selectedId={localSelectedId} onPick={pick} />}
       </motion.div>
     </div>,
     overlayTarget(),
@@ -91,14 +105,17 @@ function Section({
                 <EmojiIcon emoji={t.emoji} avatarId={t.id} size={30} className="text-accent" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-body font-bold text-ink">{t.label}</p>
-                <p className="mt-0.5 text-caption font-medium text-ink-soft">{t.sub}</p>
+                <p className="text-[17px] font-extrabold leading-snug text-ink">{t.label}</p>
+                <p className="mt-0.5 text-body font-medium text-ink-soft">{t.sub}</p>
               </div>
-              {active && (
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent text-white">
-                  <Check size={13} strokeWidth={3} />
-                </span>
-              )}
+              <span
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                  active ? 'border-accent bg-accent text-white' : 'border-ink/10 bg-ink/5 text-ink-faint'
+                }`}
+                aria-hidden
+              >
+                <Check size={14} strokeWidth={3} className={active ? '' : 'opacity-35'} />
+              </span>
             </button>
           )
         })}

@@ -41,16 +41,22 @@ function CompareShell({
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
       {/* 열 라벨 */}
-      <div className="grid w-full grid-cols-2 pt-2 text-center">
-        <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink-soft">
-          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={18} /> {mate.nickname}
+      <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pt-3 text-center">
+        <p className="flex min-w-0 items-center justify-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
+          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} /> <span className="truncate">{mate.nickname}</span>
         </p>
-        <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink-soft">
-          <EmojiIcon emoji="🙋‍♀️" size={12} /> 지혜
+        <span className="rounded-full bg-ink/5 px-2 py-0.5 text-caption font-extrabold text-ink-faint">VS</span>
+        <p className="flex min-w-0 items-center justify-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
+          <EmojiIcon emoji="🙋‍♀️" size={16} /> <span className="truncate">지혜</span>
         </p>
       </div>
       <div className="grid w-full flex-1 grid-cols-2 items-center divide-x divide-line/70">{children}</div>
-      <p className="pb-3 text-body font-bold text-ink">{verdict}</p>
+      <div className="mb-3 flex items-center gap-2 rounded-2xl bg-point/60 px-3 py-2">
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-invest text-micro">
+          ✨
+        </span>
+        <p className="text-body font-extrabold text-ink">{verdict}</p>
+      </div>
     </div>
   )
 }
@@ -69,7 +75,7 @@ function iGa(word: string): string {
 function pctVerdict(name: string, mateVal: number, myVal: number, unit = '%p'): string {
   if (mateVal === myVal) return '막상막하, 완벽한 동률!'
   const diff = Math.abs(Math.round((mateVal - myVal) * 10) / 10)
-  return mateVal > myVal ? `${name}${iGa(name)} ${diff}${unit} 앞서요` : `내가 ${diff}${unit} 앞서요!`
+  return mateVal > myVal ? `${name}${iGa(name)} ${diff}${unit} 높아요` : `내가 ${diff}${unit} 높아요`
 }
 
 /* ---------- 소비 (일/주/월) ---------- */
