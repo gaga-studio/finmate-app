@@ -36,7 +36,7 @@ function CompareShell({
   children: React.ReactNode
 }) {
   return (
-    <div className={`flex h-full flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${metricClass}`}>
+    <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
       <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
@@ -51,9 +51,9 @@ function CompareShell({
         </p>
       </div>
       <div className="grid w-full flex-1 grid-cols-2 items-center divide-x divide-line/70">{children}</div>
-      <div className="mb-3 flex items-center gap-2 rounded-2xl bg-point/60 px-3 py-2">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-invest text-micro">
-          ✨
+      <div className="mb-3 flex items-center gap-2 rounded-2xl bg-point px-3 py-2 ring-1 ring-point-ink/10">
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-micro font-bold text-point-ink">
+          AI
         </span>
         <p className="text-body font-extrabold text-ink">{verdict}</p>
       </div>
@@ -219,7 +219,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
         <Col>
           <p className="text-title font-extrabold leading-tight">{mateTop.label}</p>
           <p className="text-[26px] font-extrabold leading-none text-invest">{Math.round(mateTop.weight * 100)}%</p>
-          <p className="text-caption font-medium text-ink-soft">비중 1위 · {inv.portfolio.length}개 분야</p>
+          <p className="text-caption font-medium text-ink-soft">비중 1위 · {inv.portfolio.length}개 종목</p>
         </Col>
       </CompareShell>
     )
@@ -227,7 +227,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
 
   // 뉴스 — 시장은 공용 정보라 비교 대신 공용 보드
   return (
-    <div className={`flex h-full flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${METRIC_TEXT.invest}`}>
+    <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${METRIC_TEXT.invest}`}>
       <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">뉴스</p>
       </div>

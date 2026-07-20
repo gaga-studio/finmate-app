@@ -129,8 +129,8 @@ function MateInvestCard({ mate, view }: { mate: MateProfile; view: InvestView })
             height={148}
           />
         </div>
-        <p className="mt-2 text-title font-extrabold leading-none">{inv.portfolio.length}개 분야 분산</p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">종목명 대신 분야 비중만 공개</p>
+        <p className="mt-2 text-title font-extrabold leading-none">{inv.portfolio.length}개 종목 분산</p>
+        <p className="mt-1.5 text-body font-medium text-ink-soft">평가금액 대신 비중만 공개</p>
       </MateShell>
     )
   }

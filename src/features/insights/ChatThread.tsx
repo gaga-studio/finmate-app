@@ -137,10 +137,10 @@ function Bubble({
 function Avatar({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-invest text-[13px] ${visible ? '' : 'invisible'}`}
+      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-point ring-1 ring-point-ink/15 ${visible ? '' : 'invisible'}`}
       aria-hidden
     >
-      ✨
+      <img src="/icons/icon-ai-coach.png" alt="" className="h-7 w-7 object-contain" draggable={false} />
     </div>
   )
 }
@@ -199,7 +199,7 @@ function Widget({
           key={c}
           type="button"
           onClick={() => !readOnly && onChip(c)}
-          className="rounded-full border border-saving/30 bg-point/65 px-3 py-1.5 text-caption font-bold text-saving"
+          className="rounded-full border border-point-ink/15 bg-point px-3 py-1.5 text-caption font-bold text-point-ink"
         >
           {c}
         </button>

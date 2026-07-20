@@ -7,7 +7,6 @@ import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
 import { DEMO_TODAY, USER } from '../../data/demo'
 import { UserAvatar } from '../../shared/profile/UserAvatar'
-import { PageTitle } from '../../shared/ui/PageTitle'
 import { MetricTabs } from './MetricTabs'
 import { ViewChips } from './ViewChips'
 import {
@@ -30,9 +29,9 @@ import {
 const WEEKDAY = ['일', '월', '화', '수', '목', '금', '토']
 
 const TINT: Record<Metric, string> = {
-  budget: 'from-budget/22 via-budget/8',
-  saving: 'from-saving/18 via-saving/7',
-  invest: 'from-invest/20 via-invest/8',
+  budget: 'from-budget/10 via-budget/0',
+  saving: 'from-saving/10 via-saving/0',
+  invest: 'from-invest/10 via-invest/0',
 }
 
 interface OpenCard {
@@ -93,13 +92,13 @@ export function MyPage() {
   }, [metric])
 
   return (
-    <div className="relative min-h-full bg-gradient-to-b from-[var(--active-soft)] via-surface to-surface" data-metric={metric}>
+    <div className="relative min-h-full bg-surface" data-metric={metric}>
       {/* 지표별 배경 틴트 — 그라디언트 3장 크로스페이드 */}
       {(Object.keys(TINT) as Metric[]).map((m) => (
         <motion.div
           key={m}
           aria-hidden
-          className={`pointer-events-none absolute inset-x-0 top-0 h-[620px] bg-gradient-to-b ${TINT[m]} to-transparent`}
+          className={`pointer-events-none absolute inset-x-0 top-0 h-[360px] bg-gradient-to-b ${TINT[m]} to-transparent`}
           initial={false}
           animate={{ opacity: metric === m ? 1 : 0 }}
           transition={{ duration: 0.45 }}
@@ -107,7 +106,6 @@ export function MyPage() {
       ))}
 
       <header className="relative flex items-center justify-between px-5 pb-2 pt-14">
-        <PageTitle>마이</PageTitle>
         <div>
           <p className="text-caption font-semibold text-ink-faint">
             {DEMO_TODAY.getMonth() + 1}월 {DEMO_TODAY.getDate()}일 {WEEKDAY[DEMO_TODAY.getDay()]}요일
