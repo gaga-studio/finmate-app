@@ -146,26 +146,18 @@ export function MateProfilePage() {
               <div className="mb-2.5 grid grid-cols-2 gap-3 text-center">
                 <p className="mx-auto grid w-full max-w-[132px] grid-cols-[32px_minmax(0,1fr)] items-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-white shadow-soft">
-                    <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} className="text-accent" />
-                  </span>
-                  <span className="truncate">{mate.nickname}</span>
-                </p>
-                <p className="mx-auto grid w-full max-w-[132px] grid-cols-[32px_minmax(0,1fr)] items-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-white shadow-soft">
                     <EmojiIcon emoji="🙋‍♀️" size={16} className="text-accent" />
                   </span>
                   <span className="truncate">지혜</span>
                 </p>
+                <p className="mx-auto grid w-full max-w-[132px] grid-cols-[32px_minmax(0,1fr)] items-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-white shadow-soft">
+                    <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} className="text-accent" />
+                  </span>
+                  <span className="truncate">{mate.nickname}</span>
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="h-[248px]">
-                  <MateListCard
-                    title={LIST_TITLE[metric]}
-                    metricClass={METRIC_TEXT[metric]}
-                    items={mateRows(mate, metric)}
-                    dense
-                  />
-                </div>
                 <div className="h-[248px]">
                   <LinkedListPanel
                     metric={metric}
@@ -173,6 +165,14 @@ export function MateProfilePage() {
                     savingView={savingView}
                     investView={investView}
                     hideSub
+                  />
+                </div>
+                <div className="h-[248px]">
+                  <MateListCard
+                    title={LIST_TITLE[metric]}
+                    metricClass={METRIC_TEXT[metric]}
+                    items={mateRows(mate, metric)}
+                    dense
                   />
                 </div>
               </div>
