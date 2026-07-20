@@ -13,7 +13,7 @@ export function ProfileCard({ profile, className }: Props) {
       <div className="clay-card flex h-16 w-16 items-center justify-center rounded-full">
         <EmojiIcon emoji={profile.emoji} avatarId={profile.id} size={60} className="text-accent" strokeWidth={1.8} />
       </div>
-      <p className="mt-2.5 text-title font-extrabold text-ink">{profile.nickname}</p>
+      <p className="mt-2.5 text-display font-extrabold text-ink">{profile.nickname}</p>
       {profile.bio && <p className="mt-0.5 text-body text-ink-soft">{profile.bio}</p>}
       {profile.similarity !== undefined && (
         <p className="mt-1 text-body font-bold text-saving">

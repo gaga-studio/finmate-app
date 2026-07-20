@@ -76,11 +76,11 @@ export function StoryOverlay({ story, onClose }: Props) {
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className={`flex h-11 items-center gap-2 rounded-full pl-2 pr-4 text-body font-bold backdrop-blur-md ${
+            className={`flex h-12 items-center gap-2 rounded-full pl-2 pr-5 text-title font-extrabold backdrop-blur-md ${
               expanded ? 'bg-white text-ink' : 'bg-white/20 text-white'
             }`}
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-body">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/25 text-body">
               <EmojiIcon emoji={story.author.emoji} avatarId={story.author.id} size={26} />
             </span>
             {story.author.nickname}

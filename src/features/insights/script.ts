@@ -7,7 +7,7 @@ export type Reply = Omit<InsightMsg, 'id'>
 
 /** 첫 진입 시 AI가 자동으로 발화하는 시퀀스 — 총평 + 추천옵션 */
 export const INITIAL_REPLIES: Reply[] = [
-  { role: 'ai', text: '지혜님, 오늘 하루 이렇게 정리했어요 👋' },
+  { role: 'ai', text: '지혜님, 지금까지의 하루요약입니다 👋' },
   { role: 'ai', widget: { type: 'summary' } },
   {
     role: 'ai',
@@ -21,7 +21,7 @@ export const INITIAL_REPLIES: Reply[] = [
 /** 비교 시트에서 대상을 고르면 발화하는 완성 멘트 — useInsightChat.completeCompare가 사용 */
 export function compareDoneReplies(targetId: string): Reply[] {
   return [
-    { role: 'ai', text: '시뮬레이션이 완성되었어요! ✨', chart: { kind: 'compare', targetId } },
+    { role: 'ai', text: '시뮬레이션이 생성되었어요! ✨', chart: { kind: 'compare', targetId } },
     { role: 'ai', widget: { type: 'options', options: ['이어서하기'] } },
   ]
 }
