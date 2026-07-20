@@ -140,7 +140,7 @@ export function MetricCarousel({
     <div
       ref={viewportRef}
       className="relative select-none"
-      style={{ height: CARD_H + 34, touchAction: 'none' }}
+      style={{ height: CARD_H + 18, touchAction: 'none' }}
     >
       {/* 기간 고스트 스택 — 활성 카드 뒤 2장 */}
       <GhostCard offset={-14} scale={0.955} opacity={0.5} lift={lift} liftFactor={0.16} cardW={cardW} cardH={CARD_H} vw={vw} />
