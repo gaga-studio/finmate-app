@@ -313,36 +313,39 @@ function SummaryCard() {
   const lines = [
     {
       emoji: '☕️',
-      text: `소비 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 남김`,
+      text: `지출 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 여유`,
       detail: `오늘 1위 ${s.top.merchant} ${formatKrw(s.top.amount)} — 한도 안 방어 성공!`,
     },
     {
       emoji: '✈️',
-      text: `파리 자금 +${formatKrw(s.savingDelta)} · 목표 ${s.savingPct}%`,
+      text: `파리 자금 ${formatKrw(s.savingDelta)} 추가 · 목표 ${s.savingPct}% 달성중`,
       detail: '오늘의 미션 저축 완료, 절반이 코앞!',
     },
     {
       emoji: '📈',
-      text: `포트 +${s.investReturnPct}% 유지`,
+      text: `포트 +${s.investReturnPct}% 유지중`,
       detail: '급락장에도 분산 투자가 버팀목!',
     },
   ]
 
   return (
     <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid="daily-summary">
-      <div className="flex flex-col gap-2.5">
+      {/* 번호 타임라인 — 점선이 번호 원들을 세로로 잇는다 */}
+      <div className="relative flex flex-col gap-3">
+        <span className="absolute bottom-4 left-[10px] top-4 w-px border-l border-dashed border-saving/25" />
         {lines.map((l, i) => (
-          <div key={l.emoji} className="flex items-start gap-2.5">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-point/65 text-micro font-extrabold text-point-ink">
+          <div key={l.emoji} className={`relative flex items-start gap-3 ${i > 0 ? 'border-t border-ink/5 pt-3' : ''}`}>
+            <span className="relative z-10 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-point text-caption font-extrabold text-point-ink shadow-[0_0_0_4px_rgba(255,255,255,0.9)]">
               {i + 1}
             </span>
-            <div>
-              <p className="text-body font-bold leading-snug text-ink">
-                {l.emoji} {l.text}
+            <div className="min-w-0 flex-1">
+              <p className="flex items-start gap-2 text-body font-extrabold leading-snug text-ink">
+                <span className="shrink-0 text-[16px] leading-snug">{l.emoji}</span>
+                <span className="min-w-0 break-keep">{l.text}</span>
               </p>
               {open && (
                 <motion.p
-                  className="mt-0.5 text-caption font-medium text-ink-soft"
+                  className="mt-1 text-caption font-medium leading-snug text-ink-soft"
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={snappy}
@@ -357,7 +360,7 @@ function SummaryCard() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="mt-2.5 flex items-center gap-0.5 text-caption font-bold text-saving"
+        className="mx-auto mt-3 flex items-center gap-0.5 text-caption font-bold text-saving"
       >
         {open ? '접기' : '자세히'}
         <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
