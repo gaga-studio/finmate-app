@@ -39,26 +39,25 @@ const BUDGET_TITLE: Record<Period, string> = {
 
 export function BudgetCard({ period }: { period: Period }) {
   const b = getBudget(period)
-  const spentPct = Math.min(100, (b.spent / b.limit) * 100)
   return (
     <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
       <WaterGlass pct={b.pct} width={124} height={140} />
       <p className="mt-1 text-display font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
-      {/* 사용량 스택 바 — 쓴 만큼 채워진다 */}
+      {/* 잔량 바 — 물잔·큰 숫자와 같은 기준(남은 만큼 파랗게) */}
       <div className="mt-2.5 w-full min-w-[200px] max-w-[230px]">
         <div className="h-2.5 overflow-hidden rounded-full bg-budget/15">
           <motion.div
             className="h-full rounded-full bg-budget"
             initial={{ width: 0 }}
-            animate={{ width: `${spentPct}%` }}
+            animate={{ width: `${Math.round(b.pct * 100)}%` }}
             transition={{ delay: 0.25, duration: 0.7, ease: [0.3, 0, 0.2, 1] }}
           />
         </div>
         <div className="mt-1 flex justify-between text-caption font-semibold">
-          <span className="text-budget">씀 {formatKrw(b.spent)}</span>
-          <span className="text-ink-soft">남음 {formatKrw(b.remaining)}</span>
+          <span className="text-budget">남음 {formatKrw(b.remaining)}</span>
+          <span className="text-ink-soft">씀 {formatKrw(b.spent)}</span>
         </div>
       </div>
     </CardShell>
