@@ -167,19 +167,19 @@ export function DiaryPage() {
   )
 }
 
-/** 이미지 타일 하단 금액 — 소비는 좌측 하늘색, 수입은 우측 핑크색 뱃지 */
+/** 이미지 타일 금액 — 좌하단에 세로로 쌓임 (소비 하늘색, 수입 핑크색) */
 function TileBadges({ income, spend }: { income: number; spend: number }) {
   return (
-    <>
-      <span className="absolute bottom-2 left-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-sky-300 backdrop-blur-sm">
-        {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
-      </span>
+    <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
       {income > 0 && (
-        <span className="absolute bottom-2 right-2 rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-pink-300 backdrop-blur-sm">
+        <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-pink-300 backdrop-blur-sm">
           +{formatKrwCompact(income)}
         </span>
       )}
-    </>
+      <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-sky-300 backdrop-blur-sm">
+        {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
+      </span>
+    </div>
   )
 }
 
