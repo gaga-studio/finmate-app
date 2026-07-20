@@ -32,8 +32,6 @@ export type InsightWidget =
   | { type: 'scenario-switch' }
   /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
   | { type: 'report'; variant?: 'macbook' }
-  /** 추천 행동 리스트 — 여러 번 클릭 가능, 클릭한 행은 체크 표시 */
-  | { type: 'action-list'; items: { emoji: string; title: string; desc: string }[] }
   /** 상세 정보 카드 — 카드/혜택 추천 응답 */
   | { type: 'detail-card'; variant: 'card' | 'benefit' }
 
@@ -286,14 +284,7 @@ export const PRESET_SESSIONS: SavedSession[] = [
   },
 ]
 
-/* ---------- ETF 추천 행동 (시연 6-2) ---------- */
-
-/** "ETF 시도 해보고 싶어" 답변의 추천 행동 3가지 — 클릭하면 각 상세 응답으로 */
-export const ETF_ACTIONS = [
-  { emoji: '🎯', title: '절약 미션', desc: '매일 조금씩 아껴서 30만원을 모아보세요!' },
-  { emoji: '💳', title: '카드 추천', desc: '새는 돈을 잡아주는 지출 관리 카드가 있어요!' },
-  { emoji: '🎁', title: '혜택 추천', desc: 'ETF 첫 거래 전 챙길 혜택을 알려드려요!' },
-] as const
+/* ---------- ETF 추천 상세 카드 (시연 6-2) ---------- */
 
 export interface DetailCardContent {
   tag: string
