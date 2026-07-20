@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void
 }
 
-/** 스타일 비교 rows — 좌 메이트 / 우 나 */
+/** 스타일 비교 rows — 대결표와 같은 순서(좌 나 / 우 메이트) */
 function styleRows(mate: MateProfile) {
   const myTop = getTopPurchases('monthly', 1)[0]
   const myDelta = getSavingProgress('monthly').delta
@@ -139,9 +139,9 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               <div className="mt-1.5 flex flex-col">
                 {styleRows(mate).map((r) => (
                   <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-1.5 text-center">
-                    <p className="truncate text-body font-bold text-ink">{r.mate}</p>
-                    <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
                     <p className="truncate text-body font-bold text-ink">{r.mine}</p>
+                    <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
+                    <p className="truncate text-body font-bold text-ink">{r.mate}</p>
                   </div>
                 ))}
               </div>
