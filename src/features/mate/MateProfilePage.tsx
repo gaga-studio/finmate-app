@@ -137,7 +137,7 @@ export function MateProfilePage() {
             <section className="mt-3 px-5">
               <div className="mb-1.5 grid grid-cols-2 gap-3 text-center">
                 <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji={mate.emoji} size={12} className="text-accent" /> {mate.nickname}
+                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={15} className="text-accent" /> {mate.nickname}
                 </p>
                 <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
                   <EmojiIcon emoji="🙋‍♀️" size={12} className="text-accent" /> 지혜
