@@ -63,7 +63,27 @@ const SCENARIOS: Scenario[] = [
     id: 'continue',
     match: /^이어서하기$/,
     replies: [
-      { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?\n말해주시면 그래프에 바로 얹어볼게요' },
+      { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?\n예: 30만원 모아서 ETF 시도 해보고 싶어' },
+    ],
+  },
+  {
+    id: 'etf-goal',
+    match: /ETF|etf|30만원|삼십만원|첫\s*시도|첫\s*투자/i,
+    replies: [
+      {
+        role: 'ai',
+        text: '좋아요. 30만원을 ETF 첫 시도 자금으로 잡아볼게요.',
+        chart: { kind: 'sim-etf', monthly: 100_000 },
+      },
+      {
+        role: 'ai',
+        text: '월 10만원씩 3개월이면 30만원 달성!\n3개월 뒤 미국 S&P500 ETF 첫 매수 자금이 생겨요.',
+      },
+      {
+        role: 'ai',
+        text: '이 목표에 맞춰 바로 실행 미션도 추천해둘게요.',
+        widget: { type: 'mission', missionId: 'r-etf' },
+      },
     ],
   },
   // 시연 핵심: 맥북 200만 — 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다

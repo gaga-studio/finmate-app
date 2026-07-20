@@ -272,7 +272,7 @@ function GhostCard({
   return (
     <motion.div
       aria-hidden
-      className="absolute top-0 rounded-card bg-elevated shadow-soft"
+      className="clay-card absolute top-0 rounded-card"
       style={{ left: (vw - cardW) / 2, width: cardW, height: CARD_H, y, scale: s, opacity }}
     />
   )

@@ -31,7 +31,7 @@ export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, o
                 key={c}
                 type="button"
                 onClick={() => onChip(c)}
-                className="rounded-full border border-accent/30 bg-accent/8 px-3 py-1.5 text-caption font-bold text-accent"
+                className="rounded-full border border-saving/30 bg-point/65 px-3 py-1.5 text-caption font-bold text-saving"
               >
                 {c}
               </button>
@@ -51,7 +51,7 @@ export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, o
           type="button"
           onClick={onToggleChips}
           disabled={disabled}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-elevated text-ink shadow-soft disabled:opacity-40"
+          className="clay-pressed flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-point/50 text-ink disabled:opacity-40"
           aria-label="추천 질문"
         >
           <Plus size={18} className={`transition-transform ${chipsOpen ? 'rotate-45' : ''}`} />
@@ -61,12 +61,12 @@ export function ChatInput({ value, onChange, onSend, chipsOpen, onToggleChips, o
           onChange={(e) => onChange(e.target.value)}
           placeholder="만약 …"
           disabled={disabled}
-          className="h-10 min-w-0 flex-1 rounded-full bg-elevated px-4 text-body font-medium text-ink shadow-soft outline-none placeholder:text-ink-faint disabled:opacity-50"
+          className="h-10 min-w-0 flex-1 rounded-full bg-white/80 px-4 text-body font-medium text-ink shadow-soft outline-none ring-1 ring-line/70 placeholder:text-ink-faint focus:ring-2 focus:ring-saving/45 disabled:opacity-50"
         />
         <button
           type="submit"
           disabled={disabled || value.trim() === ''}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-white shadow-soft disabled:opacity-30"
+          className="clay-cta flex h-9 w-9 shrink-0 items-center justify-center rounded-full disabled:opacity-30"
           aria-label="전송"
         >
           <Send size={15} />

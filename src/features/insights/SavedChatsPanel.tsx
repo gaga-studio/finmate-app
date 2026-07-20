@@ -34,7 +34,7 @@ export function SavedChatsPanel({ sessions, onOpen, onClose }: Props) {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+            className="clay-card flex h-8 w-8 items-center justify-center rounded-full text-ink"
             aria-label="닫기"
           >
             <X size={15} />
@@ -51,10 +51,10 @@ export function SavedChatsPanel({ sessions, onOpen, onClose }: Props) {
                 onOpen(s)
                 onClose()
               }}
-              className="rounded-2xl bg-elevated px-4 py-3 text-left shadow-soft"
+              className="clay-card rounded-2xl px-4 py-3 text-left transition-transform active:scale-[0.98]"
             >
               <div className="flex items-center gap-2">
-                <Bookmark size={13} className="shrink-0 text-accent" />
+                <Bookmark size={13} className="shrink-0 text-saving" />
                 <p className="line-clamp-1 text-body font-bold text-ink">{s.title}</p>
               </div>
               <p className="mt-0.5 pl-[21px] text-caption font-medium text-ink-faint">{s.savedAt} 저장</p>

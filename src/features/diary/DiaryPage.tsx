@@ -26,7 +26,7 @@ export function DiaryPage() {
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+          className="clay-card flex h-10 w-10 items-center justify-center rounded-full text-ink transition-transform active:scale-95"
           aria-label="알림"
         >
           <Bell size={18} />
@@ -39,7 +39,7 @@ export function DiaryPage() {
           type="button"
           onClick={() => setMonth(6)}
           disabled={month === 6}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-ink-soft disabled:opacity-30"
+          className="clay-pressed flex h-9 w-9 items-center justify-center rounded-full bg-point/45 text-ink-soft disabled:opacity-30"
           aria-label="이전 달"
         >
           <ChevronLeft size={18} />
@@ -49,7 +49,7 @@ export function DiaryPage() {
           type="button"
           onClick={() => setMonth(7)}
           disabled={month === 7}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-ink-soft disabled:opacity-30"
+          className="clay-pressed flex h-9 w-9 items-center justify-center rounded-full bg-point/45 text-ink-soft disabled:opacity-30"
           aria-label="다음 달"
         >
           <ChevronRight size={18} />
@@ -115,7 +115,7 @@ export function DiaryPage() {
                         layoutId={`diary-${d.day}`}
                         onClick={() => setOpen(true)}
                         whileTap={{ scale: 0.96 }}
-                        className="relative block aspect-[3/4] w-full overflow-hidden rounded-2xl text-left shadow-soft ring-2 ring-accent"
+                        className="relative block aspect-[3/4] w-full overflow-hidden rounded-2xl text-left shadow-soft ring-2 ring-saving"
                         style={{ visibility: open ? 'hidden' : 'visible' }}
                       >
                         <img
@@ -145,7 +145,7 @@ export function DiaryPage() {
                         <TileBadges income={d.income} spend={d.spend} />
                       </div>
                     ) : (
-                      <div className="flex aspect-[3/4] w-full flex-col justify-between rounded-2xl bg-ink/4 p-2.5">
+                      <div className="clay-card flex aspect-[3/4] w-full flex-col justify-between rounded-2xl p-2.5">
                         <span className="text-body font-extrabold text-ink-faint">{d.day}일</span>
                         <TileAmounts income={d.income} spend={d.spend} />
                       </div>

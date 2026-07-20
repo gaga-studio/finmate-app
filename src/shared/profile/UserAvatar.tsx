@@ -12,7 +12,7 @@ interface Props {
 export function UserAvatar({ size = 44, className }: Props) {
   return (
     <div
-      className={`shrink-0 overflow-hidden rounded-full bg-elevated shadow-soft ${className ?? ''}`}
+      className={`clay-card shrink-0 overflow-hidden rounded-full ${className ?? ''}`}
       style={{ width: size, height: size }}
     >
       <img

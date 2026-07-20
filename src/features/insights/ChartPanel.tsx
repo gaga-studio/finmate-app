@@ -8,6 +8,8 @@ import {
   getMacbookSim,
   HABIT_BOOST,
   MACBOOK,
+  ETF_GOAL,
+  makeEtfProjection,
   makeSavingProjection,
   PROJECTION_MONTHS,
   type InsightChartState,
@@ -34,7 +36,7 @@ export function ChartPanel({ state }: Props) {
   const { title, caption, metricClass, chart } = renderState(state)
 
   return (
-    <div className="mx-5 mt-2 rounded-card bg-elevated px-4 pb-2.5 pt-3 shadow-float">
+    <div className="clay-card mx-5 mt-2 rounded-card px-4 pb-2.5 pt-3">
       <div className="flex items-center">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.p
@@ -152,6 +154,35 @@ function renderState(state: InsightChartState) {
           xLabels={['지금', `${p.months}개월`]}
           yTicks
         />
+      ),
+    }
+  }
+
+  if (state.kind === 'sim-etf') {
+    const p = makeEtfProjection(state.monthly)
+    return {
+      title: `${p.months}개월 뒤 ${formatKrwCompact(p.target)} 달성`,
+      caption: `${ETF_GOAL.product} 첫 매수 자금 확보!`,
+      metricClass: 'text-invest',
+      chart: (
+        <div className="flex flex-col items-center">
+          <p className="text-title font-extrabold leading-none text-ink">
+            월 <span className="text-invest">{formatKrwCompact(p.monthly)}</span>
+            <span className="mx-1.5 text-ink-faint">×</span>
+            {p.months}개월
+          </p>
+          <div className="mt-2">
+            <LineChart
+              points={p.curve}
+              width={CHART_W}
+              height={108}
+              drawKey={`etf-${p.monthly}`}
+              markers
+              xLabels={['시작', `${p.months}개월`]}
+              yTicks
+            />
+          </div>
+        </div>
       ),
     }
   }
