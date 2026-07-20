@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { AnimatePresence, animate, motion, useMotionValue, useTransform, type MotionValue } from 'motion/react'
 import { LineChart } from '../../shared/charts/LineChart'
 import { CompareChart } from '../../shared/charts/CompareChart'
 import { formatKrwCompact } from '../../shared/format/krw'
@@ -39,20 +40,21 @@ export function ChartPanel({ state }: Props) {
 
   if (compareTarget?.kind === 'group') {
     return (
-      <div className="mt-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex w-max snap-x snap-mandatory gap-3">
+      <ChartCarousel
+        cards={[
           <ChartCard
+            key="chart"
             title={title}
             caption={caption}
             metricClass={metricClass}
             chart={chart}
             animationKey={chartKey(state)}
-            className="mx-0 mt-0 w-[372px] max-w-[calc(100vw-58px)] snap-center"
-          />
-          <GroupPositionCard targetLabel={compareTarget.label} />
-          <GroupSavingProductsCard targetLabel={compareTarget.label} />
-        </div>
-      </div>
+            className="h-full"
+          />,
+          <GroupPositionCard key="position" targetLabel={compareTarget.label} />,
+          <GroupSavingProductsCard key="products" targetLabel={compareTarget.label} />,
+        ]}
+      />
     )
   }
 
@@ -112,6 +114,115 @@ function ChartCard({
   )
 }
 
+/**
+ * 그룹 비교 3카드 캐러셀 — 마이 탭 MetricCarousel의 가로축 문법을 그대로 이식.
+ * 팬 제스처 + 스프링 스냅, 옆 카드가 축소·반투명으로 살짝 보인다.
+ */
+function ChartCarousel({ cards }: { cards: React.ReactNode[] }) {
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const [vw, setVw] = useState(390)
+  const [idx, setIdx] = useState(0)
+
+  useLayoutEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    const update = () => setVw(el.clientWidth)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const cardW = vw - 56
+  const step = cardW + 12
+  const x = useMotionValue(0)
+  const dragging = useRef(false)
+
+  const snapTo = (next: number) => {
+    const clamped = Math.max(0, Math.min(cards.length - 1, next))
+    setIdx(clamped)
+    animate(x, -clamped * step, snappy)
+  }
+
+  return (
+    <div className="mt-2">
+      <div
+        ref={viewportRef}
+        className="relative overflow-hidden"
+        style={{ height: 224, touchAction: 'pan-y' }}
+      >
+        <motion.div
+          className="relative h-full"
+          style={{ x }}
+          onPanStart={() => {
+            dragging.current = true
+          }}
+          onPan={(_, info) => {
+            x.set(-idx * step + info.offset.x)
+          }}
+          onPanEnd={(_, info) => {
+            dragging.current = false
+            const delta = info.offset.x < -50 || info.velocity.x < -400 ? 1 : info.offset.x > 50 || info.velocity.x > 400 ? -1 : 0
+            snapTo(idx + delta)
+          }}
+        >
+          {cards.map((card, i) => (
+            <ChartCarouselSlot key={i} i={i} x={x} step={step} cardW={cardW} vw={vw}>
+              {card}
+            </ChartCarouselSlot>
+          ))}
+        </motion.div>
+      </div>
+      {/* 도트 인디케이터 — 스와이프 가능함을 암시 */}
+      <div className="mt-1.5 flex justify-center gap-1.5">
+        {cards.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`${i + 1}번 카드`}
+            onClick={() => snapTo(i)}
+            className={`h-1.5 rounded-full transition-all ${i === idx ? 'w-4 bg-accent' : 'w-1.5 bg-ink/15'}`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ChartCarouselSlot({
+  i,
+  x,
+  step,
+  cardW,
+  vw,
+  children,
+}: {
+  i: number
+  x: MotionValue<number>
+  step: number
+  cardW: number
+  vw: number
+  children: React.ReactNode
+}) {
+  const scale = useTransform(x, (v) => {
+    const d = Math.abs(-v / step - i)
+    return 1 - Math.min(d, 1) * 0.08
+  })
+  const opacity = useTransform(x, (v) => {
+    const d = Math.abs(-v / step - i)
+    return 1 - Math.min(d, 1) * 0.65
+  })
+  return (
+    <motion.div
+      className="absolute top-0 h-full"
+      style={{ left: (vw - cardW) / 2 + i * step, width: cardW, scale, opacity }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+/** 캐러셀 2·3번 카드 공용 셸 — ChartCard와 같은 규격(제목·172px 본문·캡션) */
 function GroupCarouselCard({
   title,
   eyebrow,
@@ -124,14 +235,14 @@ function GroupCarouselCard({
   caption?: string
 }) {
   return (
-    <div className="clay-card w-[372px] max-w-[calc(100vw-58px)] snap-center rounded-card px-4 pb-2.5 pt-3">
-      <div>
+    <div className="clay-card h-full rounded-card px-4 pb-2.5 pt-3">
+      <div className="flex items-baseline justify-between gap-2">
         <p className="truncate text-[17px] font-bold leading-snug text-ink">{title}</p>
-        <p className="mt-0.5 truncate text-caption font-bold text-ink-faint">{eyebrow}</p>
+        <p className="shrink-0 text-caption font-bold text-ink-faint">{eyebrow}</p>
       </div>
       <div className="relative mt-1 flex h-[172px] flex-col justify-center">
         {children}
-        {caption && <p className="mt-3 text-center text-caption font-bold text-ink-soft">{caption}</p>}
+        {caption && <p className="mt-2.5 text-center text-caption font-bold text-ink-soft">{caption}</p>}
       </div>
     </div>
   )
@@ -185,20 +296,28 @@ function GroupPositionCard({ targetLabel }: { targetLabel: string }) {
 
 function PositionRail({ item }: { item: (typeof GROUP_POSITIONS)[number] }) {
   return (
-    <div className="grid grid-cols-[38px_minmax(0,1fr)] items-center gap-3">
-      <span className={`text-section font-extrabold ${item.className}`}>{item.label}</span>
+    <div className={`grid grid-cols-[44px_minmax(0,1fr)] items-center gap-2.5 ${item.className}`}>
+      <span className="rounded-lg bg-current/10 py-1 text-center text-caption font-extrabold">{item.label}</span>
       <div className="min-w-0">
-        <div className="relative h-6">
-          <span className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-line" />
-          <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-white" />
+        {/* 트랙 + 위치까지 색 채움 — 마이 탭 잔량 바와 같은 문법 */}
+        <div className="relative h-4">
+          <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-ink/8">
+            <motion.span
+              className="absolute inset-y-0 left-0 rounded-full bg-current/60"
+              initial={{ width: 0 }}
+              animate={{ width: `${item.position}%` }}
+              transition={{ ...snappy, delay: 0.15 }}
+            />
+          </span>
+          <span className="absolute left-1/2 top-1/2 h-2 w-px -translate-x-1/2 -translate-y-1/2 bg-white/80" />
           <motion.span
-            className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ${item.dotClass} shadow-soft ring-4 ring-white`}
-            initial={{ left: '50%', opacity: 0 }}
+            className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current shadow-soft ring-2 ring-white"
+            initial={{ left: '0%', opacity: 0 }}
             animate={{ left: `${item.position}%`, opacity: 1 }}
-            transition={snappy}
+            transition={{ ...snappy, delay: 0.15 }}
           />
         </div>
-        <div className="flex items-center justify-between">
+        <div className="mt-0.5 flex items-center justify-between">
           <span className="text-micro font-medium text-ink-faint">{item.left}</span>
           <span className="text-caption font-bold text-ink-soft">{item.desc}</span>
           <span className="text-micro font-medium text-ink-faint">{item.right}</span>
@@ -221,13 +340,17 @@ function GroupSavingProductsCard({ targetLabel }: { targetLabel: string }) {
       eyebrow={targetLabel}
       caption="그룹에서 자주 선택한 저축 루틴 기준"
     >
-      <div className="grid grid-cols-3 gap-2.5">
+      {/* 소비 탑5와 같은 순위 리스트 문법 */}
+      <div className="flex flex-col divide-y divide-line/60">
         {GROUP_SAVING_PRODUCTS.map((name, i) => (
-          <div key={name} className="flex min-h-[118px] flex-col items-center justify-center rounded-2xl border border-line bg-white px-2.5 py-3 text-center">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-point text-body font-extrabold text-point-ink">
+          <div key={name} className="flex items-center gap-3 py-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-point text-body font-extrabold text-point-ink">
               {i + 1}
             </span>
-            <b className="mt-2 line-clamp-3 break-keep text-caption font-extrabold leading-snug text-ink">{name}</b>
+            <b className="min-w-0 flex-1 truncate text-body font-extrabold text-ink">{name}</b>
+            <span className="shrink-0 rounded-full bg-ink/5 px-2 py-0.5 text-micro font-bold text-ink-soft">
+              {['이용 1위', '인기', '인기'][i]}
+            </span>
           </div>
         ))}
       </div>
