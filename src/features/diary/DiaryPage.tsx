@@ -165,16 +165,16 @@ export function DiaryPage() {
   )
 }
 
-/** 이미지 타일 금액 — 좌하단에 세로로 쌓임 (수입 rise·소비 fall — 전역 등락 색) */
+/** 이미지 타일 금액 — 좌하단에 세로로 쌓임 (등락 색 계열(어두운 배경용 밝은 톤) — 수입 빨강·소비 파랑) */
 function TileBadges({ income, spend }: { income: number; spend: number }) {
   return (
     <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
       {income > 0 && (
-        <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-rise backdrop-blur-sm">
+        <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-extrabold text-red-300 backdrop-blur-sm">
           +{formatKrwCompact(income)}
         </span>
       )}
-      <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-fall backdrop-blur-sm">
+      <span className="rounded-full bg-black/50 px-2.5 py-1 text-micro font-bold text-blue-300 backdrop-blur-sm">
         {spend > 0 ? `-${formatKrwCompact(spend)}` : '무지출'}
       </span>
     </div>
