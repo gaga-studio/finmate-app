@@ -12,7 +12,7 @@ interface Props<T extends string> {
 
 export function SegmentedControl<T extends string>({ items, value, onChange, id, className }: Props<T>) {
   return (
-    <div className={`flex rounded-full bg-ink/6 p-1 ${className ?? ''}`}>
+    <div className={`clay-pressed flex rounded-full bg-white/75 p-1 ring-1 ring-line/70 ${className ?? ''}`}>
       {items.map((item) => {
         const active = item.value === value
         return (
@@ -20,16 +20,16 @@ export function SegmentedControl<T extends string>({ items, value, onChange, id,
             key={item.value}
             type="button"
             onClick={() => onChange(item.value)}
-            className="relative flex-1 rounded-full px-3.5 py-1.5 text-body font-semibold"
+            className="relative flex-1 rounded-full px-3.5 py-1.5 text-body font-semibold transition-transform active:scale-[0.97]"
           >
             {active && (
               <motion.span
                 layoutId={`seg-${id}`}
-                className="absolute inset-0 rounded-full bg-elevated shadow-soft"
+                className="absolute inset-0 rounded-full bg-current/12 shadow-soft ring-1 ring-current/20"
                 transition={snappy}
               />
             )}
-            <span className={`relative ${active ? 'text-ink' : 'text-ink-soft'}`}>{item.label}</span>
+            <span className={`relative ${active ? 'text-accent' : 'text-ink-soft'}`}>{item.label}</span>
           </button>
         )
       })}

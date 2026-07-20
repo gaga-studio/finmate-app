@@ -40,12 +40,12 @@ export function PhoneFrame({ children }: { children: ReactNode }) {
   const desktop = scale !== 1 || (typeof window !== 'undefined' && window.innerWidth >= 640)
 
   return (
-    <div className="min-h-dvh sm:grid sm:h-dvh sm:min-h-0 sm:place-items-center sm:overflow-hidden">
+    <div className="min-h-dvh bg-[#fbfffe] sm:grid sm:h-dvh sm:min-h-0 sm:place-items-center sm:overflow-hidden">
       {/* transform은 레이아웃 크기에 영향을 주지 않아 점유 공간을 직접 잡아준다 */}
       <div className="contents sm:block" style={desktop ? { width: FRAME_W * scale, height: FRAME_H * scale } : undefined}>
         <div
           id="phone-frame"
-          className="relative mx-auto h-dvh w-full max-w-[430px] origin-top-left overflow-hidden bg-surface sm:max-w-none sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-ink/90"
+          className="relative mx-auto h-dvh w-full max-w-[430px] origin-top-left overflow-hidden bg-surface sm:max-w-none sm:rounded-[2.5rem] sm:shadow-float sm:ring-8 sm:ring-[#17211f]/85"
           style={
             desktop
               ? { width: FRAME_W, height: FRAME_H, transform: `scale(${scale})` }

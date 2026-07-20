@@ -14,6 +14,7 @@ export type InsightChartState =
    *  habit이 켜지면 내 선이 메이트의 저축 습관(기울기)을 따라간다 */
   | { kind: 'sim-macbook'; targetId?: string; habit?: boolean }
   | { kind: 'sim-saving'; monthly: number }
+  | { kind: 'sim-etf'; monthly: number }
 
 export type InsightWidget =
   | { type: 'summary' }
@@ -202,6 +203,30 @@ export const COMPARE_TARGETS: CompareTarget[] = [
 /** 저축 슬라이더 범위 — 월 10만~50만, 기본 30만 */
 export const SAVING_SLIDER = { min: 100_000, max: 500_000, step: 50_000, initial: 300_000 } as const
 
+export const ETF_GOAL = {
+  title: 'ETF 첫 시도 자금',
+  target: 300_000,
+  months: 3,
+  monthly: 100_000,
+  product: '미국 S&P500 ETF',
+} as const
+
+export interface EtfProjection {
+  curve: number[]
+  target: number
+  monthly: number
+  months: number
+}
+
+export function makeEtfProjection(monthly: number = ETF_GOAL.monthly): EtfProjection {
+  const months = Math.ceil(ETF_GOAL.target / monthly)
+  const curve: number[] = []
+  for (let i = 0; i <= months; i++) {
+    curve.push(Math.min(ETF_GOAL.target, monthly * i))
+  }
+  return { curve, target: ETF_GOAL.target, monthly, months }
+}
+
 export interface SavingProjection {
   /** 지금(225만)부터 월 저축액씩 쌓여 500만에 닿는 곡선 — 길이 = months + 1 */
   curve: number[]
@@ -230,6 +255,7 @@ export function makeSavingProjection(monthly: number): SavingProjection {
 /** 입력바 `+`와 폴백이 제안하는 추천 질문 */
 export const SUGGESTION_CHIPS = [
   '메이트/그룹 비교',
+  '30만원 모아서 ETF 시도 해보고 싶어',
   '나 이번달에 맥북 M5 프로 살거야',
   '이번 달 리포트 만들어줘',
   '금융 퀴즈 내줘',

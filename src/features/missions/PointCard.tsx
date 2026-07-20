@@ -12,7 +12,7 @@ interface Props {
 
 export function PointCard({ points, gain, onOpenShop }: Props) {
   return (
-    <div className="relative mx-5 mt-3 flex items-center justify-between rounded-card bg-elevated p-5 shadow-float">
+    <div className="clay-card relative mx-5 mt-3 flex items-center justify-between rounded-card p-5">
       <div>
         <div className="flex items-center gap-1.5">
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-point-ink text-micro font-extrabold text-white">
@@ -42,7 +42,7 @@ export function PointCard({ points, gain, onOpenShop }: Props) {
       <button
         type="button"
         onClick={onOpenShop}
-        className="flex h-11 items-center gap-1.5 rounded-full bg-point px-4 text-body font-bold text-point-ink"
+        className="clay-cta flex h-11 items-center gap-1.5 rounded-[18px] px-4 text-body font-bold transition-transform active:scale-[0.98]"
       >
         <Gift size={16} strokeWidth={2.4} />
         포인트 상점

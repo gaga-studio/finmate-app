@@ -9,7 +9,7 @@ import type { FeedGroup, ProfileSummary, Story } from './types'
 export const FEED_GROUPS: FeedGroup[] = [
   { id: 'g-income', emoji: '💼', label: '소득 유사', desc: '월 소득 ±100만원', members: 1570 },
   { id: 'g-spend', emoji: '🧾', label: '소비 유사', desc: '월 소비 70만원대', members: 514 },
-  { id: 'g-region', emoji: '🏙️', label: '서울 · 20대', desc: '같은 지역 · 또래', members: 21 },
+  { id: 'g-region', emoji: '🏙️', label: '서울 20대', desc: '같은 지역 · 또래', members: 21 },
   { id: 'g-follow', emoji: '⭐️', label: '팔로잉', desc: '내가 팔로우한 메이트', members: 10 },
 ]
 
@@ -217,8 +217,8 @@ export const STORIES: Story[] = [
       { label: '🏥 삼성바이오', value: '+1.9%' },
     ],
     artKey: 'story-bio',
-    likes: 53,
-    groupIds: ['g-income', 'g-spend'],
+    likes: 171,
+    groupIds: ['g-income', 'g-spend', 'g-region'],
     postedAt: '2026-07-23T12:15',
   },
   {

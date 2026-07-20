@@ -48,7 +48,7 @@ export function MateProfilePage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const mate = id ? getMateProfile(id) : undefined
-  const [metric, setMetric] = useState<Metric>('budget')
+  const [metric, setMetric] = useState<Metric>(id === 'a-bear' ? 'invest' : 'budget')
   const [period, setPeriod] = useState<Period>('daily')
   const [savingView, setSavingView] = useState<SavingView>('goal')
   const [investView, setInvestView] = useState<InvestView>('status')
@@ -70,7 +70,7 @@ export function MateProfilePage() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-elevated text-ink shadow-soft"
+          className="clay-card flex h-10 w-10 items-center justify-center rounded-full text-ink transition-transform active:scale-95"
           aria-label="뒤로가기"
         >
           <ChevronLeft size={18} />
@@ -79,7 +79,7 @@ export function MateProfilePage() {
           type="button"
           onClick={() => setFollowing((v) => !v)}
           className={`flex h-9 items-center rounded-full px-4 text-body font-bold ${
-            following ? 'bg-ink/5 text-ink-soft' : 'bg-accent text-white'
+            following ? 'clay-pressed bg-point/45 text-ink-soft' : 'clay-cta'
           }`}
         >
           {following ? '팔로잉 ✓' : '팔로우'}
@@ -150,7 +150,7 @@ export function MateProfilePage() {
 
             {/* 하단 2열 — 마이 탭처럼 좌 이미지 카드, 우 리스트 카드 */}
             <section className="mt-3 grid grid-cols-[1fr_1.15fr] gap-3 px-5">
-              <div className="relative h-[232px] overflow-hidden rounded-card shadow-float">
+              <div className="clay-card relative h-[232px] overflow-hidden rounded-card">
                 {story && (
                   <img
                     src={ART.stories[story.artKey]}
@@ -178,17 +178,17 @@ export function MateProfilePage() {
           layout
           onClick={() => (comparing ? setAnalysisOpen(true) : setComparing(true))}
           whileTap={{ scale: 0.96 }}
-          className="flex h-12 items-center gap-2 rounded-full bg-accent px-6 text-section font-bold text-white shadow-float"
+          className="clay-cta flex h-12 items-center gap-2 rounded-[18px] px-6 text-section font-bold"
           transition={snappy}
         >
           {comparing ? <Sparkles size={16} /> : <Users size={16} />}
-          {comparing ? '분석하기' : '나와 비교하기'}
+          {comparing ? '분석 비교' : '나와 비교하기'}
         </motion.button>
         {comparing && (
           <button
             type="button"
             onClick={() => setComparing(false)}
-            className="flex h-12 items-center rounded-full bg-elevated px-4 text-body font-bold text-ink shadow-float"
+            className="clay-pressed flex h-12 items-center rounded-[18px] bg-point/45 px-4 text-body font-bold text-ink"
           >
             프로필로
           </button>
@@ -250,13 +250,13 @@ function MateListCard({
   dense?: boolean
 }) {
   return (
-    <div className="flex h-full flex-col rounded-card bg-elevated px-3.5 py-3 shadow-float">
+    <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
       <p className={`mb-1 font-bold text-ink ${dense ? 'text-body' : 'text-section'}`}>{title}</p>
       <div className="flex flex-1 flex-col justify-evenly">
         {items.map((row, i) => (
           <div key={row.label} className="flex items-center gap-2">
             <span className="w-3.5 text-caption font-extrabold text-ink-faint">{i + 1}</span>
-            <span className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 ${dense ? 'h-7 w-7 text-caption' : 'h-8 w-8 text-body'}`}>
+            <span className={`flex shrink-0 items-center justify-center rounded-lg bg-point/55 ${dense ? 'h-7 w-7 text-caption' : 'h-8 w-8 text-body'}`}>
               {row.emoji}
             </span>
             <span className={`min-w-0 flex-1 truncate font-semibold text-ink ${dense ? 'text-caption' : 'text-body'}`}>

@@ -32,20 +32,20 @@ export function GroupRow({ selected, onSelect }: Props) {
               key={g.id}
               type="button"
               onClick={() => onSelect(active ? null : g.id)}
-              className={`w-[108px] shrink-0 rounded-card px-3 py-3 text-left shadow-soft transition-colors ${
-                active ? 'bg-accent/12 ring-2 ring-accent' : 'bg-elevated'
+              className={`w-[108px] shrink-0 rounded-card px-3 py-3 text-left transition-all active:scale-[0.98] ${
+                active ? 'clay-pressed bg-point/80 ring-2 ring-saving' : 'clay-card'
               }`}
             >
               <span
                 className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
-                  active ? 'bg-accent/15' : 'bg-ink/5'
+                  active ? 'bg-saving/15 text-saving' : 'bg-point/55'
                 }`}
               >
                 {g.emoji}
               </span>
               <p className="mt-2 text-body font-bold leading-tight text-ink">{g.label}</p>
               <p className="mt-0.5 truncate text-micro text-ink-soft">{g.desc}</p>
-              <p className="mt-1 text-caption font-semibold text-accent">
+              <p className="mt-1 text-caption font-semibold text-saving">
                 {g.members.toLocaleString()}명
               </p>
             </button>
