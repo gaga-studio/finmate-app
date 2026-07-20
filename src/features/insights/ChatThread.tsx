@@ -220,7 +220,7 @@ function Widget({
 }
 
 /** 카드/혜택 상세 카드 — 태그 + 제목 + 조건 불릿 + CTA (시연 6-2 응답) */
-function DetailCardWidget({ variant }: { variant: 'card' | 'benefit' }) {
+function DetailCardWidget({ variant }: { variant: 'saving' | 'spending' }) {
   const c = DETAIL_CARDS[variant]
   return (
     <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid={`detail-${variant}`}>
@@ -237,13 +237,15 @@ function DetailCardWidget({ variant }: { variant: 'card' | 'benefit' }) {
           </p>
         ))}
       </div>
-      <button
-        type="button"
-        className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-point py-2 text-body font-bold text-point-ink"
-      >
-        {c.cta}
-        <ChevronRight size={14} />
-      </button>
+      {c.cta && (
+        <button
+          type="button"
+          className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-point py-2 text-body font-bold text-point-ink"
+        >
+          {c.cta}
+          <ChevronRight size={14} />
+        </button>
+      )}
     </div>
   )
 }

@@ -67,33 +67,37 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   // 시연 6-2 추천 행동 — 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
-  // 시연 6-2 순차 가이드: 1️⃣카드(새는 돈) → 2️⃣계좌(매수 준비) → 3️⃣미션(실천)
+  // 시연 6-2 순차 가이드: 1️⃣저축 관리 → 2️⃣소비 관리(카드 한 줄) → 3️⃣미션(+하나증권 한 줄)
   {
-    id: 'etf-step-card',
+    id: 'etf-step-saving',
     match: /^좋아, 보여줘$/,
     replies: [
-      { role: 'ai', text: '1️⃣ 먼저 새는 돈부터 잡아야죠 —\n지출 관리 카드예요' },
-      { role: 'ai', widget: { type: 'detail-card', variant: 'card' } },
-      { role: 'ai', widget: { type: 'options', options: ['다음 추천도 보여줘'] } },
+      { role: 'ai', text: '1️⃣ 저축은 쪼개면 쉬워요 —\n하루 단위로 볼까요?' },
+      { role: 'ai', widget: { type: 'detail-card', variant: 'saving' } },
+      { role: 'ai', widget: { type: 'options', options: ['다음 팁도 보여줘'] } },
     ],
   },
   {
-    id: 'etf-step-benefit',
-    match: /^다음 추천도 보여줘$/,
+    id: 'etf-step-spending',
+    match: /^다음 팁도 보여줘$/,
     replies: [
-      { role: 'ai', text: '2️⃣ ETF는 수수료 싸움이에요 —\n첫 거래 우대 계좌면 더 유리해요!' },
-      { role: 'ai', widget: { type: 'detail-card', variant: 'benefit' } },
-      { role: 'ai', widget: { type: 'options', options: ['마지막 추천은?'] } },
+      { role: 'ai', text: '2️⃣ 새는 돈만 잡아도\n절반은 성공이에요' },
+      { role: 'ai', widget: { type: 'detail-card', variant: 'spending' } },
+      { role: 'ai', widget: { type: 'options', options: ['마지막 팁은?'] } },
     ],
   },
   {
     id: 'etf-step-mission',
-    match: /^마지막 추천은\?$/,
+    match: /^마지막 팁은\?$/,
     replies: [
       {
         role: 'ai',
         text: '3️⃣ 제일 중요한 실천 —\n30만원 모으기, 미션으로 준비해뒀어요.\n미션 탭에서 담아주세요!',
         widget: { type: 'mission', missionId: 'r-etf' },
+      },
+      {
+        role: 'ai',
+        text: '다 모이면 하나증권 첫 거래 혜택으로\n가볍게 시작해봐도 좋아요 🙂',
       },
     ],
   },
@@ -110,7 +114,7 @@ const SCENARIOS: Scenario[] = [
       },
       {
         role: 'ai',
-        text: '모으는 동안 준비하면 좋은 것들이 있어요.\n하나씩 보여드릴까요?',
+        text: '이 플랜, 쉽게 가는 팁 3가지를 준비했어요.\n하나씩 보여드릴까요?',
         widget: { type: 'options', options: ['좋아, 보여줘'] },
       },
     ],
