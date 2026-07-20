@@ -1,5 +1,5 @@
 import type { InsightMsg } from '../../data/insights'
-import { ETF_ACTIONS, SAVING_SLIDER, SUGGESTION_CHIPS } from '../../data/insights'
+import { SAVING_SLIDER, SUGGESTION_CHIPS } from '../../data/insights'
 import { SIM_SCENARIO } from '../../data/domain'
 
 /** id 없는 메시지 — 훅이 push할 때 id를 부여한다 */
@@ -67,34 +67,37 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   // 시연 6-2 추천 행동 — 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
+  // 시연 6-2 순차 가이드: 1️⃣카드(새는 돈) → 2️⃣계좌(매수 준비) → 3️⃣미션(실천)
   {
-    id: 'etf-action-card',
-    match: /^카드 추천$/,
+    id: 'etf-step-card',
+    match: /^좋아, 보여줘$/,
     replies: [
-      { role: 'ai', text: '하나카드의 사회초년생 지출 관리 카드예요!' },
+      { role: 'ai', text: '1️⃣ 먼저 새는 돈부터 잡아야죠 —\n지출 관리 카드예요' },
       { role: 'ai', widget: { type: 'detail-card', variant: 'card' } },
+      { role: 'ai', widget: { type: 'options', options: ['다음 추천도 보여줘'] } },
     ],
   },
   {
-    id: 'etf-action-benefit',
-    match: /^혜택 추천$/,
+    id: 'etf-step-benefit',
+    match: /^다음 추천도 보여줘$/,
     replies: [
-      { role: 'ai', text: 'ETF 시작 전 챙기면 좋은 하나증권 혜택이에요!' },
+      { role: 'ai', text: '2️⃣ 모은 30만원으로 바로 매수하려면\n계좌도 미리 준비해요!' },
       { role: 'ai', widget: { type: 'detail-card', variant: 'benefit' } },
+      { role: 'ai', widget: { type: 'options', options: ['마지막 추천은?'] } },
     ],
   },
   {
-    id: 'etf-action-saving',
-    match: /^절약 미션$/,
+    id: 'etf-step-mission',
+    match: /^마지막 추천은\?$/,
     replies: [
       {
         role: 'ai',
-        text: '좋아요! 30만원 모으기,\n바로 실행 미션으로 만들어봤어요.',
+        text: '3️⃣ 제일 중요한 실천 —\n30만원 모으기, 미션으로 만들어뒀어요',
         widget: { type: 'mission', missionId: 'r-etf' },
       },
     ],
   },
-  // 시연 6-1: ETF 의사 표현 → 위험 안내 → 30만원 플랜 시뮬 → 실행 방법 3가지
+  // 시연 6-1: ETF 의사 표현 → 위험 안내 → 30만원 플랜 시뮬 → 순차 가이드 시작
   {
     id: 'etf-goal',
     match: /ETF|etf|30만원|삼십만원|첫\s*시도|첫\s*투자/i,
@@ -107,8 +110,8 @@ const SCENARIOS: Scenario[] = [
       },
       {
         role: 'ai',
-        text: '이 플랜, 실행할 가장 쉬운 방법\n3가지를 준비했어요!',
-        widget: { type: 'action-list', items: [...ETF_ACTIONS] },
+        text: '모으는 동안 준비하면 좋은 것들이 있어요.\n하나씩 보여드릴까요?',
+        widget: { type: 'options', options: ['좋아, 보여줘'] },
       },
     ],
   },
