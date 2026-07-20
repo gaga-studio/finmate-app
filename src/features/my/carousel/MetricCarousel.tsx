@@ -15,9 +15,14 @@ interface Props {
   onStackPrev: () => void
   /** 카드 렌더 주입 — 생략 시 마이 탭 기본 카드. 메이트 프로필이 같은 구조로 다른 카드를 꽂는다 */
   renderCard?: (m: Metric, period: Period, savingView: SavingView, investView: InvestView) => React.ReactNode
+  /** 카드 높이 오버라이드 — 마이 탭이 더 크게 쓴다 */
+  cardH?: number
+  /** 좌우 여백(고스트 카드 노출 폭) 오버라이드 */
+  sideInset?: number
 }
 
-const CARD_H = 348
+const DEFAULT_CARD_H = 348
+const DEFAULT_SIDE_INSET = 88
 const LIFT_MAX = 130
 const LIFT_THRESHOLD = 70
 const AXIS_LOCK = 12
@@ -37,7 +42,10 @@ export function MetricCarousel({
   onStackNext,
   onStackPrev,
   renderCard,
+  cardH = DEFAULT_CARD_H,
+  sideInset = DEFAULT_SIDE_INSET,
 }: Props) {
+  const CARD_H = cardH
   const viewportRef = useRef<HTMLDivElement>(null)
   const [vw, setVw] = useState(390)
 
@@ -51,7 +59,7 @@ export function MetricCarousel({
     return () => ro.disconnect()
   }, [])
 
-  const cardW = vw - 88
+  const cardW = vw - sideInset
   const step = cardW + 16
   const idx = METRICS.indexOf(metric)
 
@@ -135,8 +143,8 @@ export function MetricCarousel({
       style={{ height: CARD_H + 34, touchAction: 'none' }}
     >
       {/* 기간 고스트 스택 — 활성 카드 뒤 2장 */}
-      <GhostCard offset={-14} scale={0.955} opacity={0.5} lift={lift} liftFactor={0.16} cardW={cardW} vw={vw} />
-      <GhostCard offset={-27} scale={0.912} opacity={0.28} lift={lift} liftFactor={0.3} cardW={cardW} vw={vw} />
+      <GhostCard offset={-14} scale={0.955} opacity={0.5} lift={lift} liftFactor={0.16} cardW={cardW} cardH={CARD_H} vw={vw} />
+      <GhostCard offset={-27} scale={0.912} opacity={0.28} lift={lift} liftFactor={0.3} cardW={cardW} cardH={CARD_H} vw={vw} />
 
       <motion.div
         className="absolute inset-x-0 top-[30px]"
@@ -177,7 +185,7 @@ export function MetricCarousel({
       >
         <motion.div className="relative" style={{ x, height: CARD_H }}>
           {METRICS.map((m, i) => (
-            <CarouselSlot key={m} i={i} x={x} step={step} cardW={cardW} vw={vw}>
+            <CarouselSlot key={m} i={i} x={x} step={step} cardW={cardW} cardH={CARD_H} vw={vw}>
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={
@@ -217,6 +225,7 @@ function CarouselSlot({
   x,
   step,
   cardW,
+  cardH,
   vw,
   children,
 }: {
@@ -224,6 +233,7 @@ function CarouselSlot({
   x: MotionValue<number>
   step: number
   cardW: number
+  cardH: number
   vw: number
   children: React.ReactNode
 }) {
@@ -241,7 +251,7 @@ function CarouselSlot({
       style={{
         left: (vw - cardW) / 2 + i * step,
         width: cardW,
-        height: CARD_H,
+        height: cardH,
         scale,
         opacity,
       }}
@@ -258,6 +268,7 @@ function GhostCard({
   lift,
   liftFactor,
   cardW,
+  cardH,
   vw,
 }: {
   offset: number
@@ -266,6 +277,7 @@ function GhostCard({
   lift: MotionValue<number>
   liftFactor: number
   cardW: number
+  cardH: number
   vw: number
 }) {
   const y = useTransform(lift, (l) => 30 + offset + l * liftFactor)
@@ -274,7 +286,7 @@ function GhostCard({
     <motion.div
       aria-hidden
       className="clay-card absolute top-0 rounded-card"
-      style={{ left: (vw - cardW) / 2, width: cardW, height: CARD_H, y, scale: s, opacity }}
+      style={{ left: (vw - cardW) / 2, width: cardW, height: cardH, y, scale: s, opacity }}
     />
   )
 }

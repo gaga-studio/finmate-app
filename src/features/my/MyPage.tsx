@@ -129,6 +129,8 @@ export function MyPage() {
         period={period}
         savingView={savingView}
         investView={investView}
+        cardH={380}
+        sideInset={68}
         onMetricChange={setMetric}
         onStackNext={() => {
           if (metric === 'saving') setSavingView(nextSavingView(savingView))
