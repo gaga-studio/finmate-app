@@ -41,8 +41,8 @@ export function BudgetCard({ period }: { period: Period }) {
   const b = getBudget(period)
   return (
     <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
-      <WaterGlass pct={b.pct} width={124} height={140} />
-      <p className="mt-1 text-display font-extrabold leading-none">
+      <WaterGlass pct={b.pct} width={132} height={150} />
+      <p className="mt-1 text-[36px] font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
       {/* 잔량 바 — 물잔·큰 숫자와 같은 기준(남은 만큼 파랗게) */}
@@ -70,11 +70,11 @@ export function SavingCard({ view }: { view: SavingView }) {
   if (view === 'goal') {
     return (
       <CardShell title="저축 목표" metricClass={METRIC_TEXT.saving}>
-        <SpeedGauge pct={s.pct} width={200} height={152} />
-        <p className="mt-1 text-display font-extrabold leading-none">
+        <SpeedGauge pct={s.pct} width={214} height={162} />
+        <p className="mt-1 text-[36px] font-extrabold leading-none">
           <AnimatedNumber value={s.pct * 100} format={(v) => `${Math.round(v)}%`} />
         </p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">
+        <p className="mt-1.5 text-section font-medium text-ink-soft">
           {s.title} · <b className="text-ink">{formatKrwCompact(s.current)}</b> / {formatKrwCompact(s.target)}
         </p>
       </CardShell>
@@ -85,12 +85,12 @@ export function SavingCard({ view }: { view: SavingView }) {
     return (
       <CardShell title="월간 저축" metricClass={METRIC_TEXT.saving}>
         <div className="pt-3">
-          <MiniBars bars={getSavingMonthBars()} width={216} height={118} />
+          <MiniBars bars={getSavingMonthBars()} width={232} height={118} />
         </div>
-        <p className="mt-2 text-display font-extrabold leading-none">
+        <p className="mt-2 text-[36px] font-extrabold leading-none">
           <AnimatedNumber value={s.delta} format={(v) => formatKrwSigned(Math.round(v))} />
         </p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">이번 달 수입에서 저축</p>
+        <p className="mt-1.5 text-section font-medium text-ink-soft">이번 달 수입에서 저축</p>
       </CardShell>
     )
   }
@@ -101,7 +101,7 @@ export function SavingCard({ view }: { view: SavingView }) {
       <div className="pt-2">
         <LineChart
           points={nw.points}
-          width={216}
+          width={232}
           height={126}
           drawKey="saving-asset"
           markers
@@ -109,10 +109,10 @@ export function SavingCard({ view }: { view: SavingView }) {
           yTicks
         />
       </div>
-      <p className="mt-2 text-display font-extrabold leading-none">
+      <p className="mt-2 text-[36px] font-extrabold leading-none">
         <AnimatedNumber value={nw.total} format={(v) => formatKrwCompact(Math.round(v))} />
       </p>
-      <p className="mt-1.5 text-body font-medium text-ink-soft">
+      <p className="mt-1.5 text-section font-medium text-ink-soft">
         총자산 · 이번 달 <b className="text-ink">+{formatKrwCompact(nw.monthGain)}</b>
       </p>
     </CardShell>
@@ -128,15 +128,15 @@ export function InvestCard({ view }: { view: InvestView }) {
           <CompareChart
             value={inv.value}
             principal={inv.principal}
-            width={216}
+            width={232}
             height={132}
             xLabels={MONTH_LABELS}
           />
         </div>
-        <p className={`mt-2 text-display font-extrabold leading-none ${inv.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
+        <p className={`mt-2 text-[36px] font-extrabold leading-none ${inv.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
           <AnimatedNumber value={inv.returnPct} format={(v) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`} />
         </p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">
+        <p className="mt-1.5 text-section font-medium text-ink-soft">
           원금 <b className="text-ink">{formatKrwCompact(inv.principalTotal)}</b> → 평가{' '}
           <b className="text-ink">{formatKrwCompact(inv.total)}</b>
         </p>
@@ -156,14 +156,14 @@ export function InvestCard({ view }: { view: InvestView }) {
               value: s.value,
               weight: s.weight,
             }))}
-            width={224}
+            width={240}
             height={150}
           />
         </div>
-        <p className="mt-2 text-display font-extrabold leading-none">
+        <p className="mt-2 text-[36px] font-extrabold leading-none">
           <AnimatedNumber value={pf.total} format={(v) => formatKrwCompact(Math.round(v))} />
         </p>
-        <p className="mt-1.5 text-body font-medium text-ink-soft">{pf.slices.length}종목 분산 투자</p>
+        <p className="mt-1.5 text-section font-medium text-ink-soft">{pf.slices.length}종목 분산 투자</p>
       </CardShell>
     )
   }
@@ -188,7 +188,7 @@ export function InvestCard({ view }: { view: InvestView }) {
           )
         })}
       </div>
-      <p className="mt-3 text-body font-medium text-ink-soft">2026. 7. 22. 장 마감 기준</p>
+      <p className="mt-3 text-section font-medium text-ink-soft">2026. 7. 22. 장 마감 기준</p>
     </CardShell>
   )
 }
@@ -206,7 +206,7 @@ function CardShell({
     <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
       {/* 제목 밴드 — 지표 테마색 틴트 (bg-current가 metricClass 색을 따른다) */}
       <div className="w-full bg-current/20 px-5 py-2.5 text-center ring-1 ring-white/60">
-        <p className="text-section font-bold text-ink">{title}</p>
+        <p className="text-title font-bold text-ink">{title}</p>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-5 pb-5 pt-2">{children}</div>
     </div>
