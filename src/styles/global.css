@@ -82,7 +82,8 @@ body {
   background: oklch(0.94 0.01 255);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: none;
+  overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 /* 숫자 정렬 (금액 카운트업 흔들림 방지) */

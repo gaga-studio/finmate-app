@@ -153,9 +153,10 @@ export function MetricCarousel({
           if (axisRef.current === 'x') {
             const raw = baseXRef.current + info.offset.x
             const min = -(METRICS.length - 1) * step
-            // 가장자리 러버밴딩
+            // 가장자리 러버밴딩 — 오버슈트는 최대 70px로 하드 클램프 (화면 밖 이탈 방지)
             const over = raw > 0 ? raw : raw < min ? raw - min : 0
-            x.set(over ? raw - over * 0.65 : raw)
+            const damped = Math.sign(over) * Math.min(Math.abs(over) * 0.35, 70)
+            x.set(over ? (raw > 0 ? damped : min + damped) : raw)
           } else if (axisRef.current === 'y') {
             // 위로 = 양수(다음), 아래로 = 음수(이전)
             lift.set(Math.max(-LIFT_MAX, Math.min(LIFT_MAX, -info.offset.y)))
