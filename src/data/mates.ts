@@ -252,3 +252,109 @@ export const MATE_PROFILES: MateProfile[] = Object.values(AUTHORS).map((author) 
 export function getMateProfile(id: string): MateProfile | undefined {
   return MATE_PROFILES.find((m) => m.id === id)
 }
+
+/* ---------- 9뷰 연동 리스트 — 지혜 쪽 LinkedListPanel과 대칭 ---------- */
+
+/** 소비 카테고리별 기간 밴드 — SPEND_POOL 라벨과 1:1 (수기 매핑, 월 기준을 일/주로 스케일) */
+const SPEND_PERIOD_BANDS: Record<string, { daily: string; weekly: string; monthly: string }> = {
+  카페: { daily: '3~5천원', weekly: '1~2만원', monthly: '3~5만원' },
+  외식: { daily: '1~2만원', weekly: '3~5만원', monthly: '10~15만원' },
+  패션: { daily: '0~1만원', weekly: '2~5만원', monthly: '10~15만원' },
+  '생활·잡화': { daily: '5천~1만원', weekly: '1~3만원', monthly: '5~10만원' },
+  '문화·여가': { daily: '0~1만원', weekly: '1~3만원', monthly: '5~10만원' },
+  전자기기: { daily: '0~2만원', weekly: '3~5만원', monthly: '15~20만원' },
+  교통: { daily: '3~5천원', weekly: '1~2만원', monthly: '3~5만원' },
+  뷰티: { daily: '0~1만원', weekly: '1~3만원', monthly: '5~10만원' },
+}
+
+const INCOME_POOL: MateCategoryRow[] = [
+  { emoji: '💼', label: '월급', band: '월 200만대' },
+  { emoji: '🧑‍💻', label: '사이드잡', band: '월 10~30만' },
+  { emoji: '🛍️', label: '중고 판매', band: '월 5~10만' },
+  { emoji: '🏦', label: '이자·배당', band: '월 1~5만' },
+  { emoji: '🎁', label: '앱테크', band: '월 1~3만' },
+]
+
+const INTEREST_POOL: MateCategoryRow[] = [
+  { emoji: '🤖', label: 'AI 반도체', band: '비중 확대 중' },
+  { emoji: '🔋', label: '2차전지', band: '관망' },
+  { emoji: '🇺🇸', label: '미국 지수', band: '적립 중' },
+  { emoji: '💸', label: '배당주', band: '신규 관심' },
+  { emoji: '🥇', label: '금·원자재', band: '관망' },
+]
+
+/** 메이트별 오버라이드 — 시연 핵심 인물의 서사 정합 */
+const LIST_OVERRIDES: Record<string, Partial<Record<'income' | 'asset', MateCategoryRow[]>>> = {
+  'a-paris': {
+    income: [
+      { emoji: '💼', label: '월급', band: '월 250만대' },
+      { emoji: '🧑‍💻', label: '사이드잡', band: '월 30~50만' },
+      { emoji: '🏦', label: '이자·배당', band: '월 5~10만' },
+    ],
+  },
+}
+
+function seededRng(key: string): () => number {
+  let seed = 0
+  for (const ch of key) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0
+  return mulberry32(seed)
+}
+
+export interface MateListView {
+  title: string
+  items: MateCategoryRow[]
+}
+
+/** 지표+뷰 → 메이트 리스트 — 카테고리·구간만, 시드 고정(촬영 재현성) */
+export function getMateListRows(
+  mate: MateProfile,
+  metric: Metric,
+  period: 'daily' | 'weekly' | 'monthly',
+  savingView: 'goal' | 'monthly' | 'asset',
+  investView: 'status' | 'portfolio' | 'news',
+): MateListView {
+  if (metric === 'budget') {
+    return {
+      title: '소비 탑 3',
+      items: mate.topCategories.budget.map((row) => ({
+        ...row,
+        band: SPEND_PERIOD_BANDS[row.label]?.[period] ?? row.band,
+      })),
+    }
+  }
+  if (metric === 'saving') {
+    if (savingView === 'monthly') {
+      const items =
+        LIST_OVERRIDES[mate.id]?.income ?? pick3(seededRng(`${mate.id}-income`), INCOME_POOL)
+      return { title: '소득 출처', items }
+    }
+    if (savingView === 'asset') {
+      const rng = seededRng(`${mate.id}-asset`)
+      const first = 45 + Math.round(rng() * 15)
+      const second = 20 + Math.round(rng() * 15)
+      return {
+        title: '자산 구성',
+        items: [
+          { emoji: '💰', label: '예·적금', band: `${first}~${first + 10}%` },
+          { emoji: '📈', label: '투자', band: `${second}~${second + 10}%` },
+          { emoji: '🏦', label: '파킹 통장', band: '10~20%' },
+        ],
+      }
+    }
+    return { title: '저축 구성', items: mate.topCategories.saving }
+  }
+  if (investView === 'portfolio') {
+    return {
+      title: '포폴 비중',
+      items: mate.views.invest.portfolio.map((p, i) => ({
+        emoji: ['📊', '🌎', '🏦'][i] ?? '📊',
+        label: p.label,
+        band: `${Math.round(p.weight * 100)}%`,
+      })),
+    }
+  }
+  if (investView === 'news') {
+    return { title: '관심 분야', items: pick3(seededRng(`${mate.id}-interest`), INTEREST_POOL) }
+  }
+  return { title: '투자 구성', items: mate.topCategories.invest }
+}
