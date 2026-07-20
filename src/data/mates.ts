@@ -78,11 +78,11 @@ const SAVING_POOL: MateCategoryRow[] = [
 ]
 
 const INVEST_POOL: MateCategoryRow[] = [
-  { emoji: '📊', label: '국내 ETF', band: '비중 30~50%' },
-  { emoji: '🌎', label: '해외 ETF', band: '비중 20~40%' },
-  { emoji: '🏢', label: '개별 주식', band: '비중 10~30%' },
-  { emoji: '🚀', label: '비상장', band: '비중 5~15%' },
-  { emoji: '🏦', label: '파킹·예금', band: '비중 10~30%' },
+  { emoji: '📊', label: '국내 ETF', band: '30~50%' },
+  { emoji: '🌎', label: '해외 ETF', band: '20~40%' },
+  { emoji: '🏢', label: '개별 주식', band: '10~30%' },
+  { emoji: '🚀', label: '비상장', band: '5~15%' },
+  { emoji: '🏦', label: '파킹·예금', band: '10~30%' },
 ]
 
 const SAVING_GOALS = ['첫 집 마련', '유럽 여행', '비상금 완성', '노트북 교체', '대학원 등록금']
