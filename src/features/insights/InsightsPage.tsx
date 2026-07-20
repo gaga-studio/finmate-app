@@ -71,7 +71,7 @@ export function InsightsPage() {
           >
             <Menu size={15} />
           </button>
-          <h2 className="text-section font-bold text-ink">{viewing ? '대화 다시보기' : '오늘의 총평'}</h2>
+          <h2 className="text-section font-bold text-ink">{viewing ? '대화 다시보기' : 'AI 코치'}</h2>
           {viewing ? (
             <button
               type="button"
