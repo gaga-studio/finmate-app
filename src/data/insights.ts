@@ -32,6 +32,10 @@ export type InsightWidget =
   | { type: 'scenario-switch' }
   /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
   | { type: 'report'; variant?: 'macbook' }
+  /** 추천 행동 리스트 — 여러 번 클릭 가능, 클릭한 행은 체크 표시 */
+  | { type: 'action-list'; items: { emoji: string; title: string; desc: string }[] }
+  /** 상세 정보 카드 — 카드/혜택 추천 응답 */
+  | { type: 'detail-card'; variant: 'card' | 'benefit' }
 
 export interface InsightMsg {
   id: string
@@ -281,3 +285,47 @@ export const PRESET_SESSIONS: SavedSession[] = [
     ],
   },
 ]
+
+/* ---------- ETF 추천 행동 (시연 6-2) ---------- */
+
+/** "ETF 시도 해보고 싶어" 답변의 추천 행동 3가지 — 클릭하면 각 상세 응답으로 */
+export const ETF_ACTIONS = [
+  { emoji: '💳', title: '카드 추천', desc: '사회초년생에게 딱 맞는 카드를 추천해드려요!' },
+  { emoji: '🎁', title: '혜택 추천', desc: '지금 받을 수 있는 청년 혜택을 알려드릴게요!' },
+  { emoji: '🎯', title: '절약 미션', desc: '30만원 절약 플랜을 만들어서 꾸준히 모아보세요!' },
+] as const
+
+export interface DetailCardContent {
+  tag: string
+  title: string
+  sub: string
+  rows: { emoji: string; text: string }[]
+  cta: string
+}
+
+/** 카드/혜택 상세 카드 콘텐츠 */
+export const DETAIL_CARDS: Record<'card' | 'benefit', DetailCardContent> = {
+  card: {
+    tag: '추천 카드',
+    title: '신한카드 Deep Dream (체크)',
+    sub: '연회비 0원',
+    rows: [
+      { emoji: '🏠', text: '전월실적 30만원 이상 시' },
+      { emoji: '🏪', text: '모든 가맹점 0.2% 적립' },
+      { emoji: '🚌', text: '교통/편의점/커피 0.5% 적립' },
+      { emoji: '🌐', text: '해외 이용 수수료 면제' },
+    ],
+    cta: '카드 자세히 보기',
+  },
+  benefit: {
+    tag: '추천 혜택',
+    title: '청년도약계좌',
+    sub: '월 최대 70만원 납입 시 5년 만기 최대 5,000만원 마련!',
+    rows: [
+      { emoji: '🧑', text: '가입 대상 · 만 19세 ~ 34세 청년' },
+      { emoji: '🏛️', text: '정부 기여금 · 소득 구간별 차등 지원' },
+      { emoji: '📱', text: '신청 방법 · 은행 앱 또는 서민금융진흥원' },
+    ],
+    cta: '자세히 보기',
+  },
+}

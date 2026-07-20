@@ -2,11 +2,12 @@ import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { Check, ChevronDown, ChevronRight } from 'lucide-react'
 import { formatKrw } from '../../shared/format/krw'
 import { getDailySummary } from '../../data/selectors'
 import { QUIZ, RECOMMENDED_MISSIONS } from '../../data/domain'
 import {
+  DETAIL_CARDS,
   HABIT_MISSION,
   SAVING_SLIDER,
   makeSavingProjection,
@@ -190,6 +191,8 @@ function Widget({
   if (widget.type === 'mission-accept') return <MissionAcceptWidget onAccept={onOption} readOnly={readOnly} />
   if (widget.type === 'scenario-switch') return <ScenarioSwitchWidget onScenario={onScenario} readOnly={readOnly} />
   if (widget.type === 'report') return <ReportWidget variant={widget.variant} onReport={onReport} readOnly={readOnly} />
+  if (widget.type === 'action-list') return <ActionListWidget items={widget.items} onOption={onOption} readOnly={readOnly} />
+  if (widget.type === 'detail-card') return <DetailCardWidget variant={widget.variant} />
   return (
     <div className="flex flex-wrap gap-1.5">
       {widget.chips.map((c) => (
@@ -202,6 +205,84 @@ function Widget({
           {c}
         </button>
       ))}
+    </div>
+  )
+}
+
+/** 추천 행동 리스트 — 여러 번 클릭 가능, 클릭한 행은 체크 표시로 남는다 (시연 6-2) */
+function ActionListWidget({
+  items,
+  onOption,
+  readOnly,
+}: {
+  items: { emoji: string; title: string; desc: string }[]
+  onOption: (o: string) => void
+  readOnly?: boolean
+}) {
+  const [clicked, setClicked] = useState<string[]>([])
+
+  return (
+    <div className="clay-card w-full divide-y divide-line/60 rounded-2xl rounded-tl-md px-1 py-0.5">
+      {items.map((item) => {
+        const done = clicked.includes(item.title)
+        return (
+          <button
+            key={item.title}
+            type="button"
+            disabled={readOnly}
+            onClick={() => {
+              if (readOnly) return
+              setClicked((prev) => (prev.includes(item.title) ? prev : [...prev, item.title]))
+              onOption(item.title)
+            }}
+            className={`flex w-full items-center gap-3 px-3 py-3 text-left transition-opacity active:scale-[0.99] ${
+              done ? 'opacity-55' : ''
+            }`}
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-point/55">
+              <EmojiIcon emoji={item.emoji} size={34} className="text-point-ink" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-body font-bold text-ink">{item.title}</span>
+              <span className="mt-0.5 block text-caption font-medium leading-snug text-ink-soft">{item.desc}</span>
+            </span>
+            {done ? (
+              <Check size={15} strokeWidth={3} className="shrink-0 text-saving" />
+            ) : (
+              <ChevronRight size={15} className="shrink-0 text-ink-faint" />
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+/** 카드/혜택 상세 카드 — 태그 + 제목 + 조건 불릿 + CTA (시연 6-2 응답) */
+function DetailCardWidget({ variant }: { variant: 'card' | 'benefit' }) {
+  const c = DETAIL_CARDS[variant]
+  return (
+    <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid={`detail-${variant}`}>
+      <span className="rounded-full bg-point px-2.5 py-1 text-caption font-bold text-point-ink">{c.tag}</span>
+      <p className="mt-2.5 text-section font-extrabold leading-snug text-ink">{c.title}</p>
+      <p className="mt-0.5 text-caption font-semibold text-ink-soft">{c.sub}</p>
+      <div className="mt-2.5 flex flex-col gap-1.5">
+        {c.rows.map((r) => (
+          <p key={r.text} className="flex items-center gap-2 text-caption font-medium text-ink">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/5">
+              <EmojiIcon emoji={r.emoji} size={18} className="text-ink-soft" />
+            </span>
+            {r.text}
+          </p>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-point py-2 text-body font-bold text-point-ink"
+      >
+        {c.cta}
+        <ChevronRight size={14} />
+      </button>
     </div>
   )
 }

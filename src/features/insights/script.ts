@@ -1,5 +1,5 @@
 import type { InsightMsg } from '../../data/insights'
-import { SAVING_SLIDER, SUGGESTION_CHIPS } from '../../data/insights'
+import { ETF_ACTIONS, SAVING_SLIDER, SUGGESTION_CHIPS } from '../../data/insights'
 import { SIM_SCENARIO } from '../../data/domain'
 
 /** id 없는 메시지 — 훅이 push할 때 id를 부여한다 */
@@ -66,13 +66,30 @@ const SCENARIOS: Scenario[] = [
       { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?\n예: 30만원 모아서 ETF 시도 해보고 싶어' },
     ],
   },
+  // 시연 6-2 추천 행동 — 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
   {
-    id: 'etf-goal',
-    match: /ETF|etf|30만원|삼십만원|첫\s*시도|첫\s*투자/i,
+    id: 'etf-action-card',
+    match: /^카드 추천$/,
+    replies: [
+      { role: 'ai', text: '사회초년생에게 인기 많은 카드를 추천해드릴게요!' },
+      { role: 'ai', widget: { type: 'detail-card', variant: 'card' } },
+    ],
+  },
+  {
+    id: 'etf-action-benefit',
+    match: /^혜택 추천$/,
+    replies: [
+      { role: 'ai', text: '지금 신청하면 받을 수 있는 청년 혜택이에요!' },
+      { role: 'ai', widget: { type: 'detail-card', variant: 'benefit' } },
+    ],
+  },
+  {
+    id: 'etf-action-saving',
+    match: /^절약 미션$/,
     replies: [
       {
         role: 'ai',
-        text: '좋아요. 30만원을 ETF 첫 시도 자금으로 잡아볼게요.',
+        text: '30만원 절약 플랜을 그래프에 얹어봤어요.',
         chart: { kind: 'sim-etf', monthly: 100_000 },
       },
       {
@@ -84,6 +101,19 @@ const SCENARIOS: Scenario[] = [
         text: '이 목표에 맞춰 바로 실행 미션도 추천해둘게요.',
         widget: { type: 'mission', missionId: 'r-etf' },
       },
+    ],
+  },
+  // 시연 6-1: ETF 의사 표현 → 위험 안내 + 30만원 플랜 + 추천 행동 3가지
+  {
+    id: 'etf-goal',
+    match: /ETF|etf|30만원|삼십만원|첫\s*시도|첫\s*투자/i,
+    replies: [
+      { role: 'ai', text: '지금 자금 없이 바로 시작하는 건\n위험해 보여요 ⚠️' },
+      {
+        role: 'ai',
+        text: '먼저 30만원부터 모아보는 걸 추천해요.\n모으는 가장 쉬운 방법 3가지를 준비했어요!',
+      },
+      { role: 'ai', widget: { type: 'action-list', items: [...ETF_ACTIONS] } },
     ],
   },
   // 시연 핵심: 맥북 200만 — 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다
