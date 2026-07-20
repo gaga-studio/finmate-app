@@ -11,7 +11,7 @@ export function ProfileCard({ profile, className }: Props) {
   return (
     <div className={`flex flex-col items-center text-center ${className ?? ''}`}>
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-ink/5 text-3xl">
-        <EmojiIcon emoji={profile.emoji} avatarId={profile.id} size={44} className="text-accent" strokeWidth={1.8} />
+        <EmojiIcon emoji={profile.emoji} avatarId={profile.id} size={54} className="text-accent" strokeWidth={1.8} />
       </div>
       <p className="mt-2.5 text-title font-extrabold text-ink">{profile.nickname}</p>
       {profile.bio && <p className="mt-0.5 text-body text-ink-soft">{profile.bio}</p>}

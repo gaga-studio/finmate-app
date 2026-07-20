@@ -116,7 +116,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
     }
     return WISHLIST.map((w) => ({
       key: w.id,
-      leading: <EmojiIcon emoji={w.emoji} size={13} className="text-saving" />,
+      leading: <EmojiIcon emoji={w.emoji} size={19} className="text-saving" />,
       title: w.title,
       trailing: <span className="text-saving">{formatKrwCompact(w.price)}</span>,
     }))
@@ -133,7 +133,7 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
   if (investView === 'news') {
     return STOCK_NEWS.map((n) => ({
       key: n.id,
-      leading: <EmojiIcon emoji="📰" size={13} className="text-invest" />,
+      leading: <EmojiIcon emoji="📰" size={19} className="text-invest" />,
       title: n.name,
       sub: n.summary,
       trailing: (

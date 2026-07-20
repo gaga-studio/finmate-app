@@ -116,7 +116,7 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
                 <p className="text-caption font-extrabold text-ink">나</p>
                 <p className="text-micro font-bold text-ink-faint">vs</p>
                 <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={15} className="text-accent" /> {mate.nickname}
+                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={18} className="text-accent" /> {mate.nickname}
                 </p>
               </div>
               {rows.map((r) => (
