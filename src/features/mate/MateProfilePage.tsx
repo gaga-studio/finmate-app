@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { ChevronLeft, Sparkles, Users } from 'lucide-react'
-import { getMateProfile, type MateCategoryRow, type MateProfile } from '../../data/mates'
+import { getMateListRows, getMateProfile } from '../../data/mates'
 import { STORIES } from '../../data/social'
 import { ART } from '../../data/art-manifest'
 import { ProfileCard } from '../../shared/profile/ProfileCard'
@@ -30,7 +30,6 @@ import {
 import type { Metric } from '../../data/types'
 
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
-const LIST_TITLE: Record<Metric, string> = { budget: '소비 탑 3', saving: '저축 구성', invest: '투자 구성' }
 
 interface ListItem {
   emoji: string
@@ -54,6 +53,9 @@ export function MateProfilePage() {
   const [analysisOpen, setAnalysisOpen] = useState(false)
 
   if (!mate) return <Navigate to="/feed" replace />
+
+  // 지혜 쪽 LinkedListPanel과 대칭 — 지표+뷰 9가지를 함께 갈아입는다
+  const mateList = getMateListRows(mate, metric, period, savingView, investView)
 
   // 마이 탭 하단 아트 카드 자리 — 이 메이트가 올린 스토리 이미지 재활용 (지표 일치 우선)
   const story =
@@ -169,9 +171,9 @@ export function MateProfilePage() {
                 </div>
                 <div className="h-[248px]">
                   <MateListCard
-                    title={LIST_TITLE[metric]}
+                    title={mateList.title}
                     metricClass={METRIC_TEXT[metric]}
-                    items={mateRows(mate, metric)}
+                    items={mateList.items.map((r) => ({ emoji: r.emoji, label: r.label, value: r.band }))}
                     dense
                   />
                 </div>
@@ -237,7 +239,11 @@ export function MateProfilePage() {
                 </span>
               </div>
               <div className="h-[232px]">
-                <MateListCard title={LIST_TITLE[metric]} metricClass={METRIC_TEXT[metric]} items={mateRows(mate, metric)} />
+                <MateListCard
+                  title={mateList.title}
+                  metricClass={METRIC_TEXT[metric]}
+                  items={mateList.items.map((r) => ({ emoji: r.emoji, label: r.label, value: r.band }))}
+                />
               </div>
             </section>
           </motion.div>
@@ -283,15 +289,6 @@ export function MateProfilePage() {
   )
 }
 
-/** 메이트 쪽 리스트 rows — 카테고리 + 구간만 */
-function mateRows(mate: MateProfile, metric: Metric): ListItem[] {
-  return mate.topCategories[metric].map((row: MateCategoryRow) => ({
-    emoji: row.emoji,
-    label: row.label,
-    value: row.band,
-  }))
-}
-
 function MateListCard({
   title,
   metricClass,
@@ -306,25 +303,35 @@ function MateListCard({
   return (
     <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
       <p className="mb-1 text-section font-bold text-ink">{title}</p>
-      <div className="flex flex-1 flex-col justify-evenly">
-        {items.map((row, i) => (
-          <div key={row.label} className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2">
-            <span
-              className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 font-extrabold text-ink-soft ${
-                dense ? 'h-7 w-7 text-body' : 'h-8 w-8 text-body'
-              }`}
-            >
-              {i + 1}
-            </span>
-            <span className="min-w-0 flex-1 truncate text-body font-semibold text-ink">
-              {row.label}
-            </span>
-            <span className={`shrink-0 text-body font-bold ${row.valueClass ?? metricClass}`}>
-              {row.value}
-            </span>
-          </div>
-        ))}
-      </div>
+      {/* 뷰 전환 시 지혜 쪽 패널과 같은 갈아입기 모션 */}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.div
+          key={`${title}-${items.map((r) => r.label).join('|')}`}
+          className="flex flex-1 flex-col justify-evenly"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={snappy}
+        >
+          {items.map((row, i) => (
+            <div key={row.label} className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2">
+              <span
+                className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 font-extrabold text-ink-soft ${
+                  dense ? 'h-7 w-7 text-body' : 'h-8 w-8 text-body'
+                }`}
+              >
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-body font-semibold text-ink">
+                {row.label}
+              </span>
+              <span className={`shrink-0 text-body font-bold ${row.valueClass ?? metricClass}`}>
+                {row.value}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }
