@@ -11,18 +11,20 @@ import { PageTitle } from '../../shared/ui/PageTitle'
 type StorySort = 'popular' | 'recent'
 
 export function FeedPage() {
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null)
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([])
   const [sort, setSort] = useState<StorySort>('popular')
   const [openStory, setOpenStory] = useState<string | null>(null)
 
+  const toggleGroup = (id: string) =>
+    setSelectedGroups((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]))
+
   const stories = useMemo(() => {
-    const filtered = selectedGroup
-      ? STORIES.filter((s) => s.groupIds.includes(selectedGroup))
-      : STORIES
+    // 다중 선택은 AND — 고른 그룹 전부에 속한 스토리만 남긴다
+    const filtered = STORIES.filter((s) => selectedGroups.every((id) => s.groupIds.includes(id)))
     return [...filtered].sort((a, b) =>
       sort === 'popular' ? b.likes - a.likes : b.postedAt.localeCompare(a.postedAt),
     )
-  }, [selectedGroup, sort])
+  }, [selectedGroups, sort])
 
   return (
     <div className="relative min-h-full">
@@ -44,7 +46,7 @@ export function FeedPage() {
         <span className="text-body font-medium text-ink-faint">그룹 찾아보기</span>
       </div>
 
-      <GroupRow selected={selectedGroup} onSelect={setSelectedGroup} />
+      <GroupRow selected={selectedGroups} onToggle={toggleGroup} />
 
       <section className="mt-5 pb-6">
         <div className="flex items-center justify-between px-5">
