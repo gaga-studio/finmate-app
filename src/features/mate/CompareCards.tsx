@@ -43,7 +43,7 @@ function CompareShell({
       {/* 열 라벨 */}
       <div className="grid w-full grid-cols-2 pt-2 text-center">
         <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink-soft">
-          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={15} /> {mate.nickname}
+          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={18} /> {mate.nickname}
         </p>
         <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink-soft">
           <EmojiIcon emoji="🙋‍♀️" size={12} /> 지혜

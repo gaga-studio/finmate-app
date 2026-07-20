@@ -42,7 +42,7 @@ export function GroupRow({ selected, onSelect }: Props) {
                   active ? 'bg-accent/15' : 'bg-ink/5'
                 }`}
               >
-                <EmojiIcon emoji={g.emoji} size={20} className="text-accent" />
+                <EmojiIcon emoji={g.emoji} size={27} className="text-accent" />
               </span>
               <p className="mt-2 text-body font-bold leading-tight text-ink">{g.label}</p>
               <p className="mt-0.5 truncate text-micro text-ink-soft">{g.desc}</p>

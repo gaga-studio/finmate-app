@@ -49,7 +49,7 @@ function MissionRow({
   const body = (
     <div className="flex items-center gap-3 py-3">
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-section">
-        {done ? <Check size={18} strokeWidth={3} className="text-point-ink" /> : <EmojiIcon emoji={mission.emoji} size={17} className="text-point-ink" />}
+        {done ? <Check size={18} strokeWidth={3} className="text-point-ink" /> : <EmojiIcon emoji={mission.emoji} size={27} className="text-point-ink" />}
       </span>
       <div className="min-w-0 flex-1">
         <p className={`text-body font-semibold ${done ? 'text-ink-faint line-through' : 'text-ink'}`}>

@@ -494,7 +494,7 @@ function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) 
     <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="mission-accept">
       <div className="flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-point">
-          <EmojiIcon emoji={HABIT_MISSION.emoji} size={19} className="text-point-ink" />
+          <EmojiIcon emoji={HABIT_MISSION.emoji} size={29} className="text-point-ink" />
         </span>
         <div className="min-w-0">
           <p className="text-body font-bold text-ink">{HABIT_MISSION.title}</p>
@@ -529,7 +529,7 @@ function MissionWidget({ missionId, readOnly }: { missionId: string; readOnly?: 
     <div className="w-full rounded-2xl rounded-tl-md bg-elevated px-4 py-3.5 shadow-soft" data-testid="mission-card">
       <div className="flex items-center gap-3">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-point">
-          <EmojiIcon emoji={m.emoji} size={19} className="text-point-ink" />
+          <EmojiIcon emoji={m.emoji} size={29} className="text-point-ink" />
         </span>
         <div className="min-w-0">
           <p className="text-body font-bold text-ink">{m.title}</p>

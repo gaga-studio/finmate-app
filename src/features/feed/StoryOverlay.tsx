@@ -81,7 +81,7 @@ export function StoryOverlay({ story, onClose }: Props) {
             }`}
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/25 text-body">
-              <EmojiIcon emoji={story.author.emoji} avatarId={story.author.id} size={18} />
+              <EmojiIcon emoji={story.author.emoji} avatarId={story.author.id} size={22} />
             </span>
             {story.author.nickname}
           </button>
