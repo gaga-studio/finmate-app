@@ -60,7 +60,7 @@ export function InsightsPage() {
       <ChartPanel state={chat.chart} />
 
       {/* AI 채팅 카드 — 시뮬 카드와 구분되는 옅은 틴트의 두 번째 카드 */}
-      <div className="mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card border border-line/70 bg-[#f5f8fb] shadow-soft">
+      <div className="clay-card mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card">
         {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
         <div className="flex items-center justify-between px-3.5 pb-1 pt-3">
           <button
@@ -71,7 +71,7 @@ export function InsightsPage() {
           >
             <Menu size={15} />
           </button>
-          <h2 className="text-section font-bold text-ink">{viewing ? '대화 다시보기' : 'AI 코치'}</h2>
+          <h2 className="text-section font-bold text-ink">{viewing ? '대화 다시보기' : '오늘의 총평'}</h2>
           {viewing ? (
             <button
               type="button"

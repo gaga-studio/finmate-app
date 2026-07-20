@@ -45,7 +45,7 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
   return (
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto bg-[#f5f8fb] px-3.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="flex-1 overflow-y-auto px-3.5 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <div className="flex flex-col gap-2.5">
         {messages.map((m, i) => (
@@ -92,7 +92,7 @@ function Bubble({
   if (msg.role === 'user') {
     return (
       <motion.div
-        className="max-w-[78%] self-end rounded-2xl rounded-tr-md bg-accent px-3.5 py-2.5 text-body font-medium text-white shadow-soft"
+        className="max-w-[78%] self-end rounded-2xl rounded-tr-md bg-accent px-3.5 py-2.5 text-body font-medium text-white"
         initial={{ opacity: 0, y: 10, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={snappy}
@@ -112,7 +112,7 @@ function Bubble({
       <Avatar visible={showAvatar} />
       <div className="flex max-w-[82%] flex-col gap-2">
         {msg.text && (
-          <div className="whitespace-pre-line rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-body font-medium text-ink shadow-sm ring-1 ring-line/60">
+          <div className="whitespace-pre-line rounded-2xl rounded-tl-md bg-elevated px-3.5 py-2.5 text-body font-medium text-ink shadow-soft">
             {msg.text}
           </div>
         )}
@@ -148,7 +148,7 @@ function TypingIndicator() {
   return (
     <div className="flex items-start gap-2">
       <Avatar visible />
-      <div className="flex items-center gap-1 rounded-2xl rounded-tl-md bg-white px-3.5 py-3 shadow-sm ring-1 ring-line/60">
+      <div className="flex items-center gap-1 rounded-2xl rounded-tl-md bg-elevated px-3.5 py-3 shadow-soft">
         {[0, 1, 2].map((i) => (
           <motion.span
             key={i}
@@ -229,10 +229,10 @@ function OptionsWidget({
             setPicked(o)
             onOption(o)
           }}
-          className={`rounded-full px-4 py-2 text-body font-bold transition-opacity ${
+          className={`rounded-full px-3.5 py-2 text-body font-bold transition-opacity ${
             picked === o
-              ? 'bg-[#d7dbe1] text-ink shadow-soft'
-              : 'border border-ink/10 bg-[#eef0f3] text-ink-soft shadow-soft'
+              ? 'clay-cta'
+              : 'clay-card text-saving'
           } ${picked !== null && picked !== o ? 'opacity-35' : ''}`}
         >
           {o}
@@ -262,7 +262,7 @@ function ComparePickerWidget({
           type="button"
           disabled={readOnly}
           onClick={() => onComparePick(kind)}
-          className="rounded-full border border-ink/10 bg-[#eef0f3] px-4 py-2 text-body font-bold text-ink-soft shadow-soft"
+          className="clay-card rounded-full px-3.5 py-2 text-body font-bold text-saving"
         >
           {label}
         </button>
@@ -313,43 +313,36 @@ function SummaryCard() {
   const lines = [
     {
       emoji: '☕️',
-      text: `지출 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 여유`,
+      text: `소비 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 남김`,
       detail: `오늘 1위 ${s.top.merchant} ${formatKrw(s.top.amount)} — 한도 안 방어 성공!`,
     },
     {
       emoji: '✈️',
-      text: `파리 자금 ${formatKrw(s.savingDelta)} 추가 · 목표 ${s.savingPct}% 달성중`,
+      text: `파리 자금 +${formatKrw(s.savingDelta)} · 목표 ${s.savingPct}%`,
       detail: '오늘의 미션 저축 완료, 절반이 코앞!',
     },
     {
       emoji: '📈',
-      text: `포트 +${s.investReturnPct}% 유지중`,
+      text: `포트 +${s.investReturnPct}% 유지`,
       detail: '급락장에도 분산 투자가 버팀목!',
     },
   ]
 
   return (
-    <div className="w-full rounded-2xl rounded-tl-md bg-[#d4dbfc] px-4 py-3.5 shadow-soft" data-testid="daily-summary">
-      <div className="relative flex flex-col gap-3">
-        <span className="absolute left-[10px] top-4 bottom-4 w-px border-l border-dashed border-saving/25" />
+    <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid="daily-summary">
+      <div className="flex flex-col gap-2.5">
         {lines.map((l, i) => (
-          <div
-            key={l.emoji}
-            className={`relative flex items-start gap-3 ${
-              i > 0 ? 'border-t border-ink/5 pt-3' : ''
-            }`}
-          >
-            <span className="relative z-10 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#eef8f4] text-caption font-extrabold text-saving shadow-[0_0_0_4px_rgba(255,255,255,0.9)]">
+          <div key={l.emoji} className="flex items-start gap-2.5">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-point/65 text-micro font-extrabold text-point-ink">
               {i + 1}
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="flex items-start gap-2 text-body font-extrabold leading-snug text-ink">
-                <span className="shrink-0 text-[16px] leading-snug">{l.emoji}</span>
-                <span className="min-w-0 break-keep">{l.text}</span>
+            <div>
+              <p className="text-body font-bold leading-snug text-ink">
+                {l.emoji} {l.text}
               </p>
               {open && (
                 <motion.p
-                  className="mt-1 text-caption font-medium leading-snug text-ink-soft"
+                  className="mt-0.5 text-caption font-medium text-ink-soft"
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={snappy}
@@ -364,7 +357,7 @@ function SummaryCard() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="mx-auto mt-3 flex items-center gap-0.5 text-caption font-bold text-saving"
+        className="mt-2.5 flex items-center gap-0.5 text-caption font-bold text-saving"
       >
         {open ? '접기' : '자세히'}
         <ChevronDown size={13} className={`transition-transform ${open ? 'rotate-180' : ''}`} />
