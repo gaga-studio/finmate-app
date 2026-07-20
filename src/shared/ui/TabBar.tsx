@@ -16,7 +16,7 @@ export function TabBar() {
 
   return (
     <nav className="absolute inset-x-0 bottom-0 z-40 px-3 pb-[calc(10px+env(safe-area-inset-bottom))]">
-      <div className="clay-card flex items-stretch rounded-[1.65rem] px-1 py-1 backdrop-blur-xl">
+      <div className="flex items-stretch rounded-[22px] border border-line bg-white/95 px-1 py-1 shadow-soft backdrop-blur-xl">
         {TABS.map(({ to, label, Icon }) => {
           const active = pathname.startsWith(to)
           return (
@@ -28,7 +28,7 @@ export function TabBar() {
               {active && (
                 <motion.span
                   layoutId="tab-pill"
-                  className="clay-pressed absolute inset-x-1.5 inset-y-1 rounded-[1.25rem] bg-accent/12"
+                  className="absolute inset-x-1.5 inset-y-1 rounded-[18px] bg-point ring-1 ring-accent/15"
                   transition={snappy}
                 />
               )}

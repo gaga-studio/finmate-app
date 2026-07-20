@@ -78,11 +78,11 @@ const SAVING_POOL: MateCategoryRow[] = [
 ]
 
 const INVEST_POOL: MateCategoryRow[] = [
-  { emoji: '📊', label: '국내 ETF', band: '30~50%' },
-  { emoji: '🌎', label: '해외 ETF', band: '20~40%' },
-  { emoji: '🏢', label: '개별 주식', band: '10~30%' },
+  { emoji: '🇺🇸', label: 'TIGER 미국S&P500', band: '30~50%' },
+  { emoji: '📊', label: 'KODEX 200', band: '20~40%' },
+  { emoji: '🌎', label: 'ACE 미국나스닥100', band: '10~30%' },
   { emoji: '🚀', label: '비상장', band: '5~15%' },
-  { emoji: '🏦', label: '파킹·예금', band: '10~30%' },
+  { emoji: '🧠', label: 'TIGER 글로벌AI', band: '10~30%' },
 ]
 
 const SAVING_GOALS = ['첫 집 마련', '유럽 여행', '비상금 완성', '노트북 교체', '대학원 등록금']
@@ -172,9 +172,9 @@ const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?:
     similarity: 0.86,
     assetBand: '2,000만 이상',
     portfolio: [
-      { label: '해외 ETF', weight: 0.4 },
-      { label: '국내 ETF', weight: 0.35 },
-      { label: '파킹·예금', weight: 0.25 },
+      { label: 'TIGER 미국S&P500', weight: 0.4 },
+      { label: 'KODEX 200', weight: 0.35 },
+      { label: 'ACE 미국나스닥100', weight: 0.25 },
     ],
     budgetLeftPct: 52,
     budgetBand: '하루 1~2만원대',
@@ -200,6 +200,11 @@ const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?:
   'a-bear': {
     similarity: 0.78,
     assetBand: '1,500~2,000만',
+    portfolio: [
+      { label: 'KODEX 바이오', weight: 0.5 },
+      { label: '셀트리온', weight: 0.3 },
+      { label: 'KODEX 200', weight: 0.2 },
+    ],
     budgetLeftPct: 34,
     budgetBand: '하루 2~3만원대',
     savingPct: 48,
@@ -268,11 +273,23 @@ const SPEND_PERIOD_BANDS: Record<string, { daily: string; weekly: string; monthl
 }
 
 const INCOME_POOL: MateCategoryRow[] = [
-  { emoji: '💼', label: '월급', band: '월 200만대' },
-  { emoji: '🧑‍💻', label: '사이드잡', band: '월 10~30만' },
-  { emoji: '🛍️', label: '중고 판매', band: '월 5~10만' },
-  { emoji: '🏦', label: '이자·배당', band: '월 1~5만' },
-  { emoji: '🎁', label: '앱테크', band: '월 1~3만' },
+  { emoji: '💼', label: '월급', band: '월 200만원대' },
+  { emoji: '🧑‍💻', label: '사이드잡', band: '월 10~30만원' },
+  { emoji: '🛍️', label: '중고 판매', band: '월 5~10만원' },
+  { emoji: '🏦', label: '이자·배당', band: '월 1~5만원' },
+  { emoji: '🎁', label: '앱테크', band: '월 1~3만원' },
+]
+
+const SAVING_GOAL_POOL: MateCategoryRow[] = [
+  { emoji: '🏠', label: '주택청약', band: '480만원 달성' },
+  { emoji: '🛡️', label: '비상금 통장', band: '120만원 달성' },
+  { emoji: '📈', label: 'ETF 첫 자금', band: '18만원 달성' },
+]
+
+const MONTHLY_SAVING_POOL: MateCategoryRow[] = [
+  { emoji: '🏠', label: '주택청약', band: '월 10만원' },
+  { emoji: '💰', label: '청년도약계좌', band: '월 30만원' },
+  { emoji: '🏦', label: '파킹통장', band: '월 15만원' },
 ]
 
 const INTEREST_POOL: MateCategoryRow[] = [
@@ -284,12 +301,39 @@ const INTEREST_POOL: MateCategoryRow[] = [
 ]
 
 /** 메이트별 오버라이드 — 시연 핵심 인물의 서사 정합 */
-const LIST_OVERRIDES: Record<string, Partial<Record<'income' | 'asset', MateCategoryRow[]>>> = {
+const LIST_OVERRIDES: Record<string, Partial<Record<'income' | 'savingGoal' | 'monthlySaving', MateCategoryRow[]>>> = {
   'a-paris': {
     income: [
-      { emoji: '💼', label: '월급', band: '월 250만대' },
-      { emoji: '🧑‍💻', label: '사이드잡', band: '월 30~50만' },
-      { emoji: '🏦', label: '이자·배당', band: '월 5~10만' },
+      { emoji: '💼', label: '월급', band: '월 250만원대' },
+      { emoji: '🧑‍💻', label: '사이드잡', band: '월 30~50만원' },
+      { emoji: '🏦', label: '이자·배당', band: '월 5~10만원' },
+    ],
+    savingGoal: [
+      { emoji: '✈️', label: '파리 이주 자금', band: '780만원 달성' },
+      { emoji: '🏠', label: '주택청약', band: '360만원 달성' },
+      { emoji: '🛡️', label: '비상금 통장', band: '150만원 달성' },
+    ],
+    monthlySaving: [
+      { emoji: '✈️', label: '여행 적금', band: '월 50만원' },
+      { emoji: '💰', label: '정기적금', band: '월 30만원' },
+      { emoji: '🏠', label: '주택청약', band: '월 10만원' },
+    ],
+  },
+  'a-bear': {
+    income: [
+      { emoji: '💼', label: '월급', band: '월 200만원대' },
+      { emoji: '🧑‍💻', label: '사이드잡', band: '월 20~30만원' },
+      { emoji: '🏦', label: '이자·배당', band: '월 1~5만원' },
+    ],
+    savingGoal: [
+      { emoji: '🏠', label: '주택청약', band: '480만원 달성' },
+      { emoji: '🛡️', label: '비상금 통장', band: '120만원 달성' },
+      { emoji: '📈', label: 'ETF 첫 자금', band: '18만원 달성' },
+    ],
+    monthlySaving: [
+      { emoji: '🏠', label: '주택청약', band: '월 10만원' },
+      { emoji: '💰', label: '청년도약계좌', band: '월 30만원' },
+      { emoji: '🏦', label: '파킹통장', band: '월 15만원' },
     ],
   },
 }
@@ -323,31 +367,27 @@ export function getMateListRows(
     }
   }
   if (metric === 'saving') {
+    if (savingView === 'goal') {
+      const items =
+        LIST_OVERRIDES[mate.id]?.savingGoal ?? pick3(seededRng(`${mate.id}-saving-goal`), SAVING_GOAL_POOL)
+      return { title: '저축 목표', items }
+    }
     if (savingView === 'monthly') {
       const items =
-        LIST_OVERRIDES[mate.id]?.income ?? pick3(seededRng(`${mate.id}-income`), INCOME_POOL)
-      return { title: '소득 출처', items }
+        LIST_OVERRIDES[mate.id]?.monthlySaving ?? pick3(seededRng(`${mate.id}-monthly-saving`), MONTHLY_SAVING_POOL)
+      return { title: '월간 저축', items }
     }
     if (savingView === 'asset') {
-      const rng = seededRng(`${mate.id}-asset`)
-      const first = 45 + Math.round(rng() * 15)
-      const second = 20 + Math.round(rng() * 15)
-      return {
-        title: '자산 구성',
-        items: [
-          { emoji: '💰', label: '예·적금', band: `${first}~${first + 10}%` },
-          { emoji: '📈', label: '투자', band: `${second}~${second + 10}%` },
-          { emoji: '🏦', label: '파킹 통장', band: '10~20%' },
-        ],
-      }
+      const items =
+        LIST_OVERRIDES[mate.id]?.income ?? INCOME_POOL.slice(0, 3)
+      return { title: '소득 출처', items }
     }
-    return { title: '저축 구성', items: mate.topCategories.saving }
   }
   if (investView === 'portfolio') {
     return {
       title: '포폴 비중',
       items: mate.views.invest.portfolio.map((p, i) => ({
-        emoji: ['📊', '🌎', '🏦'][i] ?? '📊',
+        emoji: ['🧬', '💊', '📊'][i] ?? '📈',
         label: p.label,
         band: `${Math.round(p.weight * 100)}%`,
       })),

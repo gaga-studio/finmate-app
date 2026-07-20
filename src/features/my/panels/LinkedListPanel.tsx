@@ -3,15 +3,16 @@ import { ListRow } from '../../../shared/ui/ListRow'
 import { EmojiIcon } from '../../../shared/ui/EmojiIcon'
 import { snappy } from '../../../shared/motion/springs'
 import { CATEGORY_META } from '../../../data/categories'
-import { HOLDINGS, STOCK_NEWS, WISHLIST } from '../../../data/domain'
+import { HOLDINGS, STOCK_NEWS } from '../../../data/domain'
 import { getIncomeSources, getNetWorth, getPortfolio, getTopPurchases } from '../../../data/selectors'
 import { formatKrwCompact } from '../../../shared/format/krw'
 import type { InvestView, Metric, Period, SavingView } from '../myState'
 
+/** 메이트 쪽 getMateListRows와 같은 매핑 — 비교 2열의 좌우 제목이 전 뷰에서 일치한다 */
 const SAVING_PANEL_TITLE: Record<SavingView, string> = {
-  goal: '위시 리스트',
-  monthly: '소득 출처',
-  asset: '자산 구성',
+  goal: '저축 목표',
+  monthly: '월간 저축',
+  asset: '소득 출처',
 }
 
 const INVEST_PANEL_TITLE: Record<InvestView, string> = {
@@ -100,7 +101,23 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
     })
   }
   if (metric === 'saving') {
+    // 월간 저축 — 이번 달 수입에서 저축한 항목들 (거래 실측과 정합)
     if (savingView === 'monthly') {
+      const rowsData = [
+        { id: 'ms-emergency', emoji: '🛡️', title: '비상금 통장', amount: 200_000 },
+        { id: 'ms-housing', emoji: '🏠', title: '주택청약', amount: 100_000 },
+        { id: 'ms-paris', emoji: '✈️', title: '파리 통장', amount: 93_900 },
+      ]
+      return rowsData.map((r, i) => ({
+        key: r.id,
+        leading: rank(i),
+        title: r.title,
+        sub: '이번 달',
+        trailing: <span className="text-saving">월 {formatKrwCompact(r.amount)}</span>,
+      }))
+    }
+    // 소득 출처 — 메이트 쪽과 같은 슬롯(asset 뷰)
+    if (savingView === 'asset') {
       return getIncomeSources().map((s, i) => ({
         key: s.merchant,
         leading: rank(i),
@@ -109,20 +126,15 @@ function rows(metric: Metric, period: Period, savingView: SavingView, investView
         trailing: <span className="text-saving">{formatKrwCompact(s.total)}</span>,
       }))
     }
-    if (savingView === 'asset') {
-      return getNetWorth().assets.map((a, i) => ({
+    // 저축 목표 — 목표별 달성액 (자산 실측 기반)
+    return getNetWorth()
+      .assets.slice(0, 3)
+      .map((a, i) => ({
         key: a.id,
         leading: rank(i),
         title: a.title,
-        trailing: <span className="text-saving">{formatKrwCompact(a.value)}</span>,
+        trailing: <span className="text-saving">{formatKrwCompact(a.value)} 달성</span>,
       }))
-    }
-    return WISHLIST.map((w) => ({
-      key: w.id,
-      leading: <EmojiIcon emoji={w.emoji} size={22} className="text-saving" />,
-      title: w.title,
-      trailing: <span className="text-saving">{formatKrwCompact(w.price)}</span>,
-    }))
   }
   if (investView === 'portfolio') {
     return getPortfolio().slices.map((s, i) => ({

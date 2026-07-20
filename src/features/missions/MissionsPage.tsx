@@ -10,7 +10,6 @@ import { RecommendedList } from './RecommendedList'
 import { RewardSheet } from './RewardSheet'
 import { MISSIONS, PAST_MISSIONS, POINTS_BALANCE, QUIZ, RECOMMENDED_MISSIONS, STREAK_CHECK_REWARD } from '../../data/domain'
 import type { Mission, RecommendedMission } from '../../data/types'
-import { PageTitle } from '../../shared/ui/PageTitle'
 import { overlayTarget } from '../../shared/ui/overlayTarget'
 
 type MissionTab = 'active' | 'history'
@@ -72,7 +71,6 @@ export function MissionsPage() {
   return (
     <div className="relative min-h-full pb-6">
       <header className="relative flex items-center justify-between px-5 pb-3 pt-14">
-        <PageTitle>미션</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"
@@ -84,7 +82,7 @@ export function MissionsPage() {
       </header>
 
       {/* 당근식 상단 탭 — 활동미션 / 지난 내역 */}
-      <div className="mx-5 flex rounded-full bg-point/45 p-1 shadow-soft">
+      <div className="mx-5 flex rounded-full border border-line bg-white p-1 shadow-soft">
         {(
           [
             { value: 'active', label: '활동미션' },
@@ -96,11 +94,11 @@ export function MissionsPage() {
             type="button"
             onClick={() => setTab(value)}
             className={`relative flex-1 rounded-full py-2 text-section font-bold transition-transform active:scale-[0.98] ${
-              tab === value ? 'text-saving' : 'text-ink-faint'
+              tab === value ? 'text-point-ink' : 'text-ink-faint'
             }`}
           >
             {tab === value && (
-              <motion.span layoutId="mission-tab" className="clay-pressed absolute inset-0 rounded-full bg-elevated" />
+              <motion.span layoutId="mission-tab" className="absolute inset-0 rounded-full bg-point ring-1 ring-point-ink/15" />
             )}
             <span className="relative">{label}</span>
           </button>

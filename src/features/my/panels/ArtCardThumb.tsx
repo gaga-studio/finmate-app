@@ -28,7 +28,7 @@ export function ArtCardThumb({ period, metric, savingView, investView, onOpen }:
       layoutId="wrapped-card"
       onClick={onOpen}
       whileTap={{ scale: 0.97 }}
-      className="relative block h-full w-full overflow-hidden rounded-card text-left shadow-float"
+      className="relative block h-full w-full overflow-hidden rounded-card text-left shadow-soft"
     >
       <ArtOrGradient src={ART.wrapped[content.artKey]} palette={metric} className="h-full w-full">
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />

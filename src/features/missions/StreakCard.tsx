@@ -24,7 +24,7 @@ export function StreakCard({ todayChecked, onCheckToday }: Props) {
   const flame = getStreakFlame(dots)
 
   return (
-    <section className="clay-card mx-5 mt-3 rounded-card p-5 ring-1 ring-point-ink/15">
+    <section className="clay-card mx-5 mt-3 rounded-card p-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-title font-extrabold text-ink">예산을 지켜라</h2>
@@ -81,7 +81,7 @@ function Dot({ dot, delay, onTap }: { dot: StreakDot; delay: number; onTap?: () 
           : dot.status === 'fail'
             ? 'bg-ink/8 text-ink-faint'
             : dot.status === 'current'
-              ? 'bg-point/50 text-point-ink ring-2 ring-point-ink'
+              ? 'bg-point text-point-ink ring-1 ring-point-ink/30'
               : 'border border-dashed border-line'
       }`}
     >
@@ -90,7 +90,7 @@ function Dot({ dot, delay, onTap }: { dot: StreakDot; delay: number; onTap?: () 
       {dot.status === 'current' && (
         <>
           <motion.span
-            className="absolute inset-0 rounded-full ring-2 ring-point-ink"
+            className="absolute inset-0 rounded-full ring-1 ring-point-ink"
             animate={{ scale: [1, 1.45], opacity: [0.6, 0] }}
             transition={{ repeat: Infinity, duration: 1.6, repeatDelay: 0.6 }}
           />

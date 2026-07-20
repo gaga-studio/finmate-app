@@ -34,9 +34,48 @@ interface Props {
 
 export function ChartPanel({ state }: Props) {
   const { title, caption, metricClass, chart } = renderState(state)
+  const compareTarget =
+    state.kind === 'compare' ? COMPARE_TARGETS.find((t) => t.id === state.targetId) : undefined
 
+  if (compareTarget?.kind === 'group') {
+    return (
+      <div className="mt-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-max snap-x snap-mandatory gap-3">
+          <ChartCard
+            title={title}
+            caption={caption}
+            metricClass={metricClass}
+            chart={chart}
+            animationKey={chartKey(state)}
+            className="mx-0 mt-0 w-[372px] max-w-[calc(100vw-58px)] snap-center"
+          />
+          <GroupPositionCard targetLabel={compareTarget.label} />
+          <GroupSavingProductsCard targetLabel={compareTarget.label} />
+        </div>
+      </div>
+    )
+  }
+
+  return <ChartCard title={title} caption={caption} metricClass={metricClass} chart={chart} animationKey={chartKey(state)} />
+}
+
+function ChartCard({
+  title,
+  caption,
+  metricClass,
+  chart,
+  animationKey,
+  className,
+}: {
+  title: string
+  caption?: string
+  metricClass: string
+  chart: React.ReactNode
+  animationKey: string
+  className?: string
+}) {
   return (
-    <div className="clay-card mx-5 mt-2 rounded-card px-4 pb-2.5 pt-3">
+    <div className={`clay-card rounded-card px-4 pb-2.5 pt-3 ${className ?? 'mx-5 mt-2'}`}>
       <div className="flex items-center">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.p
@@ -55,7 +94,7 @@ export function ChartPanel({ state }: Props) {
       <div className={`relative mt-1 flex h-[172px] flex-col items-center justify-center ${metricClass}`}>
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.div
-            key={chartKey(state)}
+            key={animationKey}
             className="flex flex-col items-center"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,6 +109,129 @@ export function ChartPanel({ state }: Props) {
         </AnimatePresence>
       </div>
     </div>
+  )
+}
+
+function GroupCarouselCard({
+  title,
+  eyebrow,
+  children,
+  caption,
+}: {
+  title: string
+  eyebrow: string
+  children: React.ReactNode
+  caption?: string
+}) {
+  return (
+    <div className="clay-card w-[372px] max-w-[calc(100vw-58px)] snap-center rounded-card px-4 pb-2.5 pt-3">
+      <div>
+        <p className="truncate text-[17px] font-bold leading-snug text-ink">{title}</p>
+        <p className="mt-0.5 truncate text-caption font-bold text-ink-faint">{eyebrow}</p>
+      </div>
+      <div className="relative mt-1 flex h-[172px] flex-col justify-center">
+        {children}
+        {caption && <p className="mt-3 text-center text-caption font-bold text-ink-soft">{caption}</p>}
+      </div>
+    </div>
+  )
+}
+
+const GROUP_POSITIONS = [
+  {
+    label: '소비',
+    left: '과소비',
+    right: '방어',
+    position: 68,
+    desc: '예산을 오래 남김',
+    className: 'text-budget',
+    dotClass: 'bg-budget',
+  },
+  {
+    label: '저축',
+    left: '느림',
+    right: '빠름',
+    position: 76,
+    desc: '평균보다 빠른 페이스',
+    className: 'text-saving',
+    dotClass: 'bg-saving',
+  },
+  {
+    label: '투자',
+    left: '준비 전',
+    right: '실행권',
+    position: 59,
+    desc: 'ETF 첫 시도 여유권',
+    className: 'text-invest',
+    dotClass: 'bg-invest',
+  },
+] as const
+
+function GroupPositionCard({ targetLabel }: { targetLabel: string }) {
+  return (
+    <GroupCarouselCard
+      title="그룹 안에서 내 위치"
+      eyebrow={targetLabel}
+      caption="점이 오른쪽일수록 이번 목표에 가까워요"
+    >
+      <div className="grid gap-3">
+        {GROUP_POSITIONS.map((item) => (
+          <PositionRail key={item.label} item={item} />
+        ))}
+      </div>
+    </GroupCarouselCard>
+  )
+}
+
+function PositionRail({ item }: { item: (typeof GROUP_POSITIONS)[number] }) {
+  return (
+    <div className="grid grid-cols-[38px_minmax(0,1fr)] items-center gap-3">
+      <span className={`text-section font-extrabold ${item.className}`}>{item.label}</span>
+      <div className="min-w-0">
+        <div className="relative h-6">
+          <span className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-line" />
+          <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-line bg-white" />
+          <motion.span
+            className={`absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full ${item.dotClass} shadow-soft ring-4 ring-white`}
+            initial={{ left: '50%', opacity: 0 }}
+            animate={{ left: `${item.position}%`, opacity: 1 }}
+            transition={snappy}
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-micro font-medium text-ink-faint">{item.left}</span>
+          <span className="text-caption font-bold text-ink-soft">{item.desc}</span>
+          <span className="text-micro font-medium text-ink-faint">{item.right}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const GROUP_SAVING_PRODUCTS = [
+  '하나은행 청년미래적금',
+  '하나은행 청년 주택드림 청약 통장',
+  '하나은행 청년내일저축계좌',
+] as const
+
+function GroupSavingProductsCard({ targetLabel }: { targetLabel: string }) {
+  return (
+    <GroupCarouselCard
+      title="그룹이 많이 쓰는 저축 상품"
+      eyebrow={targetLabel}
+      caption="그룹에서 자주 선택한 저축 루틴 기준"
+    >
+      <div className="grid grid-cols-3 gap-2.5">
+        {GROUP_SAVING_PRODUCTS.map((name, i) => (
+          <div key={name} className="flex min-h-[118px] flex-col items-center justify-center rounded-2xl border border-line bg-white px-2.5 py-3 text-center">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-point text-body font-extrabold text-point-ink">
+              {i + 1}
+            </span>
+            <b className="mt-2 line-clamp-3 break-keep text-caption font-extrabold leading-snug text-ink">{name}</b>
+          </div>
+        ))}
+      </div>
+    </GroupCarouselCard>
   )
 }
 
