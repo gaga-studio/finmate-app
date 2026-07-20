@@ -4,20 +4,15 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { ChevronLeft, Sparkles, Users } from 'lucide-react'
 import { getMateProfile, type MateCategoryRow, type MateProfile } from '../../data/mates'
-import { getBudget, getInvestStatus, getSavingProgress, getTopPurchases } from '../../data/selectors'
-import { HOLDINGS, MY_ASSETS } from '../../data/domain'
 import { STORIES } from '../../data/social'
 import { ART } from '../../data/art-manifest'
-import { CATEGORY_META } from '../../data/categories'
-import { formatKrw, formatKrwCompact } from '../../shared/format/krw'
 import { ProfileCard } from '../../shared/profile/ProfileCard'
 import { MetricCarousel } from '../my/carousel/MetricCarousel'
 import { MetricTabs } from '../my/MetricTabs'
 import { ViewChips } from '../my/ViewChips'
 import { makeMateCardRenderer } from './MateMetricCards'
+import { BudgetCard, InvestCard, SavingCard } from '../my/cards/MetricCards'
 import { PageTitle } from '../../shared/ui/PageTitle'
-import { WaterGlass } from '../../shared/charts/WaterGlass'
-import { SpeedGauge } from '../../shared/charts/SpeedGauge'
 import { MateAnalysisOverlay } from './MateAnalysisOverlay'
 import { snappy } from '../../shared/motion/springs'
 import {
@@ -34,7 +29,6 @@ import {
 import type { Metric } from '../../data/types'
 
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
-const CARD_TITLE: Record<Metric, string> = { budget: '오늘의 예산', saving: '저축 목표', invest: '투자 현황' }
 const LIST_TITLE: Record<Metric, string> = { budget: '소비 탑 3', saving: '저축 구성', invest: '투자 구성' }
 
 interface ListItem {
@@ -89,10 +83,12 @@ export function MateProfilePage() {
 
       <ProfileCard profile={mate} className="px-5" />
 
-      {/* 지표 밑줄 탭 — 마이와 동일 문법, 프로필/비교 공용 */}
-      <div className="mt-3">
-        <MetricTabs metric={metric} onChange={setMetric} layoutId="mate-metric-tab" />
-      </div>
+      {/* 지표 밑줄 탭 — 비교 모드에선 9뷰가 전부 나열되므로 숨김 */}
+      {!comparing && (
+        <div className="mt-3">
+          <MetricTabs metric={metric} onChange={setMetric} layoutId="mate-metric-tab" />
+        </div>
+      )}
 
       <AnimatePresence mode="popLayout" initial={false}>
         {comparing ? (
@@ -104,7 +100,7 @@ export function MateProfilePage() {
             transition={snappy}
             className="mt-3 px-5"
           >
-            <CompareView mate={mate} metric={metric} />
+            <CompareView mate={mate} />
           </motion.div>
         ) : (
           <motion.div
@@ -212,33 +208,6 @@ function mateRows(mate: MateProfile, metric: Metric): ListItem[] {
   }))
 }
 
-/** 내 쪽 리스트 rows — 내 데이터라 실명·실측 그대로 */
-function myRows(metric: Metric): ListItem[] {
-  if (metric === 'budget') {
-    return getTopPurchases('monthly', 3).map((t) => ({
-      emoji: CATEGORY_META[t.category].emoji,
-      label: t.merchant,
-      value: formatKrw(t.amount),
-      valueClass: 'text-budget',
-    }))
-  }
-  if (metric === 'saving') {
-    return [...MY_ASSETS]
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 3)
-      .map((a) => ({ emoji: a.emoji, label: a.title, value: formatKrwCompact(a.value), valueClass: 'text-saving' }))
-  }
-  return [...HOLDINGS]
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 3)
-    .map((h) => ({
-      emoji: '📈',
-      label: h.name,
-      value: `${h.returnPct >= 0 ? '+' : ''}${h.returnPct}%`,
-      valueClass: h.returnPct >= 0 ? 'text-rise' : 'text-fall',
-    }))
-}
-
 function MateListCard({
   title,
   metricClass,
@@ -273,20 +242,51 @@ function MateListCard({
   )
 }
 
-/** 나와 비교하기 — 좌 메이트 / 우 지혜, 각 열에 [지표 카드 + 리스트 카드] */
-function CompareView({ mate, metric }: { mate: MateProfile; metric: Metric }) {
-  const my = {
-    budgetLeftPct: Math.round(getBudget('daily').pct * 100),
-    savingPct: Math.round(getSavingProgress('monthly').pct * 100),
-    investReturnPct: getInvestStatus().returnPct,
-  }
-  const mateVal =
-    metric === 'budget' ? mate.metrics.budgetLeftPct : metric === 'saving' ? mate.metrics.savingPct : mate.metrics.investReturnPct
-  const myVal = metric === 'budget' ? my.budgetLeftPct : metric === 'saving' ? my.savingPct : my.investReturnPct
+/** 나와 비교하기 — 마이 9카드 전체를 좌 메이트/우 나 2열 스크롤로 */
+const COMPARE_ROWS: { metric: Metric; period: Period; savingView: SavingView; investView: InvestView; title: string }[] = [
+  { metric: 'budget', period: 'daily', savingView: 'goal', investView: 'status', title: '오늘의 예산' },
+  { metric: 'budget', period: 'weekly', savingView: 'goal', investView: 'status', title: '이번 주 예산' },
+  { metric: 'budget', period: 'monthly', savingView: 'goal', investView: 'status', title: '7월 예산' },
+  { metric: 'saving', period: 'monthly', savingView: 'goal', investView: 'status', title: '저축 목표' },
+  { metric: 'saving', period: 'monthly', savingView: 'monthly', investView: 'status', title: '월간 저축' },
+  { metric: 'saving', period: 'monthly', savingView: 'asset', investView: 'status', title: '나의 자산' },
+  { metric: 'invest', period: 'monthly', savingView: 'goal', investView: 'status', title: '투자 현황' },
+  { metric: 'invest', period: 'monthly', savingView: 'goal', investView: 'portfolio', title: '포트폴리오' },
+  { metric: 'invest', period: 'monthly', savingView: 'goal', investView: 'news', title: '뉴스' },
+]
+
+const SECTION_LABEL: Record<Metric, string> = { budget: '소비', saving: '저축', invest: '투자' }
+
+/** 원본 폭 기준으로 렌더한 카드를 열 폭에 맞춰 통째로 축소 */
+const CARD_BASE_W = 326
+const CARD_BASE_H = 316
+
+function ScaledCard({ colW, children }: { colW: number; children: React.ReactNode }) {
+  const s = colW / CARD_BASE_W
+  return (
+    <div style={{ width: colW, height: CARD_BASE_H * s }} className="overflow-hidden">
+      <div style={{ width: CARD_BASE_W, height: CARD_BASE_H, transform: `scale(${s})`, transformOrigin: 'top left' }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function myCard(row: (typeof COMPARE_ROWS)[number]): React.ReactNode {
+  if (row.metric === 'budget') return <BudgetCard period={row.period} />
+  if (row.metric === 'saving') return <SavingCard view={row.savingView} />
+  return <InvestCard view={row.investView} />
+}
+
+function CompareView({ mate }: { mate: MateProfile }) {
+  const renderMate = makeMateCardRenderer(mate)
+  // 폰 프레임 고정폭 기준 열 폭: (430 - 좌우 40 - 열 간격 10) / 2
+  const colW = 190
 
   return (
     <div data-testid="compare-columns">
-      <div className="mb-2 grid grid-cols-2 gap-2.5 text-center">
+      {/* 열 헤더 — 스크롤해도 어느 열이 누군지 보이게 고정 */}
+      <div className="sticky top-11 z-10 -mx-1 mb-1 grid grid-cols-2 gap-2.5 rounded-xl bg-surface/90 px-1 py-2 text-center backdrop-blur-sm">
         <p className="flex items-center justify-center gap-1.5 text-body font-extrabold text-ink">
           <EmojiIcon emoji={mate.emoji} size={15} className="text-accent" /> {mate.nickname}
         </p>
@@ -295,38 +295,22 @@ function CompareView({ mate, metric }: { mate: MateProfile; metric: Metric }) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2.5" data-metric={metric}>
-        <MiniMetricCard metric={metric} value={mateVal} />
-        <MiniMetricCard metric={metric} value={myVal} />
-        <div className="h-[190px]">
-          <MateListCard title={LIST_TITLE[metric]} metricClass={METRIC_TEXT[metric]} items={mateRows(mate, metric)} dense />
-        </div>
-        <div className="h-[190px]">
-          <MateListCard title={LIST_TITLE[metric]} metricClass={METRIC_TEXT[metric]} items={myRows(metric)} dense />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function MiniMetricCard({ metric, value }: { metric: Metric; value: number }) {
-  return (
-    <div className={`flex flex-col items-center overflow-hidden rounded-2xl bg-elevated shadow-soft ${METRIC_TEXT[metric]}`}>
-      <div className="w-full bg-current/25 py-1.5 text-center">
-        <p className="text-caption font-bold text-ink">{CARD_TITLE[metric]}</p>
-      </div>
-      <div className="flex min-h-[124px] flex-col items-center justify-center px-3 py-2.5">
-        {metric === 'budget' && <WaterGlass pct={value / 100} width={58} height={66} />}
-        {metric === 'saving' && <SpeedGauge pct={value / 100} width={96} height={74} />}
-        {metric === 'invest' ? (
-          <p className={`text-[26px] font-extrabold leading-none ${value >= 0 ? 'text-rise' : 'text-fall'}`}>
-            {value >= 0 ? '+' : ''}
-            {value}%
-          </p>
-        ) : (
-          <p className="mt-1 text-title font-extrabold leading-none">{value}%</p>
-        )}
-      </div>
+      {COMPARE_ROWS.map((row, i) => {
+        const sectionStart = i === 0 || COMPARE_ROWS[i - 1].metric !== row.metric
+        return (
+          <div key={row.title} data-metric={row.metric}>
+            {sectionStart && (
+              <p className={`mt-3 px-0.5 text-title font-extrabold ${METRIC_TEXT[row.metric]}`}>
+                {SECTION_LABEL[row.metric]}
+              </p>
+            )}
+            <div className="mt-2 grid grid-cols-2 justify-items-center gap-2.5">
+              <ScaledCard colW={colW}>{renderMate(row.metric, row.period, row.savingView, row.investView)}</ScaledCard>
+              <ScaledCard colW={colW}>{myCard(row)}</ScaledCard>
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
