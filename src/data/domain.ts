@@ -108,9 +108,9 @@ export interface StockNews {
 
 /** 뉴스 뷰 오른쪽 카드 — ETF 첫 시도 전, 사용자가 보유/관심 중인 개별주 중심 */
 export const STOCK_NEWS: StockNews[] = [
-  { id: 'nw1', name: '삼성전자', summary: '오늘 2분기 실적 발표, HBM 주목', changePct: -7.8 },
+  { id: 'nw1', name: '삼성전자', summary: '2분기 실적 · HBM 주목', changePct: -7.8 },
   { id: 'nw2', name: 'NAVER', summary: 'AI 검색 서비스 개편 기대감', changePct: 1.6 },
-  { id: 'nw3', name: '스페이스X', summary: '스타십 시험발사 중단 여파로', changePct: -3.2 },
+  { id: 'nw3', name: '스페이스X', summary: '스타십 발사 중단 여파', changePct: -3.2 },
   { id: 'nw4', name: '카카오', summary: '플랫폼 규제 우려에 변동성 확대', changePct: -2.1 },
 ]
 
