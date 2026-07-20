@@ -174,7 +174,7 @@ function MateShell({
 }) {
   return (
     <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
-      <div className="w-full bg-current/20 px-5 py-2.5 text-center ring-1 ring-white/60">
+      <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-5 pt-2">{children}</div>

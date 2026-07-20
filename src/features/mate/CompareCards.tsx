@@ -37,7 +37,7 @@ function CompareShell({
 }) {
   return (
     <div className={`flex h-full flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${metricClass}`}>
-      <div className="w-full bg-current/25 px-5 py-2.5 text-center">
+      <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
       {/* 열 라벨 — 좌 나 / 우 메이트 */}
@@ -228,7 +228,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
   // 뉴스 — 시장은 공용 정보라 비교 대신 공용 보드
   return (
     <div className={`flex h-full flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${METRIC_TEXT.invest}`}>
-      <div className="w-full bg-current/25 px-5 py-2.5 text-center">
+      <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">뉴스</p>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-5">
