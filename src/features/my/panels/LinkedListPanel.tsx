@@ -32,11 +32,14 @@ export function LinkedListPanel({
   period,
   savingView,
   investView,
+  hideSub,
 }: {
   metric: Metric
   period: Period
   savingView: SavingView
   investView: InvestView
+  /** 좁은 2열(메이트 비교)에서 부제를 숨겨 '…' 잘림을 막는다 */
+  hideSub?: boolean
 }) {
   return (
     <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
@@ -62,7 +65,7 @@ export function LinkedListPanel({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.05 + i * 0.045, ...snappy }}
             >
-              <ListRow dense leading={row.leading} title={row.title} sub={row.sub} trailing={row.trailing} />
+              <ListRow dense leading={row.leading} title={row.title} sub={hideSub ? undefined : row.sub} trailing={row.trailing} />
             </motion.div>
           ))}
         </motion.div>

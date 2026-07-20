@@ -1,5 +1,5 @@
 import { EmojiIcon } from '../../shared/ui/EmojiIcon'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { ChevronLeft, Sparkles, Users } from 'lucide-react'
@@ -44,7 +44,8 @@ export function MateProfilePage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const mate = id ? getMateProfile(id) : undefined
-  const [metric, setMetric] = useState<Metric>(id === 'a-bear' ? 'invest' : 'budget')
+  const rootRef = useRef<HTMLDivElement>(null)
+  const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
   const [savingView, setSavingView] = useState<SavingView>('goal')
   const [investView, setInvestView] = useState<InvestView>('status')
@@ -60,7 +61,7 @@ export function MateProfilePage() {
     STORIES.find((s) => s.author.id === mate.id)
 
   return (
-    <div className="relative min-h-full pb-8">
+    <div ref={rootRef} className="relative min-h-full pb-8">
       <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
         <PageTitle>메이트</PageTitle>
         <button
@@ -171,6 +172,7 @@ export function MateProfilePage() {
                     period={period}
                     savingView={savingView}
                     investView={investView}
+                    hideSub
                   />
                 </div>
               </div>
@@ -247,7 +249,15 @@ export function MateProfilePage() {
         <motion.button
           type="button"
           layout
-          onClick={() => (comparing ? setAnalysisOpen(true) : setComparing(true))}
+          onClick={() => {
+            if (comparing) {
+              setAnalysisOpen(true)
+              return
+            }
+            setComparing(true)
+            // 비교 모드는 캐러셀부터 다시 보이도록 — 스크롤 컨테이너(TabLayout <main>)를 맨 위로
+            rootRef.current?.closest('main')?.scrollTo({ top: 0, behavior: 'smooth' })
+          }}
           whileTap={{ scale: 0.96 }}
           className="clay-cta flex h-12 items-center gap-2 rounded-[18px] px-6 text-section font-bold"
           transition={snappy}
