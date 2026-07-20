@@ -1,5 +1,5 @@
 import { EmojiIcon } from '../../shared/ui/EmojiIcon'
-import { Check, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { FEED_GROUPS } from '../../data/social'
 import { useMouseScroll } from '../../shared/ui/useMouseScroll'
 
@@ -33,15 +33,10 @@ export function GroupRow({ selected, onToggle }: Props) {
               key={g.id}
               type="button"
               onClick={() => onToggle(g.id)}
-              className={`relative w-[108px] shrink-0 rounded-card px-3 py-3 text-left transition-all active:scale-[0.98] ${
+              className={`w-[108px] shrink-0 rounded-card px-3 py-3 text-left transition-all active:scale-[0.98] ${
                 active ? 'clay-pressed bg-saving/15 ring-2 ring-saving' : 'clay-card'
               }`}
             >
-              {active && (
-                <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-saving text-white shadow-soft">
-                  <Check size={12} strokeWidth={3} />
-                </span>
-              )}
               <span
                 className={`flex h-12 w-12 items-center justify-center rounded-full text-lg ${
                   active ? 'bg-saving/15 text-saving' : 'bg-point/55'

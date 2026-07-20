@@ -65,6 +65,7 @@
   --active-softer: #f8fbff;
   --active-shadow: rgba(105, 167, 255, 0.13);
   --active-shadow-soft: rgba(105, 167, 255, 0.1);
+  --active-border: rgba(105, 167, 255, 0.2);
 }
 [data-metric="budget"] {
   --accent: var(--color-budget);
@@ -72,6 +73,7 @@
   --active-softer: #f8fbff;
   --active-shadow: rgba(105, 167, 255, 0.16);
   --active-shadow-soft: rgba(105, 167, 255, 0.11);
+  --active-border: rgba(105, 167, 255, 0.2);
 }
 [data-metric="saving"] {
   --accent: var(--color-saving);
@@ -79,6 +81,7 @@
   --active-softer: #fbfffe;
   --active-shadow: rgba(31, 143, 131, 0.13);
   --active-shadow-soft: rgba(31, 143, 131, 0.09);
+  --active-border: rgba(31, 143, 131, 0.18);
 }
 [data-metric="invest"] {
   --accent: var(--color-invest);
@@ -86,6 +89,7 @@
   --active-softer: #fbfaff;
   --active-shadow: rgba(139, 124, 246, 0.15);
   --active-shadow-soft: rgba(139, 124, 246, 0.1);
+  --active-border: rgba(139, 124, 246, 0.18);
 }
 
 html,
@@ -112,7 +116,8 @@ body {
 @layer utilities {
   .clay-card {
     background: linear-gradient(145deg, #ffffff 0%, var(--active-softer) 58%, var(--active-soft) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+    /* 연한 틴트 테두리 — 그림자만으론 흐릿한 카드 윤곽을 잡아준다 */
+    border: 1px solid var(--active-border);
     box-shadow:
       10px 14px 28px var(--active-shadow),
       -8px -8px 20px rgba(255, 255, 255, 0.94),
