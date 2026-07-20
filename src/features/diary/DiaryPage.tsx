@@ -22,7 +22,7 @@ export function DiaryPage() {
   return (
     <div className="relative min-h-full pb-6">
       <header className="relative flex items-center justify-between px-5 pb-3 pt-14">
-        <PageTitle>다이어리</PageTitle>
+        <PageTitle>기록</PageTitle>
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
         <button
           type="button"

@@ -10,7 +10,7 @@ import type { InvestView, Metric, Period, SavingView } from '../my/myState'
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
 const BUDGET_TITLE: Record<Period, string> = { daily: '오늘의 예산', weekly: '이번 주 예산', monthly: '7월 예산' }
 
-/** 비교 모드 캐러셀 카드 — 한 카드 안에서 좌 메이트/우 나가 정상 크기로 대결한다 */
+/** 비교 모드 캐러셀 카드 — 한 카드 안에서 좌 나/우 메이트가 정상 크기로 대결한다 */
 export function makeCompareCardRenderer(mate: MateProfile) {
   return function renderCompareCard(m: Metric, period: Period, savingView: SavingView, investView: InvestView) {
     if (m === 'budget') return <CompareBudget mate={mate} period={period} />
@@ -40,14 +40,14 @@ function CompareShell({
       <div className="w-full bg-current/25 px-5 py-2.5 text-center">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
-      {/* 열 라벨 */}
+      {/* 열 라벨 — 좌 나 / 우 메이트 */}
       <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pt-3 text-center">
         <p className="flex min-w-0 items-center justify-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
-          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} /> <span className="truncate">{mate.nickname}</span>
+          <EmojiIcon emoji="🙋‍♀️" size={16} /> <span className="truncate">지혜</span>
         </p>
         <span className="rounded-full bg-ink/5 px-2 py-0.5 text-caption font-extrabold text-ink-faint">VS</span>
         <p className="flex min-w-0 items-center justify-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
-          <EmojiIcon emoji="🙋‍♀️" size={16} /> <span className="truncate">지혜</span>
+          <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} /> <span className="truncate">{mate.nickname}</span>
         </p>
       </div>
       <div className="grid w-full flex-1 grid-cols-2 items-center divide-x divide-line/70">{children}</div>
@@ -93,14 +93,14 @@ function CompareBudget({ mate, period }: { mate: MateProfile; period: Period }) 
       verdict={pctVerdict(mate.nickname, mv.leftPct, myPct)}
     >
       <Col>
-        <WaterGlass pct={mv.leftPct / 100} width={78} height={88} />
-        <p className="text-title font-extrabold leading-none">{mv.leftPct}%</p>
-        <p className="text-caption font-medium text-ink-soft">{mv.band}</p>
-      </Col>
-      <Col>
         <WaterGlass pct={my.pct} width={78} height={88} />
         <p className="text-title font-extrabold leading-none">{myPct}%</p>
         <p className="text-caption font-medium text-ink-soft">남음 {formatKrwCompact(my.remaining)}</p>
+      </Col>
+      <Col>
+        <WaterGlass pct={mv.leftPct / 100} width={78} height={88} />
+        <p className="text-title font-extrabold leading-none">{mv.leftPct}%</p>
+        <p className="text-caption font-medium text-ink-soft">{mv.band}</p>
       </Col>
     </CompareShell>
   )
@@ -122,14 +122,14 @@ function CompareSaving({ mate, view }: { mate: MateProfile; view: SavingView }) 
         verdict={pctVerdict(mate.nickname, s.goalPct, myPct)}
       >
         <Col>
-          <SpeedGauge pct={s.goalPct / 100} width={110} height={82} />
-          <p className="text-title font-extrabold leading-none">{s.goalPct}%</p>
-          <p className="max-w-full truncate text-caption font-medium text-ink-soft">{s.goalLabel}</p>
-        </Col>
-        <Col>
           <SpeedGauge pct={my.pct} width={110} height={82} />
           <p className="text-title font-extrabold leading-none">{myPct}%</p>
           <p className="max-w-full truncate text-caption font-medium text-ink-soft">{my.title}</p>
+        </Col>
+        <Col>
+          <SpeedGauge pct={s.goalPct / 100} width={110} height={82} />
+          <p className="text-title font-extrabold leading-none">{s.goalPct}%</p>
+          <p className="max-w-full truncate text-caption font-medium text-ink-soft">{s.goalLabel}</p>
         </Col>
       </CompareShell>
     )
@@ -144,12 +144,12 @@ function CompareSaving({ mate, view }: { mate: MateProfile; view: SavingView }) 
         verdict="페이스 유지가 곧 승리!"
       >
         <Col>
-          <p className="text-[22px] font-extrabold leading-tight">{s.paceBand}</p>
-          <p className="text-caption font-medium text-ink-soft">월 저축 페이스</p>
-        </Col>
-        <Col>
           <p className="text-[22px] font-extrabold leading-tight">{formatKrwSigned(my.delta)}</p>
           <p className="text-caption font-medium text-ink-soft">이번 달 저축</p>
+        </Col>
+        <Col>
+          <p className="text-[22px] font-extrabold leading-tight">{s.paceBand}</p>
+          <p className="text-caption font-medium text-ink-soft">월 저축 페이스</p>
         </Col>
       </CompareShell>
     )
@@ -159,12 +159,12 @@ function CompareSaving({ mate, view }: { mate: MateProfile; view: SavingView }) 
   return (
     <CompareShell title="나의 자산" metricClass={METRIC_TEXT.saving} mate={mate} verdict="구간 vs 실측 — 꾸준함의 대결">
       <Col>
-        <p className="text-[22px] font-extrabold leading-tight">{s.assetBand}</p>
-        <p className="text-caption font-medium text-ink-soft">총자산 구간</p>
-      </Col>
-      <Col>
         <p className="text-[22px] font-extrabold leading-tight">{formatKrwCompact(nw.total)}</p>
         <p className="text-caption font-medium text-ink-soft">이번 달 +{formatKrwCompact(nw.monthGain)}</p>
+      </Col>
+      <Col>
+        <p className="text-[22px] font-extrabold leading-tight">{s.assetBand}</p>
+        <p className="text-caption font-medium text-ink-soft">총자산 구간</p>
       </Col>
     </CompareShell>
   )
@@ -185,17 +185,17 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
         verdict={pctVerdict(mate.nickname, inv.returnPct, my.returnPct)}
       >
         <Col>
+          <p className={`text-[34px] font-extrabold leading-none ${my.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
+            +{my.returnPct}%
+          </p>
+          <p className="text-caption font-medium text-ink-soft">원금 {formatKrwCompact(my.principalTotal)}</p>
+        </Col>
+        <Col>
           <p className={`text-[34px] font-extrabold leading-none ${inv.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
             {inv.returnPct >= 0 ? '+' : ''}
             {inv.returnPct}%
           </p>
           <p className="text-caption font-medium text-ink-soft">총 수익률</p>
-        </Col>
-        <Col>
-          <p className={`text-[34px] font-extrabold leading-none ${my.returnPct >= 0 ? 'text-rise' : 'text-fall'}`}>
-            +{my.returnPct}%
-          </p>
-          <p className="text-caption font-medium text-ink-soft">원금 {formatKrwCompact(my.principalTotal)}</p>
         </Col>
       </CompareShell>
     )
@@ -212,14 +212,14 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
         verdict="1등 자리는 각자의 스타일로"
       >
         <Col>
-          <p className="text-title font-extrabold leading-tight">{mateTop.label}</p>
-          <p className="text-[26px] font-extrabold leading-none text-invest">{Math.round(mateTop.weight * 100)}%</p>
-          <p className="text-caption font-medium text-ink-soft">비중 1위 · {inv.portfolio.length}개 분야</p>
-        </Col>
-        <Col>
           <p className="text-title font-extrabold leading-tight">{myTop.name}</p>
           <p className="text-[26px] font-extrabold leading-none text-invest">{Math.round(myTop.weight * 100)}%</p>
           <p className="text-caption font-medium text-ink-soft">비중 1위 · 5종목</p>
+        </Col>
+        <Col>
+          <p className="text-title font-extrabold leading-tight">{mateTop.label}</p>
+          <p className="text-[26px] font-extrabold leading-none text-invest">{Math.round(mateTop.weight * 100)}%</p>
+          <p className="text-caption font-medium text-ink-soft">비중 1위 · {inv.portfolio.length}개 분야</p>
         </Col>
       </CompareShell>
     )
