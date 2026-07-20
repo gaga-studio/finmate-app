@@ -205,7 +205,7 @@ function CardShell({
   return (
     <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
       {/* 제목 밴드 — 지표 테마색 틴트 (bg-current가 metricClass 색을 따른다) */}
-      <div className="w-full px-5 pb-0.5 pt-3 text-center">
+      <div className="w-full px-5 pb-0 pt-2.5 text-center">
         <p className="text-title font-bold text-ink">{title}</p>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-5 pb-2 pt-0">{children}</div>

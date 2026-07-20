@@ -126,7 +126,7 @@ export function MyPage() {
 
       <MetricCarousel
         metric={metric}
-        cardH={330}
+        cardH={314}
         sideInset={84}
         period={period}
         savingView={savingView}
