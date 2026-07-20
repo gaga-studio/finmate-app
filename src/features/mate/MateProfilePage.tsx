@@ -12,7 +12,7 @@ import { LinkedListPanel } from '../my/panels/LinkedListPanel'
 import { MetricTabs } from '../my/MetricTabs'
 import { ViewChips } from '../my/ViewChips'
 import { makeMateCardRenderer } from './MateMetricCards'
-import { BudgetCard, InvestCard, SavingCard } from '../my/cards/MetricCards'
+import { makeCompareCardRenderer } from './CompareCards'
 import { PageTitle } from '../../shared/ui/PageTitle'
 import { MateAnalysisOverlay } from './MateAnalysisOverlay'
 import { snappy } from '../../shared/motion/springs'
@@ -296,41 +296,4 @@ function MateListCard({
       </div>
     </div>
   )
-}
-
-/** 원본 폭 기준으로 렌더한 카드를 열 폭에 맞춰 통째로 축소 */
-const CARD_BASE_W = 326
-const CARD_BASE_H = 316
-
-function ScaledCard({ colW, children }: { colW: number; children: React.ReactNode }) {
-  const s = colW / CARD_BASE_W
-  return (
-    <div style={{ width: colW, height: CARD_BASE_H * s }} className="overflow-hidden">
-      <div style={{ width: CARD_BASE_W, height: CARD_BASE_H, transform: `scale(${s})`, transformOrigin: 'top left' }}>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-/** 비교 모드 캐러셀 카드 — 좌 메이트/우 나 카드가 한 슬롯에 나란히 */
-function makeCompareCardRenderer(mate: MateProfile) {
-  const renderMate = makeMateCardRenderer(mate)
-  return function renderComparePair(m: Metric, period: Period, savingView: SavingView, investView: InvestView) {
-    const colW = (CARD_BASE_W - 8) / 2
-    const myCard =
-      m === 'budget' ? (
-        <BudgetCard period={period} />
-      ) : m === 'saving' ? (
-        <SavingCard view={savingView} />
-      ) : (
-        <InvestCard view={investView} />
-      )
-    return (
-      <div className="flex h-full items-center justify-center gap-2">
-        <ScaledCard colW={colW}>{renderMate(m, period, savingView, investView)}</ScaledCard>
-        <ScaledCard colW={colW}>{myCard}</ScaledCard>
-      </div>
-    )
-  }
 }
