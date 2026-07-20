@@ -88,7 +88,7 @@ function Section({
               className="flex items-center gap-3 py-2.5 text-left"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink/5 text-title">
-                <EmojiIcon emoji={t.emoji} size={18} className="text-accent" />
+                <EmojiIcon emoji={t.emoji} avatarId={t.id} size={24} className="text-accent" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-body font-bold text-ink">{t.label}</p>

@@ -50,7 +50,7 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
             )}
             <div className="mt-1.5 flex items-center gap-1 px-0.5">
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-ink/5 text-micro">
-                <EmojiIcon emoji={s.author.emoji} size={12} className="text-ink-soft" />
+                <EmojiIcon emoji={s.author.emoji} avatarId={s.author.id} size={15} className="text-ink-soft" />
               </span>
               <span className="min-w-0 flex-1 truncate text-micro font-semibold text-ink-soft">
                 {s.author.nickname}
