@@ -11,17 +11,17 @@
 @theme {
   --font-sans: "Pretendard Variable", "Pretendard", -apple-system, "Apple SD Gothic Neo", sans-serif;
 
-  /* 지표별 액센트 — 캐러셀 전환 시 화면 틴트가 따라감 */
-  --color-budget: oklch(0.68 0.13 230);
-  --color-saving: oklch(0.7 0.14 168);
-  --color-invest: oklch(0.62 0.18 295);
+  /* 지표별 액센트 — 소비=블루, 저축=틸, 투자=바이올렛 */
+  --color-budget: #69a7ff;
+  --color-saving: #1f8f83;
+  --color-invest: #8b7cf6;
 
-  --color-surface: oklch(0.98 0.005 250);
-  --color-elevated: oklch(1 0 0);
-  --color-ink: oklch(0.25 0.02 260);
-  --color-ink-soft: oklch(0.55 0.02 260);
-  --color-ink-faint: oklch(0.72 0.015 260);
-  --color-line: oklch(0.92 0.008 260);
+  --color-surface: #fcfffe;
+  --color-elevated: #ffffff;
+  --color-ink: #17211f;
+  --color-ink-soft: #667571;
+  --color-ink-faint: #8a9a96;
+  --color-line: #e2efec;
   --color-danger: oklch(0.62 0.19 25);
 
   /* 등락 색 — 한국 증권 관례: 상승=빨강, 하락=파랑 */
@@ -29,8 +29,8 @@
   --color-fall: oklch(0.55 0.16 250);
 
   /* 포인트 전용 민트 — 미션·리워드 화폐 (면 = point, 글자·아이콘 = point-ink) */
-  --color-point: #cdf1eb;
-  --color-point-ink: oklch(0.5 0.08 180);
+  --color-point: #f2fbf9;
+  --color-point-ink: #1f8f83;
 
   /* 타이포 스케일 6단계 — 임의 px 금지, 전 화면이 이 토큰만 쓴다 */
   --text-display: 32px; /* 카드 큰 숫자 (extrabold) */
@@ -49,8 +49,8 @@
   --radius-card: 1.5rem;
   --radius-sheet: 2rem;
 
-  --shadow-float: 0 8px 30px oklch(0.3 0.05 260 / 0.12);
-  --shadow-soft: 0 2px 12px oklch(0.3 0.05 260 / 0.07);
+  --shadow-float: 10px 14px 28px var(--active-shadow), -8px -8px 20px rgba(255, 255, 255, 0.94), inset 1px 1px 0 rgba(255, 255, 255, 0.88);
+  --shadow-soft: 0 8px 18px var(--active-shadow-soft), inset 1px 1px 0 rgba(255, 255, 255, 0.78);
 }
 
 /* 활성 지표 액센트: data-metric 속성으로 런타임 스위칭.
@@ -61,15 +61,31 @@
 
 :root {
   --accent: var(--color-budget);
+  --active-soft: #eef6ff;
+  --active-softer: #f8fbff;
+  --active-shadow: rgba(105, 167, 255, 0.13);
+  --active-shadow-soft: rgba(105, 167, 255, 0.1);
 }
 [data-metric="budget"] {
   --accent: var(--color-budget);
+  --active-soft: #eef6ff;
+  --active-softer: #f8fbff;
+  --active-shadow: rgba(105, 167, 255, 0.16);
+  --active-shadow-soft: rgba(105, 167, 255, 0.11);
 }
 [data-metric="saving"] {
   --accent: var(--color-saving);
+  --active-soft: #f0faf8;
+  --active-softer: #fbfffe;
+  --active-shadow: rgba(31, 143, 131, 0.13);
+  --active-shadow-soft: rgba(31, 143, 131, 0.09);
 }
 [data-metric="invest"] {
   --accent: var(--color-invest);
+  --active-soft: #f3f1ff;
+  --active-softer: #fbfaff;
+  --active-shadow: rgba(139, 124, 246, 0.15);
+  --active-shadow-soft: rgba(139, 124, 246, 0.1);
 }
 
 html,
@@ -79,7 +95,9 @@ body {
 
 body {
   font-family: var(--font-sans);
-  background: oklch(0.94 0.01 255);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(242, 251, 249, 0.9), transparent 30rem),
+    linear-gradient(180deg, #fbfffe 0%, #ffffff 58%, #f8fcfb 100%);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
@@ -89,4 +107,29 @@ body {
 /* 숫자 정렬 (금액 카운트업 흔들림 방지) */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+@layer utilities {
+  .clay-card {
+    background: linear-gradient(145deg, #ffffff 0%, var(--active-softer) 58%, var(--active-soft) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      10px 14px 28px var(--active-shadow),
+      -8px -8px 20px rgba(255, 255, 255, 0.94),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.88);
+  }
+
+  .clay-pressed {
+    box-shadow:
+      inset 5px 5px 12px var(--active-shadow),
+      inset -5px -5px 12px rgba(255, 255, 255, 0.85);
+  }
+
+  .clay-cta {
+    background: linear-gradient(145deg, #2fb3a5 0%, #1f8f83 100%);
+    color: #ffffff;
+    box-shadow:
+      0 12px 24px rgba(31, 143, 131, 0.28),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.32);
+  }
 }

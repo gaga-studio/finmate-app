@@ -46,7 +46,7 @@ const NARRATIVE: Transaction[] = [
   { id: 'n-allow', date: '2026-07-03', merchant: '알바비', amount: 380000, category: 'income' },
   { id: 'n-carrot', date: '2026-07-12', merchant: '당근마켓 판매', amount: 45000, category: 'income', memo: '안 입는 패딩' },
   { id: 'n-interest', date: '2026-07-15', merchant: '예금 이자', amount: 12400, category: 'income' },
-  { id: 'n-etf', date: '2026-07-20', merchant: 'TIGER 미국S&P500 매수', amount: -50000, category: 'invest', memo: '첫 소액 투자' },
+  { id: 'n-stock', date: '2026-07-20', merchant: '삼성전자 소액 매수', amount: -50000, category: 'invest', memo: 'ETF 전, 개별주로만 연습 중' },
 ]
 
 function generate(): Transaction[] {
@@ -79,7 +79,7 @@ function generate(): Transaction[] {
       out.push({ id: `s-${key}`, date: key, merchant: '파리 여행 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
     }
     if (d.getDay() === 5 && i % 14 < 7 && key !== todayKey) {
-      out.push({ id: `i-${key}`, date: key, merchant: 'KODEX 200 매수', amount: -30000, category: 'invest' })
+      out.push({ id: `i-${key}`, date: key, merchant: '카카오 소액 매수', amount: -30000, category: 'invest' })
     }
     // 월급(매월 10일), 알바비(매월 3일)
     if (d.getDate() === 10 && !narrativeDates.has(key)) {

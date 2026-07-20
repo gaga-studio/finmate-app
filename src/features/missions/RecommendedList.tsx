@@ -12,10 +12,10 @@ interface Props {
 /** 추천 미션 — 해체분석 근거(reason)가 설득의 핵심. 담기 → 진행 중으로 이동 */
 export function RecommendedList({ items, onAdopt }: Props) {
   return (
-    <section className="mx-5 mt-3 rounded-card bg-elevated p-5 shadow-float">
+    <section className="clay-card mx-5 mt-3 rounded-card p-5">
       <div className="flex items-center gap-2">
         <h2 className="text-title font-extrabold text-ink">추천 미션</h2>
-        <span className="rounded-full bg-accent/10 px-2 py-0.5 text-caption font-bold text-accent">
+        <span className="rounded-full bg-point px-2 py-0.5 text-caption font-bold text-point-ink">
           내 소비 분석 기반
         </span>
       </div>
@@ -39,7 +39,7 @@ export function RecommendedList({ items, onAdopt }: Props) {
             transition={snappy}
             className="flex items-center gap-3 py-3"
           >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-section">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-point/55 text-section">
               <EmojiIcon emoji={r.emoji} size={27} className="text-point-ink" />
             </span>
             <div className="min-w-0 flex-1">
@@ -51,7 +51,7 @@ export function RecommendedList({ items, onAdopt }: Props) {
               type="button"
               onClick={() => onAdopt(r)}
               whileTap={{ scale: 0.9 }}
-              className="flex h-8 shrink-0 items-center gap-0.5 rounded-full bg-accent px-3 text-caption font-bold text-white"
+              className="clay-cta flex h-8 shrink-0 items-center gap-0.5 rounded-[16px] px-3 text-caption font-bold"
             >
               <Plus size={13} strokeWidth={3} />
               담기

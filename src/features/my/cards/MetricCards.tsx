@@ -24,10 +24,10 @@ const MONTH_LABELS = ['2월', '3월', '4월', '5월', '6월', '7월']
 
 /** 트리맵 셀용 짧은 종목명 */
 const SHORT_NAME: Record<string, string> = {
-  'TIGER S&P500': 'S&P500',
-  'KODEX 200': 'KODEX 200',
   '005930': '삼성전자',
-  'KODEX 미국나스닥': '나스닥',
+  '035720': '카카오',
+  '035420': 'NAVER',
+  '373220': 'LG엔솔',
   SPACEX: '스페이스X',
 }
 
@@ -203,9 +203,9 @@ function CardShell({
   children: React.ReactNode
 }) {
   return (
-    <div className={`flex h-full flex-col items-center overflow-hidden rounded-card bg-elevated shadow-float ${metricClass}`}>
+    <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
       {/* 제목 밴드 — 지표 테마색 틴트 (bg-current가 metricClass 색을 따른다) */}
-      <div className="w-full bg-current/25 px-5 py-2.5 text-center">
+      <div className="w-full bg-current/20 px-5 py-2.5 text-center ring-1 ring-white/60">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center px-5 pb-5 pt-2">{children}</div>
