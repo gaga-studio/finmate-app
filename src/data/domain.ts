@@ -149,14 +149,13 @@ export const STREAK_CHECK_REWARD = 50
 export const MISSIONS: Mission[] = [
   { id: 'm-save', emoji: '✈️', title: '이번 주 저축 5만원 추가', reward: 120, kind: 'saving' },
   { id: 'm-budget', emoji: '🎯', title: '일 소비 예산 5% 줄이기', reward: 80, kind: 'daily-budget' },
-  { id: 'm-quiz', emoji: '🧠', title: '매일 투자 관련 O/X 퀴즈', reward: 60, kind: 'quiz' },
 ]
 
 /** 추천 미션 — 해체분석에서 나온 근거를 함께 보여준다 */
 export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
   { id: 'r-etf', emoji: '📈', title: 'ETF 첫 시도 자금 30만원 모으기', reason: '월 10만원씩 3개월 플랜', reward: 150 },
+  { id: 'r-quiz', emoji: '📉', title: 'ETF 시작 전 투자 퀴즈', reason: '첫 ETF 매수 전 기본기 체크', reward: 60, kind: 'quiz' },
   { id: 'r-cafe', emoji: '☕️', title: '일주일 카페 2회 이하', reason: '이번 달 카페 8회 · 34,400원', reward: 80 },
-  { id: 'r-quiz', emoji: '📉', title: 'ETF 시작 전 투자 퀴즈', reason: '첫 ETF 매수 전 기본기 체크', reward: 60 },
   { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
 ]
 

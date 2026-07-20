@@ -65,6 +65,8 @@ export interface RecommendedMission {
   /** 해체분석 기반 추천 근거 — 행동화 설득의 핵심 */
   reason: string
   reward: number
+  /** 담았을 때 진행 방식 — 생략 시 simple(내일부터 판정) */
+  kind?: Mission['kind']
 }
 
 export interface RewardItem {
