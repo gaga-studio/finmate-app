@@ -23,21 +23,13 @@ export const ART = {
     'invest-portfolio': '/art/wrapped/invest-portfolio.png',
     'invest-news': '/art/wrapped/invest-news.png',
   } satisfies Record<WrappedArtKey | SavingArtKey | InvestArtKey, string>,
-  /** 피드 스토리 아트 — 신규 8장 + 마이 탭 재사용 4장 */
-  stories: {
-    'story-coffee': '/art/wrapped/budget-daily.png',
-    'story-brunch': '/art/stories/story-brunch.png',
-    'story-grocery': '/art/stories/story-grocery.png',
-    'story-shopping': '/art/wrapped/budget-weekly.png',
-    'story-concert': '/art/stories/story-concert.png',
-    'story-interior': '/art/stories/story-interior.png',
-    'story-workout': '/art/stories/story-workout.png',
-    'story-paris': '/art/wrapped/saving-monthly.png',
-    'story-housekey': '/art/stories/story-housekey.png',
-    'story-jeonse': '/art/wrapped/saving-asset.png',
-    'story-bio': '/art/stories/story-bio.png',
-    'story-green': '/art/stories/story-green.png',
-  } as Record<string, string>,
+  /** 피드 스토리 아트 — 12장 전원 전용 세트(서로 다른 그림체) */
+  stories: Object.fromEntries(
+    [
+      'coffee', 'brunch', 'grocery', 'shopping', 'concert', 'interior',
+      'workout', 'paris', 'housekey', 'jeonse', 'bio', 'green',
+    ].map((k) => [`story-${k}`, `/art/stories/story-${k}.jpg`]),
+  ) as Record<string, string>,
 }
 
 /** 에셋 미도착 시 지표 팔레트 그라디언트 폴백 */
