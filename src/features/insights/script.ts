@@ -13,7 +13,8 @@ export const INITIAL_REPLIES: Reply[] = [
     role: 'ai',
     widget: {
       type: 'options',
-      options: ['메이트/그룹 비교'],
+      options: ['질문하기', '추세 확인하기'],
+      persist: true,
     },
   },
 ]
@@ -203,6 +204,27 @@ const SCENARIOS: Scenario[] = [
         chart: { kind: 'sim-saving', monthly: SAVING_SLIDER.initial },
         widget: { type: 'slider' },
       },
+    ],
+  },
+  // 초기 옵션 — 질문하기는 자유 입력 유도, 추세 확인하기는 차트 공개 후 비교로 잇는다
+  {
+    id: 'ask-free',
+    match: /^질문하기$/,
+    replies: [
+      { role: 'ai', text: '궁금한 건 아래 입력창에 편하게 적어주세요 ✍️\n예: 이번 달 소비 어때?' },
+    ],
+  },
+  {
+    id: 'show-trend',
+    match: /^추세 확인하기$/,
+    replies: [
+      {
+        role: 'ai',
+        text: '지금 습관대로면 7월 1,400만원에서\n12월 1,637만원까지 우상향이에요 📈',
+        chart: { kind: 'projection' },
+      },
+      { role: 'ai', text: '어떤 메이트/그룹과 비교하시겠어요? 👇' },
+      { role: 'ai', widget: { type: 'compare-picker' } },
     ],
   },
   {

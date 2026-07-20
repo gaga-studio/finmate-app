@@ -33,6 +33,8 @@ function bubbleGap(reply: Reply) {
 export function useInsightChat() {
   const [messages, setMessages] = useState<InsightMsg[]>([])
   const [chart, setChart] = useState<InsightChartState>({ kind: 'projection' })
+  /** 상단 시뮬레이션 노출 여부 — '추세 확인하기' 등 chart를 실은 첫 버블에서 열린다 */
+  const [chartVisible, setChartVisible] = useState(false)
   const [typing, setTyping] = useState(false)
   /** 마지막 비교 대상 — 시나리오 버튼이 그래프를 재구성할 때 쓴다 */
   const lastTarget = useRef<string | undefined>(undefined)
@@ -44,6 +46,7 @@ export function useInsightChat() {
     setMessages((prev) => [...prev, { ...reply, id }])
     if (reply.chart) {
       const next = reply.chart
+      setChartVisible(true)
       // 맥북/습관 시뮬은 비교 중이던 메이트 선을 유지한다 — 격차 변화가 시연 포인트
       setChart((prev) => {
         if (next.kind === 'sim-macbook' && next.targetId === undefined) {
@@ -111,11 +114,13 @@ export function useInsightChat() {
 
   /** 슬라이더 위젯 → 투영 차트 실시간 갱신 */
   const setSavingMonthly = useCallback((monthly: number) => {
+    setChartVisible(true)
     setChart({ kind: 'sim-saving', monthly })
   }, [])
 
   /** 그래프 우상단 '비교' — 대상 선택/해제 (null이면 내 투영으로 복귀) */
   const setCompare = useCallback((targetId: string | null) => {
+    setChartVisible(true)
     if (targetId) lastTarget.current = targetId
     setChart(targetId ? { kind: 'compare', targetId } : { kind: 'projection' })
   }, [])
@@ -158,7 +163,10 @@ export function useInsightChat() {
   }, [messages, viewing])
 
   const openSession = useCallback((s: SavedSession) => setViewing(s), [])
-  const newChat = useCallback(() => setViewing(null), [])
+  const newChat = useCallback(() => {
+    setViewing(null)
+    setChartVisible(false)
+  }, [])
 
   // 다시보기 중에는 저장된 대화·그 대화의 마지막 차트 상태를 보여준다
   const viewingChart: InsightChartState | null = viewing
@@ -168,6 +176,7 @@ export function useInsightChat() {
   return {
     messages: viewing?.messages ?? messages,
     chart: viewingChart ?? chart,
+    chartVisible: viewing ? true : chartVisible,
     typing: viewing ? false : typing,
     send,
     setSavingMonthly,

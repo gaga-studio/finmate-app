@@ -57,7 +57,21 @@ export function InsightsPage() {
         </button>
       </header>
 
-      <ChartPanel state={chat.chart} />
+      {/* 시뮬레이션 차트 — 첫 진입엔 숨김, '추세 확인하기'가 열면 채팅이 아래로 밀리며 등장 */}
+      <AnimatePresence initial={false}>
+        {chat.chartVisible && (
+          <motion.div
+            key="chart"
+            className="overflow-hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={snappy}
+          >
+            <ChartPanel state={chat.chart} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* AI 채팅 카드 — 시뮬 카드와 구분되는 옅은 틴트의 두 번째 카드 */}
       <div className="clay-card mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card">

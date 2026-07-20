@@ -186,7 +186,7 @@ function Widget({
   if (widget.type === 'slider') return <SliderWidget onSlider={onSlider} readOnly={readOnly} />
   if (widget.type === 'quiz') return <QuizWidget quizId={widget.quizId} readOnly={readOnly} />
   if (widget.type === 'mission') return <MissionWidget missionId={widget.missionId} readOnly={readOnly} />
-  if (widget.type === 'options') return <OptionsWidget options={widget.options} onOption={onOption} readOnly={readOnly} />
+  if (widget.type === 'options') return <OptionsWidget options={widget.options} persist={widget.persist} onOption={onOption} readOnly={readOnly} />
   if (widget.type === 'compare-picker') return <ComparePickerWidget onComparePick={onComparePick} readOnly={readOnly} />
   if (widget.type === 'mission-accept') return <MissionAcceptWidget onAccept={onOption} readOnly={readOnly} />
   if (widget.type === 'scenario-switch') return <ScenarioSwitchWidget onScenario={onScenario} readOnly={readOnly} />
@@ -242,10 +242,13 @@ function DetailCardWidget({ variant }: { variant: 'saving' | 'spending' }) {
 /** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송, 한 번 고르면 잠긴다 */
 function OptionsWidget({
   options,
+  persist,
   onOption,
   readOnly,
 }: {
   options: string[]
+  /** true면 골라도 잠기지 않는다 — 초기 옵션처럼 반복 사용 가능한 버튼 */
+  persist?: boolean
   onOption: (text: string) => void
   readOnly?: boolean
 }) {
@@ -257,9 +260,9 @@ function OptionsWidget({
         <button
           key={o}
           type="button"
-          disabled={readOnly || picked !== null}
+          disabled={readOnly || (!persist && picked !== null)}
           onClick={() => {
-            setPicked(o)
+            if (!persist) setPicked(o)
             onOption(o)
           }}
           className={`rounded-full px-3.5 py-2 text-body font-bold transition-opacity ${

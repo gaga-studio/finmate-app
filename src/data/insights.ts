@@ -23,7 +23,7 @@ export type InsightWidget =
   | { type: 'mission'; missionId: string }
   | { type: 'chips'; chips: string[] }
   /** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송되는 1회용 버튼 */
-  | { type: 'options'; options: string[] }
+  | { type: 'options'; options: string[]; persist?: boolean }
   /** 메이트/그룹 선택지 — 탭하면 비교 바텀시트가 열린다 */
   | { type: 'compare-picker' }
   /** 습관 미션 제안 — '미션 수락' 버튼이 다음 단계(예상 리포트)로 잇는다 */
