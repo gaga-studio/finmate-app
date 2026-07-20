@@ -32,8 +32,8 @@ export type InsightWidget =
   | { type: 'scenario-switch' }
   /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
   | { type: 'report'; variant?: 'macbook' }
-  /** 상세 정보 카드 — 카드/혜택 추천 응답 */
-  | { type: 'detail-card'; variant: 'card' | 'benefit' }
+  /** 조언 카드 — 저축/소비 관리 팁 응답 */
+  | { type: 'detail-card'; variant: 'saving' | 'spending' }
 
 export interface InsightMsg {
   id: string
@@ -284,39 +284,37 @@ export const PRESET_SESSIONS: SavedSession[] = [
   },
 ]
 
-/* ---------- ETF 추천 상세 카드 (시연 6-2) ---------- */
+/* ---------- ETF 조언 카드 (시연 6-2) ---------- */
 
 export interface DetailCardContent {
   tag: string
   title: string
   sub: string
   rows: { emoji: string; text: string }[]
-  cta: string
+  /** 생략 시 버튼 미표시 — 조언 카드는 CTA 없음 */
+  cta?: string
 }
 
-/** 카드/혜택 상세 카드 콘텐츠 — 하나금융 계열, 30만원 목표 스케일에 맞춤 */
-export const DETAIL_CARDS: Record<'card' | 'benefit', DetailCardContent> = {
-  card: {
-    tag: '추천 카드',
-    title: '하나카드 영하나 플러스 (체크)',
-    sub: '연회비 0원 · 소비를 한 장으로',
+/** 돈관리 조언 카드 — 상품은 정면 추천 대신 소비 관리에 한 줄만 은근히 */
+export const DETAIL_CARDS: Record<'saving' | 'spending', DetailCardContent> = {
+  saving: {
+    tag: '저축 관리',
+    title: '하루 3,400원이면 충분해요',
+    sub: '월 10만원을 하루 단위로 쪼개면',
     rows: [
-      { emoji: '👀', text: '지출이 한눈에 — 소비 관리 시작' },
-      { emoji: '🚌', text: '전월실적 20만원 이상 시 대중교통·통신 캐시백' },
-      { emoji: '☕️', text: '편의점·커피 5% 할인' },
-      { emoji: '📱', text: '하나원큐 앱에서 바로 발급' },
+      { emoji: '☕️', text: '하루 3,400원 = 커피 한 잔 값' },
+      { emoji: '📅', text: '월급날 자동이체 10만원 예약' },
+      { emoji: '🏦', text: '모으는 돈은 파킹 통장에 — 하루만 둬도 이자' },
     ],
-    cta: '카드 자세히 보기',
   },
-  benefit: {
-    tag: '추천 혜택',
-    title: '하나증권 첫 거래 이벤트',
-    sub: '첫 거래 우대로 ETF 수수료 아끼기',
+  spending: {
+    tag: '소비 관리',
+    title: '새는 돈 3곳만 잡아요',
+    sub: '이번 달 소비에서 찾은 절약 포인트',
     rows: [
-      { emoji: '📊', text: '국내·해외 ETF 수수료 평생 우대' },
-      { emoji: '🎁', text: '신규 고객 투자지원금 2만원' },
-      { emoji: '📱', text: '하나원큐로 3분 만에 계좌 개설' },
+      { emoji: '☕️', text: '카페 8회 34,400원 → 주 2회면 월 +3만' },
+      { emoji: '🍱', text: '배달 대신 도시락 — 주 1회만 바꿔도 +2만' },
+      { emoji: '💳', text: '지출은 체크카드 한 장으로 — 하나카드처럼 모으면 관리 쉬워요' },
     ],
-    cta: '이벤트 자세히 보기',
   },
 }
