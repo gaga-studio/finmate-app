@@ -211,7 +211,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
           <p className="text-caption font-medium text-ink-soft">비중 1위 · {inv.portfolio.length}개 분야</p>
         </Col>
         <Col>
-          <p className="text-title font-extrabold leading-tight">S&P500</p>
+          <p className="text-title font-extrabold leading-tight">{myTop.name}</p>
           <p className="text-[26px] font-extrabold leading-none text-invest">{Math.round(myTop.weight * 100)}%</p>
           <p className="text-caption font-medium text-ink-soft">비중 1위 · 5종목</p>
         </Col>

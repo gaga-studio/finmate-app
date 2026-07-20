@@ -26,7 +26,7 @@ function styleRows(mate: MateProfile) {
   return [
     { label: '소비 1위', mate: mate.topCategories.budget[0].label, mine: myTop.merchant },
     { label: '저축 페이스', mate: mate.views.saving.paceBand, mine: `월 +${formatKrwCompact(myDelta)}` },
-    { label: '투자 스타일', mate: `${mate.views.invest.portfolio[0].label} 중심`, mine: 'S&P500 중심' },
+    { label: '투자 스타일', mate: `${mate.views.invest.portfolio[0].label} 중심`, mine: '개별주 중심' },
   ]
 }
 
