@@ -5,7 +5,8 @@ import { motion } from 'motion/react'
 import { Sparkles, X } from 'lucide-react'
 import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { dramatic } from '../../shared/motion/springs'
-import { getBudget, getInvestStatus, getSavingProgress } from '../../data/selectors'
+import { getBudget, getInvestStatus, getSavingProgress, getTopPurchases } from '../../data/selectors'
+import { formatKrwCompact } from '../../shared/format/krw'
 import type { MateProfile } from '../../data/mates'
 import { USER } from '../../data/demo'
 
@@ -15,6 +16,17 @@ const LOADING_MS = 1100
 interface Props {
   mate: MateProfile
   onClose: () => void
+}
+
+/** 스타일 비교 rows — 좌 메이트 / 우 나 */
+function styleRows(mate: MateProfile) {
+  const myTop = getTopPurchases('monthly', 1)[0]
+  const myDelta = getSavingProgress('monthly').delta
+  return [
+    { label: '소비 1위', mate: mate.topCategories.budget[0].label, mine: myTop.merchant },
+    { label: '저축 페이스', mate: mate.views.saving.paceBand, mine: `월 +${formatKrwCompact(myDelta)}` },
+    { label: '투자 스타일', mate: `${mate.views.invest.portfolio[0].label} 중심`, mine: 'S&P500 중심' },
+  ]
 }
 
 /** 분석하기 → AI 비교 분석 리포트 (로딩 도트 후 등장) */
@@ -47,17 +59,23 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
         onClick={onClose}
       />
       <motion.div
-        className="absolute inset-x-0 bottom-0 top-24 overflow-y-auto rounded-t-sheet bg-surface px-5 pb-10 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="absolute inset-x-0 bottom-0 max-h-[82%] overflow-y-auto rounded-t-sheet bg-surface px-5 pb-8 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
         transition={dramatic}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0, bottom: 0.5 }}
+        onDragEnd={(_, info) => {
+          if (info.offset.y > 90 || info.velocity.y > 700) onClose()
+        }}
         data-testid="mate-analysis"
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-ink/15" />
 
         {!ready ? (
-          <div className="flex flex-col items-center pt-20">
+          <div className="flex h-[260px] flex-col items-center justify-center">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-accent to-invest text-[22px]">
               ✨
             </span>
@@ -111,6 +129,20 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               <p className="mt-1 text-center text-caption font-bold text-ink-soft">
                 {wins >= 2 ? `3판 ${wins}승 — 내가 리드 중! 🏆` : `3판 ${3 - wins}패 — 배울 게 있는 상대!`}
               </p>
+            </div>
+
+            {/* 스타일 비교 — 서로 다른 돈 습관 한눈에 */}
+            <div className="mt-3 rounded-card bg-elevated px-5 py-4 shadow-float">
+              <p className="text-caption font-bold text-ink-faint">스타일 비교</p>
+              <div className="mt-1.5 flex flex-col">
+                {styleRows(mate).map((r) => (
+                  <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-1.5 text-center">
+                    <p className="truncate text-body font-bold text-ink">{r.mate}</p>
+                    <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
+                    <p className="truncate text-body font-bold text-ink">{r.mine}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* AI 처방 */}
