@@ -1,9 +1,8 @@
 import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
-import { ArrowRight, PiggyBank, Sparkles, Target, X } from 'lucide-react'
+import { ArrowRight, Sparkles, X } from 'lucide-react'
 import { overlayTarget } from '../../shared/ui/overlayTarget'
 import { dramatic } from '../../shared/motion/springs'
 import { getBudget, getInvestStatus, getSavingProgress, getTopPurchases } from '../../data/selectors'
@@ -122,7 +121,7 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
                 </p>
               </div>
               {rows.map((r) => (
-                <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2 text-center">
+                <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-2.5 text-center">
                   <p className={`text-section font-extrabold ${r.win ? 'text-saving' : 'text-ink-soft'}`}>{r.mine}</p>
                   <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
                   <p className={`text-section font-extrabold ${r.win ? 'text-ink-soft' : 'text-saving'}`}>{r.theirs}</p>
@@ -133,27 +132,31 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               </p>
             </div>
 
-            {/* 스타일 비교 — 서로 다른 돈 습관 한눈에 */}
-            <div className="clay-card mt-3 rounded-card px-5 py-4">
-              <p className="text-caption font-bold text-ink-faint">스타일 비교</p>
-              <div className="mt-1.5 flex flex-col">
-                {styleRows(mate).map((r) => (
-                  <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-1.5 text-center">
-                    <p className="truncate text-body font-bold text-ink">{r.mine}</p>
-                    <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
-                    <p className="truncate text-body font-bold text-ink">{r.mate}</p>
-                  </div>
-                ))}
+            {/* 스타일 비교 — bearMode에선 핵심 차이 카드와 중복이라 생략(밀도 해소) */}
+            {!bearMode && (
+              <div className="clay-card mt-3 rounded-card px-5 py-4">
+                <p className="text-caption font-bold text-ink-faint">스타일 비교</p>
+                <div className="mt-1.5 flex flex-col">
+                  {styleRows(mate).map((r) => (
+                    <div key={r.label} className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 py-1.5 text-center">
+                      <p className="truncate text-body font-bold text-ink">{r.mine}</p>
+                      <p className="w-16 text-caption font-semibold text-ink-faint">{r.label}</p>
+                      <p className="truncate text-body font-bold text-ink">{r.mate}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {bearMode && (
-              <div className="clay-card mt-3 rounded-card px-5 py-4">
+              <div className="clay-card mt-3 rounded-card px-5 py-5">
                 <p className="text-caption font-bold text-invest">핵심 차이</p>
-                <h3 className="mt-1 text-section font-extrabold leading-snug text-ink">
-                  지혜는 개별주로 감을 익히는 중, 곰손재테크는 ETF 자동이체를 이미 루틴으로 만들었어요.
+                <h3 className="mt-1.5 text-title font-extrabold leading-snug text-ink">
+                  곰손재테크의 비결은
+                  <br />
+                  ETF 자동이체 루틴
                 </h3>
-                <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
                   <MiniFact label="내 현재 단계" value="개별주 연습" tone="text-ink-soft" />
                   <ArrowRight size={16} className="text-ink-faint" />
                   <MiniFact label="다음 단계" value="ETF 첫 매수" tone="text-invest" />
@@ -168,34 +171,26 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
                 AI 처방
               </p>
               <p className="mt-1.5 text-body font-bold leading-relaxed text-ink">
-                {bearMode
-                  ? '곰손재테크는 ETF를 한 번에 크게 사기보다\n소액 자동이체로 시작했어요.'
-                  : mate.metrics.savingPct > my.saving
-                  ? `${mate.nickname}의 저축 습관이 한 수 위 —\n인사이트에서 습관 시뮬레이션 어때요? ✨`
-                  : `소비 방어는 내가 우세 —\n이 페이스면 파리가 성큼! ✈️`}
+                {bearMode ? (
+                  <>
+                    먼저 <b className="text-invest">30만원</b>을 모아 소액 자동이체로 시작해보세요 — 곰손재테크도 그렇게
+                    시작했어요.
+                  </>
+                ) : mate.metrics.savingPct > my.saving ? (
+                  `${mate.nickname}의 저축 습관이 한 수 위 —\n인사이트에서 습관 시뮬레이션 어때요? ✨`
+                ) : (
+                  `소비 방어는 내가 우세 —\n이 페이스면 파리가 성큼! ✈️`
+                )}
               </p>
-              <p className="mt-2 text-caption font-medium leading-relaxed text-ink-soft">
-                {bearMode
-                  ? `나도 30만원을 먼저 모으면 ETF 첫 시도 자금으로 충분해요 · 현재 예산 방어 ${my.budget}%`
-                  : `${mate.nickname}의 강점: ${mate.badges[0] ?? '꾸준함'} · 나의 강점: 예산 방어 ${my.budget}% 남김`}
-              </p>
+              {!bearMode && (
+                <p className="mt-2 text-caption font-medium leading-relaxed text-ink-soft">
+                  {`${mate.nickname}의 강점: ${mate.badges[0] ?? '꾸준함'} · 나의 강점: 예산 방어 ${my.budget}% 남김`}
+                </p>
+              )}
             </div>
 
             {bearMode && (
               <>
-                <div className="mt-3 grid grid-cols-2 gap-2.5">
-                  <InsightTile
-                    icon={<PiggyBank size={15} />}
-                    title="따라할 점"
-                    body="매수 종목보다 먼저 자동이체 금액을 고정했어요."
-                  />
-                  <InsightTile
-                    icon={<Target size={15} />}
-                    title="내 실행안"
-                    body="월 10만원씩 3개월, 30만원 만든 뒤 첫 ETF."
-                  />
-                </div>
-
                 <div className="clay-card mt-3 rounded-card px-5 py-4">
                   <p className="text-caption font-bold text-saving">추천 루트</p>
                   <div className="mt-3 flex items-center justify-between gap-2 text-center">
@@ -217,9 +212,6 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
                       </div>
                     ))}
                   </div>
-                  <p className="mt-3 text-caption font-medium leading-relaxed text-ink-soft">
-                    지금은 큰 금액 투자보다 첫 ETF 경험을 만들 수 있는 최소 자금부터 쌓는 게 좋아요.
-                  </p>
                 </div>
               </>
             )}
@@ -244,14 +236,3 @@ function MiniFact({ label, value, tone }: { label: string; value: string; tone: 
   )
 }
 
-function InsightTile({ icon, title, body }: { icon: ReactNode; title: string; body: string }) {
-  return (
-    <div className="clay-card rounded-2xl px-3.5 py-3">
-      <p className="flex items-center gap-1 text-caption font-bold text-invest">
-        {icon}
-        {title}
-      </p>
-      <p className="mt-1.5 text-caption font-semibold leading-relaxed text-ink">{body}</p>
-    </div>
-  )
-}
