@@ -9,7 +9,15 @@ export interface WrappedCardData {
   subline: string
   metric: Metric
   artSrc?: string
-  top3?: { key: string; label: string; value: string }[]
+  top3?: {
+    key: string
+    label: string
+    value: string
+    price?: string
+    change?: string
+    changePct?: string
+    direction?: 'up' | 'down'
+  }[]
   top3Title?: string
 }
 
@@ -61,10 +69,10 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
             style={{ background: `linear-gradient(to top, ${bg.top}, transparent)` }}
           />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 text-white">
-            <span className="rounded-full bg-white/22 px-3 py-1.5 text-caption font-bold backdrop-blur-sm">
+            <span className="rounded-full bg-white/22 px-4 py-2 text-body font-bold backdrop-blur-sm">
               {data.title}
             </span>
-            <span className="text-caption font-semibold text-white/80">{data.rangeLabel}</span>
+            <span className="text-body font-semibold text-white/80">{data.rangeLabel}</span>
           </div>
         </ArtOrGradient>
       </div>
@@ -74,22 +82,32 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
         <p className="whitespace-pre-line break-keep text-title font-extrabold leading-snug">
           {data.headline}
         </p>
-        <p className="mt-1 text-body font-medium text-white/85">{data.subline}</p>
+        <p
+          className={`mt-1 text-body font-medium ${
+            data.metric === 'invest' ? 'text-[#d9c6e8]' : 'text-white/85'
+          }`}
+        >
+          {data.subline}
+        </p>
 
         <div className="flex-1" />
 
         {data.top3 && (
-          <div className="rounded-2xl bg-white/12 p-3">
-            <p className="mb-1.5 text-caption font-bold uppercase tracking-wide text-white/75">
+          <div className={`rounded-2xl bg-white/12 ${data.metric === 'invest' ? 'px-3 py-2.5' : 'p-3'}`}>
+            <p className={`text-caption font-bold uppercase tracking-wide text-white/75 ${data.metric === 'invest' ? 'mb-1' : 'mb-1.5'}`}>
               {data.top3Title}
             </p>
-            {data.top3.map((row, i) => (
-              <div key={row.key} className="flex items-center gap-2 py-[3px] text-body font-semibold">
-                <span className="w-4 text-white/70">{i + 1}</span>
-                <span className="flex flex-1 items-center gap-1.5 truncate"><LabelIcon label={row.label} /></span>
-                <span className="font-bold">{row.value}</span>
-              </div>
-            ))}
+            {data.metric === 'invest'
+              ? data.top3.map((row, i) => <StockRow key={row.key} row={row} rank={i + 1} />)
+              : data.top3.map((row, i) => (
+                  <div key={row.key} className="flex items-center gap-2 py-[3px] text-body font-semibold">
+                    <span className="w-4 text-white/70">{i + 1}</span>
+                    <span className="flex flex-1 items-center gap-1.5 truncate">
+                      <LabelIcon label={row.label} />
+                    </span>
+                    <span className="font-bold">{row.value}</span>
+                  </div>
+                ))}
           </div>
         )}
 
@@ -110,5 +128,30 @@ function LabelIcon({ label }: { label: string }) {
       <EmojiIcon emoji={m[1]} size={18} className="shrink-0 opacity-90" />
       <span className="truncate">{m[2]}</span>
     </>
+  )
+}
+
+function StockRow({
+  row,
+  rank,
+}: {
+  row: NonNullable<WrappedCardData['top3']>[number]
+  rank: number
+}) {
+  const isDown = row.direction === 'down'
+  const tone = isDown ? 'text-[#6fa2ff]' : 'text-[#ff8a6a]'
+
+  return (
+    <div className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-start gap-x-2 gap-y-0.5 py-1 text-body font-semibold">
+      <span className="pt-0.5 text-white/60">{rank}</span>
+      <span className="truncate text-white">{row.label}</span>
+      <span className="text-right font-bold text-white">{row.price ?? row.value}</span>
+      <span />
+      <span />
+      <span className={`flex items-center justify-end gap-2 text-caption font-bold leading-none ${tone}`}>
+        <span>{row.change ?? row.value}</span>
+        {row.changePct && <span>{row.changePct}</span>}
+      </span>
+    </div>
   )
 }

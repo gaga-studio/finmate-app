@@ -66,11 +66,11 @@ export interface HabitProjection {
  * ⚠️ 공식 교체 지점: 상세 공식·근거는 추후 제공 예정 — 그때 이 함수 내부만 바꾸면
  * 차트·리포트·카피가 전부 따라온다.
  *
- * 현재 플레이스홀더 근거: 이번 달 실측 현금 흐름(저축 39.39만 + 투자 적립 8만
- * = 월 +47.39만)이 유지된다고 가정한 선형 투영. 시작점은 현재 총자산 1,400만.
+ * 현재 플레이스홀더 근거: 이번 달 실측 현금 흐름(저축 39.39만 + 투자 적립 8만)에
+ * 생활비·시장 변동을 섞은 월별 투영. 시작점은 현재 총자산 1,400만.
  */
-/** 월별 흐름의 출렁임 패턴 — 합이 정확히 5.00이라 6개월 총증가는 monthlyFlow×5로 보존된다 */
-const WOBBLE = [1.1, 0.8, 1.18, 0.89, 1.03]
+/** 월별 흐름의 출렁임 패턴 — 정체/소폭 하락 뒤 완만히 회복하는 현실형 데모 곡선 */
+const WOBBLE = [0.44, -0.12, 0.62, 0.55, 0.72]
 
 export function getHabitProjection(): HabitProjection {
   const start = MY_ASSETS.reduce((s, a) => s + a.value, 0)
@@ -80,9 +80,8 @@ export function getHabitProjection(): HabitProjection {
   ).reduce((s, t) => s + -t.amount, 0)
   const curve = [start]
   for (const w of WOBBLE) curve.push(curve[curve.length - 1] + Math.round(monthlyFlow * w))
-  // 반올림 오차 보정 — 끝값은 정확히 start + monthlyFlow×5
-  curve[curve.length - 1] = start + monthlyFlow * 5
-  return { curve, monthlyFlow, totalGain: monthlyFlow * 5 }
+  const totalGain = curve[curve.length - 1] - start
+  return { curve, monthlyFlow, totalGain }
 }
 
 /** 투영 차트 x축 — 7월(지금)부터 6개월 */

@@ -4,11 +4,11 @@ import { Home, Lightbulb, NotebookPen, Target, Users } from 'lucide-react'
 import { snappy } from '../motion/springs'
 
 const TABS = [
-  { to: '/feed', label: '피드', Icon: Users },
-  { to: '/insights', label: '인사이트', Icon: Lightbulb },
+  { to: '/feed', label: '메이트', Icon: Users },
+  { to: '/insights', label: '분석', Icon: Lightbulb },
   { to: '/my', label: '마이', Icon: Home },
   { to: '/missions', label: '미션', Icon: Target },
-  { to: '/diary', label: '다이어리', Icon: NotebookPen },
+  { to: '/diary', label: '기록', Icon: NotebookPen },
 ] as const
 
 export function TabBar() {

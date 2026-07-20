@@ -124,7 +124,7 @@ export const WRAPPED: Record<Metric, Record<Period, WrappedContent>> = {
     weekly: {
       metric: 'invest',
       period: 'weekly',
-      title: '7월 4주차의 투자',
+      title: '투자',
       headline: '개별주로만 연습 중,\nETF는 아직 고민!',
       subline: '삼성전자 소액 매수 · ETF 첫 시도 준비',
       artKey: 'invest-weekly',

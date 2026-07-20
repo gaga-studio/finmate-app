@@ -131,6 +131,10 @@ export interface FeedGroup {
 export interface StoryRow {
   label: string
   value: string
+  price?: string
+  change?: string
+  changePct?: string
+  direction?: 'up' | 'down'
 }
 
 /** 오늘의 스토리 — 다른 유저가 공유한 카드 (익명 닉네임) */

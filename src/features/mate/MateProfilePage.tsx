@@ -134,13 +134,26 @@ export function MateProfilePage() {
             </div>
 
             {/* 연동 리스트 2열 — 좌 메이트(카테고리·구간) / 우 나(실측, 뷰 따라 전환) */}
-            <section className="mt-3 px-5">
-              <div className="mb-1.5 grid grid-cols-2 gap-3 text-center">
-                <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={20} className="text-accent" /> {mate.nickname}
+            <section className="mt-4 px-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-px flex-1 bg-line/80" />
+                <span className="rounded-full bg-ink/5 px-2.5 py-1 text-caption font-extrabold text-ink-faint">
+                  비교 요약
+                </span>
+                <span className="h-px flex-1 bg-line/80" />
+              </div>
+              <div className="mb-2.5 grid grid-cols-2 gap-3 text-center">
+                <p className="mx-auto grid w-full max-w-[132px] grid-cols-[32px_minmax(0,1fr)] items-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-white shadow-soft">
+                    <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={22} className="text-accent" />
+                  </span>
+                  <span className="truncate">{mate.nickname}</span>
                 </p>
-                <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji="🙋‍♀️" size={12} className="text-accent" /> 지혜
+                <p className="mx-auto grid w-full max-w-[132px] grid-cols-[32px_minmax(0,1fr)] items-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-white shadow-soft">
+                    <EmojiIcon emoji="🙋‍♀️" size={16} className="text-accent" />
+                  </span>
+                  <span className="truncate">지혜</span>
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -153,7 +166,12 @@ export function MateProfilePage() {
                   />
                 </div>
                 <div className="h-[248px]">
-                  <LinkedListPanel metric={metric} period={period} savingView={savingView} investView={investView} />
+                  <LinkedListPanel
+                    metric={metric}
+                    period={period}
+                    savingView={savingView}
+                    investView={investView}
+                  />
                 </div>
               </div>
             </section>
@@ -277,18 +295,21 @@ function MateListCard({
 }) {
   return (
     <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
-      <p className={`mb-1 font-bold text-ink ${dense ? 'text-body' : 'text-section'}`}>{title}</p>
+      <p className="mb-1 text-section font-bold text-ink">{title}</p>
       <div className="flex flex-1 flex-col justify-evenly">
         {items.map((row, i) => (
-          <div key={row.label} className="flex items-center gap-2">
-            <span className="w-3.5 text-caption font-extrabold text-ink-faint">{i + 1}</span>
-            <span className={`flex shrink-0 items-center justify-center rounded-lg bg-point/55 ${dense ? 'h-7 w-7' : 'h-8 w-8'}`}>
-              <EmojiIcon emoji={row.emoji} size={dense ? 25 : 29} className="text-ink-soft" />
+          <div key={row.label} className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2">
+            <span
+              className={`flex shrink-0 items-center justify-center rounded-lg bg-ink/5 font-extrabold text-ink-soft ${
+                dense ? 'h-7 w-7 text-body' : 'h-8 w-8 text-body'
+              }`}
+            >
+              {i + 1}
             </span>
-            <span className={`min-w-0 flex-1 truncate font-semibold text-ink ${dense ? 'text-caption' : 'text-body'}`}>
+            <span className="min-w-0 flex-1 truncate text-body font-semibold text-ink">
               {row.label}
             </span>
-            <span className={`shrink-0 font-bold ${dense ? 'text-caption' : 'text-body'} ${row.valueClass ?? metricClass}`}>
+            <span className={`shrink-0 text-body font-bold ${row.valueClass ?? metricClass}`}>
               {row.value}
             </span>
           </div>
