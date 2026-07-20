@@ -144,6 +144,38 @@ function ChartCarousel({ cards }: { cards: React.ReactNode[] }) {
     animate(x, -clamped * step, snappy)
   }
 
+  // 데스크톱 트랙패드 가로 휠 지원 — MetricCarousel과 같은 누적·쿨다운 방식
+  const wheelRef = useRef({ idx, snapTo })
+  wheelRef.current = { idx, snapTo }
+  useLayoutEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    let accum = 0
+    let cooling = false
+    let idleTimer: number | undefined
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return
+      e.preventDefault()
+      if (cooling) return
+      window.clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(() => {
+        accum = 0
+      }, 200)
+      accum += e.deltaX
+      if (Math.abs(accum) > 60) {
+        const dir = accum > 0 ? 1 : -1
+        accum = 0
+        cooling = true
+        window.setTimeout(() => {
+          cooling = false
+        }, 450)
+        wheelRef.current.snapTo(wheelRef.current.idx + dir)
+      }
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [])
+
   return (
     <div className="mt-2">
       <div
