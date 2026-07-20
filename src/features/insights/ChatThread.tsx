@@ -37,16 +37,10 @@ interface Props {
 
 export function ChatThread({ messages, typing, onChip, onOption, onSlider, onReport, onComparePick, onScenario, readOnly }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const lastUserRef = useRef<HTMLDivElement | null>(null)
-  const lastUserIdx = messages.map((m) => m.role).lastIndexOf('user')
 
-  // 앵커 클램프: 답변이 화면에 다 들어가면 맨아래 추적, 길면 마지막 질문을 상단에 고정
   useEffect(() => {
     const el = scrollRef.current
-    if (!el) return
-    const bottom = el.scrollHeight - el.clientHeight
-    const anchorTop = lastUserRef.current ? lastUserRef.current.offsetTop - 8 : Infinity
-    el.scrollTo({ top: Math.min(bottom, anchorTop), behavior: 'smooth' })
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
   }, [messages.length, typing])
 
   return (
@@ -59,7 +53,6 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
           <Bubble
             key={m.id}
             msg={m}
-            innerRef={i === lastUserIdx ? lastUserRef : undefined}
             showAvatar={m.role === 'ai' && messages[i - 1]?.role !== 'ai'}
             onChip={onChip}
             onOption={onOption}
@@ -78,7 +71,6 @@ export function ChatThread({ messages, typing, onChip, onOption, onSlider, onRep
 
 function Bubble({
   msg,
-  innerRef,
   showAvatar,
   onChip,
   onOption,
@@ -89,8 +81,6 @@ function Bubble({
   readOnly,
 }: {
   msg: InsightMsg
-  /** 스크롤 앵커용 — 마지막 유저 메시지에만 전달된다 */
-  innerRef?: React.RefObject<HTMLDivElement | null>
   showAvatar: boolean
   onChip: (text: string) => void
   onOption: (text: string) => void
@@ -103,7 +93,6 @@ function Bubble({
   if (msg.role === 'user') {
     return (
       <motion.div
-        ref={innerRef}
         className="max-w-[78%] self-end rounded-2xl rounded-tr-md bg-accent px-3.5 py-2.5 text-body font-medium text-white"
         initial={{ opacity: 0, y: 10, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
