@@ -1,3 +1,4 @@
+import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { AnimatePresence, motion } from 'motion/react'
 import { Plus } from 'lucide-react'
 import { snappy } from '../../shared/motion/springs'
@@ -39,7 +40,7 @@ export function RecommendedList({ items, onAdopt }: Props) {
             className="flex items-center gap-3 py-3"
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-section">
-              {r.emoji}
+              <EmojiIcon emoji={r.emoji} size={17} className="text-point-ink" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-body font-semibold text-ink">{r.title}</p>
