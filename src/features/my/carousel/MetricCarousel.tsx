@@ -21,8 +21,8 @@ interface Props {
   sideInset?: number
 }
 
-const DEFAULT_CARD_H = 348
-const DEFAULT_SIDE_INSET = 88
+const DEFAULT_CARD_H = 316
+const DEFAULT_SIDE_INSET = 104
 const LIFT_MAX = 130
 const LIFT_THRESHOLD = 70
 const AXIS_LOCK = 12
