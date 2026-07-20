@@ -107,7 +107,7 @@ function LabelIcon({ label }: { label: string }) {
   if (!m) return <>{label}</>
   return (
     <>
-      <EmojiIcon emoji={m[1]} size={16} className="shrink-0 opacity-90" />
+      <EmojiIcon emoji={m[1]} size={18} className="shrink-0 opacity-90" />
       <span className="truncate">{m[2]}</span>
     </>
   )

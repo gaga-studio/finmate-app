@@ -137,7 +137,7 @@ export function MateProfilePage() {
             <section className="mt-3 px-5">
               <div className="mb-1.5 grid grid-cols-2 gap-3 text-center">
                 <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
-                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={18} className="text-accent" /> {mate.nickname}
+                  <EmojiIcon emoji={mate.emoji} avatarId={mate.id} size={20} className="text-accent" /> {mate.nickname}
                 </p>
                 <p className="flex items-center justify-center gap-1 text-caption font-extrabold text-ink">
                   <EmojiIcon emoji="🙋‍♀️" size={12} className="text-accent" /> 지혜
@@ -283,7 +283,7 @@ function MateListCard({
           <div key={row.label} className="flex items-center gap-2">
             <span className="w-3.5 text-caption font-extrabold text-ink-faint">{i + 1}</span>
             <span className={`flex shrink-0 items-center justify-center rounded-lg bg-point/55 ${dense ? 'h-7 w-7' : 'h-8 w-8'}`}>
-              <EmojiIcon emoji={row.emoji} size={dense ? 20 : 23} className="text-ink-soft" />
+              <EmojiIcon emoji={row.emoji} size={dense ? 25 : 29} className="text-ink-soft" />
             </span>
             <span className={`min-w-0 flex-1 truncate font-semibold text-ink ${dense ? 'text-caption' : 'text-body'}`}>
               {row.label}

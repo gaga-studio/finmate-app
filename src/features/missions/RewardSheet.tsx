@@ -45,7 +45,7 @@ export function RewardSheet({ points, onClose }: Props) {
             return (
               <div key={item.id} className="flex items-center gap-3 py-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ink/5 text-title">
-                  <EmojiIcon emoji={item.emoji} size={29} className="text-point-ink" />
+                  <EmojiIcon emoji={item.emoji} size={36} className="text-point-ink" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-body font-semibold text-ink">{item.title}</p>
