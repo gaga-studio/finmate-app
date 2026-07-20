@@ -63,7 +63,7 @@ const SCENARIOS: Scenario[] = [
     id: 'continue',
     match: /^이어서하기$/,
     replies: [
-      { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?\n예: 30만원 모아서 ETF 시도 해보고 싶어' },
+      { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?' },
     ],
   },
   // 시연 6-2 추천 행동 — 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
