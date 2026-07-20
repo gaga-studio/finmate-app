@@ -47,6 +47,11 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                   palette={s.metric}
                   className="aspect-[3/4] w-full"
                 >
+                  {/* 좋아요 뱃지 — 작성자 줄의 폭을 닉네임에 양보하고 썸네일 위로 */}
+                  <span className="absolute right-1.5 top-1.5 flex items-center gap-0.5 rounded-full bg-black/45 px-1.5 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
+                    <Heart size={10} strokeWidth={2.4} fill="currentColor" />
+                    {s.likes}
+                  </span>
                   <p className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-2 pt-5 text-micro font-bold leading-tight text-white">
                     {s.headline.split('\n')[0].replace(/[,.]$/, '')}…
                   </p>
@@ -59,10 +64,6 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
               </span>
               <span className="min-w-0 flex-1 truncate text-body font-extrabold text-ink-soft">
                 {s.author.nickname}
-              </span>
-              <span className="flex shrink-0 items-center gap-0.5 text-micro font-semibold text-ink-soft">
-                <Heart size={11} strokeWidth={2.4} />
-                {s.likes}
               </span>
             </div>
           </motion.div>
