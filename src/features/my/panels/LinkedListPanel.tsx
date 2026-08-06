@@ -4,8 +4,10 @@ import { EmojiIcon } from '../../../shared/ui/EmojiIcon'
 import { snappy } from '../../../shared/motion/springs'
 import { CATEGORY_META } from '../../../data/categories'
 import { HOLDINGS, STOCK_NEWS } from '../../../data/domain'
-import { getIncomeSources, getNetWorth, getPortfolio, getTopPurchases } from '../../../data/selectors'
+import { getIncomeSources, getNetWorth, getPortfolio } from '../../../data/selectors'
+import { useData } from '../../../data/source'
 import { formatKrwCompact } from '../../../shared/format/krw'
+import type { Transaction } from '../../../data/types'
 import type { InvestView, Metric, Period, SavingView } from '../myState'
 
 /** 메이트 쪽 getMateListRows와 같은 매핑 — 비교 2열의 좌우 제목이 전 뷰에서 일치한다 */
@@ -42,6 +44,7 @@ export function LinkedListPanel({
   /** 좁은 2열(메이트 비교)에서 부제를 숨겨 '…' 잘림을 막는다 */
   hideSub?: boolean
 }) {
+  const topPurchases = useData().topPurchases
   return (
     <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
       <p className="mb-1 text-section font-bold text-ink">{panelTitle(metric, savingView, investView)}</p>
@@ -59,7 +62,7 @@ export function LinkedListPanel({
           animate={{ opacity: 1, y: 0, transition: { staggerChildren: 0.04 } }}
           exit={{ opacity: 0, y: -8 }}
         >
-          {rows(metric, period, savingView, investView).map((row, i) => (
+          {rows(metric, period, savingView, investView, topPurchases).map((row, i) => (
             <motion.div
               key={row.key}
               initial={{ opacity: 0, x: 14 }}
@@ -87,9 +90,19 @@ function rank(i: number): React.ReactNode {
   return <span className="text-body font-extrabold text-ink-soft">{i + 1}</span>
 }
 
-function rows(metric: Metric, period: Period, savingView: SavingView, investView: InvestView): Row[] {
+/**
+ * 소비 탑5만 데이터 소스에서 받는다 — 목이든 서버든 같은 모양이 온다.
+ * 나머지(자산·포트폴리오·수입원)는 아직 목이다. 서버 API가 생기면 같은 방식으로 넘긴다.
+ */
+function rows(
+  metric: Metric,
+  period: Period,
+  savingView: SavingView,
+  investView: InvestView,
+  topPurchases: (p: Period, n?: number) => Transaction[],
+): Row[] {
   if (metric === 'budget') {
-    return getTopPurchases(period).map((t, i) => {
+    return topPurchases(period).map((t, i) => {
       const meta = CATEGORY_META[t.category]
       return {
         key: t.id,

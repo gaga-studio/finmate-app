@@ -1,9 +1,18 @@
 import { DEMO_TODAY } from './demo'
 import { addDays, toKey } from './dates'
 import { amountBetween, mulberry32, pick } from './seed'
-import type { Category, Transaction } from './types'
+import type { Transaction } from './types'
 
-const MERCHANTS: Record<Exclude<Category, 'saving' | 'invest' | 'income'>, string[]> = {
+/**
+ * 목 데이터가 만드는 지출 분류.
+ *
+ * 전체 Category는 16종이지만 목은 6종만 만든다. 촬영용 화면을 채우는 게 목적이고,
+ * 주거·보험 같은 항목은 하루 단위 화면에 잘 나오지 않는다.
+ * 서버 모드에서는 16종이 전부 온다.
+ */
+type MockSpendCategory = 'food' | 'cafe' | 'transport' | 'shopping' | 'subscription' | 'entertainment'
+
+const MERCHANTS: Record<MockSpendCategory, string[]> = {
   food: ['김밥천국', '맘스터치', '한솥도시락', '배민 주문', '학식', 'GS25', '역전우동'],
   cafe: ['스타벅스', '메가커피', '컴포즈커피', '투썸플레이스', '블루보틀'],
   transport: ['지하철', '버스', '따릉이', '카카오T'],

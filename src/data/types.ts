@@ -5,6 +5,13 @@ export type SavingView = 'goal' | 'monthly' | 'asset'
 /** 투자 지표 전용 세로축 */
 export type InvestView = 'status' | 'portfolio' | 'news'
 
+/**
+ * 지출 분류.
+ *
+ * 처음엔 9종이었다. 서버가 실제 거래 데이터를 적재하면서 대분류 15종이 들어왔고,
+ * 교육·의료·주거·보험·여행이 갈 곳이 없었다. 접어 넣으면 월세가 '쇼핑'이 되고,
+ * 그 화면을 근거로 만드는 미션과 또래 비교까지 틀어진다. 그래서 넓혔다.
+ */
 export type Category =
   | 'food'
   | 'cafe'
@@ -12,6 +19,13 @@ export type Category =
   | 'shopping'
   | 'subscription'
   | 'entertainment'
+  | 'living'
+  | 'housing'
+  | 'education'
+  | 'beauty'
+  | 'health'
+  | 'insurance'
+  | 'travel'
   | 'saving'
   | 'invest'
   | 'income'

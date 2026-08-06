@@ -5,7 +5,8 @@ import { MetricCarousel } from './carousel/MetricCarousel'
 import { ArtCardThumb } from './panels/ArtCardThumb'
 import { LinkedListPanel } from './panels/LinkedListPanel'
 import { WrappedOverlay } from './wrapped/WrappedOverlay'
-import { DEMO_TODAY, USER } from '../../data/demo'
+import { USER } from '../../data/demo'
+import { useData } from '../../data/source'
 import { UserAvatar } from '../../shared/profile/UserAvatar'
 import { MetricTabs } from './MetricTabs'
 import { ViewChips } from './ViewChips'
@@ -59,6 +60,7 @@ function parseCardParam(raw: string | null): OpenCard | null {
 }
 
 export function MyPage() {
+  const { today } = useData()
   const [metric, setMetric] = useState<Metric>('budget')
   const [period, setPeriod] = useState<Period>('daily')
   const [savingView, setSavingView] = useState<SavingView>('goal')
@@ -108,7 +110,7 @@ export function MyPage() {
       <header className="relative flex items-center justify-between px-5 pb-2 pt-14">
         <div>
           <p className="text-caption font-semibold text-ink-faint">
-            {DEMO_TODAY.getMonth() + 1}월 {DEMO_TODAY.getDate()}일 {WEEKDAY[DEMO_TODAY.getDay()]}요일
+            {today.getMonth() + 1}월 {today.getDate()}일 {WEEKDAY[today.getDay()]}요일
           </p>
           <h1 className="mt-0.5 text-section font-bold text-ink-soft">
             안녕, {USER.nickname}

@@ -9,7 +9,6 @@ import { AnimatedNumber } from '../../../shared/ui/AnimatedNumber'
 import { formatKrw, formatKrwCompact, formatKrwSigned } from '../../../shared/format/krw'
 import { MARKET_INDICES } from '../../../data/domain'
 import {
-  getBudget,
   getInvestStatus,
   getNetWorth,
   getPortfolio,
@@ -17,6 +16,7 @@ import {
   getSavingProgress,
 } from '../../../data/selectors'
 import { METRIC_TEXT, type InvestView, type SavingView } from '../myState'
+import { useData } from '../../../data/source'
 import type { Period } from '../../../data/types'
 
 /** 월별 추이 차트 공용 x축 라벨 (2~7월) */
@@ -38,7 +38,8 @@ const BUDGET_TITLE: Record<Period, string> = {
 }
 
 export function BudgetCard({ period }: { period: Period }) {
-  const b = getBudget(period)
+  // 목이든 서버든 같은 모양이 온다. 어느 쪽인지는 이 컴포넌트가 알 필요가 없다.
+  const b = useData().budget(period)
   return (
     <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
       <WaterGlass pct={b.pct} width={124} height={140} />
