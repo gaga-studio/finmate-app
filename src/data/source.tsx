@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { api, ensureSession, type ServerOverview } from '../api/client'
+import { api, ensureSession, isServerMode, type ServerOverview } from '../api/client'
 import { DEMO_TODAY } from './demo'
 import { getBudget as mockBudget, getTopPurchases as mockTop } from './selectors'
 import type { Period, Transaction } from './types'
 
-/** 기존 시연은 명시적으로 prototype을 선택한다. 서버 모드는 오류를 화면에 표시한다. */
+/** 기존 화면과 시연 모드를 유지하며 VITE_API_URL이 있을 때 소비 데이터만 서버에서 읽는다. */
 
 interface BudgetView {
   limit: number
@@ -18,7 +18,8 @@ interface DataSource {
   /** 서버에서 읽고 있으면 true. 화면이 밝힐 수 있어야 한다. */
   server: boolean
   error: string | null
-  budget(period: Period): BudgetView
+  reload(): void
+  budget(period: Period): BudgetView | null
   topPurchases(period: Period, n?: number): Transaction[]
   /**
    * 화면의 "오늘".
@@ -40,13 +41,17 @@ function parseDate(key: string): Date {
   return new Date(y, m - 1, d)
 }
 
-export function DataSourceProvider({ children, prototype = false }: { children: ReactNode; prototype?: boolean }) {
+export function DataSourceProvider({ children }: { children: ReactNode }) {
+  const server = isServerMode()
   const [loaded, setLoaded] = useState<Record<string, ServerOverview> | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [revision, setRevision] = useState(0)
 
   useEffect(() => {
-    if (prototype) return
+    if (!server) return
     let cancelled = false
+    setLoaded(null)
+    setError(null)
     void (async () => {
       try {
         await ensureSession()
@@ -61,27 +66,20 @@ export function DataSourceProvider({ children, prototype = false }: { children: 
     return () => {
       cancelled = true
     }
-  }, [prototype])
-
-  if (!prototype && error) return <div role="alert">데이터를 불러오지 못했습니다. 서버 연결을 확인한 뒤 새로고침해 주세요.</div>
-  if (!prototype && loaded === null) return <div role="status">데이터를 불러오는 중입니다.</div>
-  const server = !prototype && loaded !== null
+  }, [server, revision])
 
   const value: DataSource = {
     // 목 모드는 동기라 언제나 준비돼 있다. 서버 모드만 기다린다.
-    ready: prototype || loaded !== null || error !== null,
+    ready: !server || loaded !== null || error !== null,
     server,
     error,
-    today: server ? parseDate(loaded.daily.referenceDate) : DEMO_TODAY,
-    budget: (period) => {
-      if (!server) return mockBudget(period)
-      const budget = loaded[period].budget
-      if (!budget) throw new Error('자료가 없는 기간입니다')
-      return budget
-    },
+    reload: () => setRevision(value => value + 1),
+    today: server && loaded ? parseDate(loaded.daily.referenceDate) : DEMO_TODAY,
+    // 오류·로딩·NO_DATA는 목 금액이나 0원으로 대체하지 않는다.
+    budget: (period) => server ? loaded?.[period]?.budget ?? null : mockBudget(period),
     topPurchases: (period, n = 5) =>
       server
-        ? loaded[period].topSpends.slice(0, n).map((s, i) => ({
+        ? (loaded?.[period]?.topSpends ?? []).slice(0, n).map((s, i) => ({
             id: `srv-${period}-${i}`,
             date: s.date,
             merchant: s.merchant,

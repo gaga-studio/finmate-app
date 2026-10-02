@@ -44,7 +44,13 @@ export function LinkedListPanel({
   /** 좁은 2열(메이트 비교)에서 부제를 숨겨 '…' 잘림을 막는다 */
   hideSub?: boolean
 }) {
-  const topPurchases = useData().topPurchases
+  const data = useData()
+  const topPurchases = data.topPurchases
+  const emptyMessage = metric === 'budget' && data.server && topPurchases(period).length === 0
+    ? data.error ? '소비 내역을 불러오지 못했습니다.'
+      : !data.ready ? '소비 내역을 불러오는 중입니다.'
+        : data.budget(period) === null ? '자료가 없는 기간입니다.' : '이 기간에는 소비 내역이 없습니다.'
+    : null
   return (
     <div className="clay-card flex h-full flex-col rounded-card px-3.5 py-3">
       <p className="mb-1 text-section font-bold text-ink">{panelTitle(metric, savingView, investView)}</p>
@@ -62,7 +68,7 @@ export function LinkedListPanel({
           animate={{ opacity: 1, y: 0, transition: { staggerChildren: 0.04 } }}
           exit={{ opacity: 0, y: -8 }}
         >
-          {rows(metric, period, savingView, investView, topPurchases).map((row, i) => (
+          {emptyMessage ? <p className="text-center text-body text-ink-soft">{emptyMessage}</p> : rows(metric, period, savingView, investView, topPurchases).map((row, i) => (
             <motion.div
               key={row.key}
               initial={{ opacity: 0, x: 14 }}

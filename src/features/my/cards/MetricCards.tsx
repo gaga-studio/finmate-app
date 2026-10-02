@@ -38,10 +38,23 @@ const BUDGET_TITLE: Record<Period, string> = {
 }
 
 export function BudgetCard({ period }: { period: Period }) {
-  // 목이든 서버든 같은 모양이 온다. 어느 쪽인지는 이 컴포넌트가 알 필요가 없다.
-  const b = useData().budget(period)
+  const data = useData()
+  const b = data.budget(period)
+  const title = period === 'monthly' ? `${data.today.getMonth() + 1}월 예산` : BUDGET_TITLE[period]
+  if (!b) {
+    return (
+      <CardShell title={title} metricClass={METRIC_TEXT.budget}>
+        {data.error ? <>
+          <p role="alert" className="text-center text-body font-medium text-ink-soft">소비 데이터를 불러오지 못했습니다.</p>
+          <button type="button" onClick={data.reload} className="clay-pressed mt-3 rounded-full px-4 py-2 text-body font-semibold text-budget">다시 불러오기</button>
+        </> : <p role="status" className="text-center text-body font-medium text-ink-soft">
+          {data.ready ? '자료가 없는 기간입니다.' : '소비 데이터를 불러오는 중입니다.'}
+        </p>}
+      </CardShell>
+    )
+  }
   return (
-    <CardShell title={BUDGET_TITLE[period]} metricClass={METRIC_TEXT.budget}>
+    <CardShell title={title} metricClass={METRIC_TEXT.budget}>
       <WaterGlass pct={b.pct} width={124} height={140} />
       <p className="mt-1 text-display font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
