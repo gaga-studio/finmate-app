@@ -1,0 +1,32 @@
+import { expect, test } from '@playwright/test'
+
+test('합성 데모 시작 → 기간별 실제 원장 조회 → 같은 달의 비교 → 미적재 기간', async ({ page }, testInfo) => {
+  await page.goto('/')
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('link', { name: '본문으로 이동' })).toBeFocused()
+  await page.getByRole('button', { name: '데모 시작' }).click()
+  await expect(page.getByRole('heading', { name: '내 소비 기록' })).toBeVisible()
+  await expect(page.getByText('합성 데이터', { exact: true })).toBeVisible()
+  await page.getByLabel('기준일').fill('2026-06-30')
+  await page.getByLabel('조회 기간').selectOption('monthly')
+  await expect(page.getByText('2026-06-01 ~ 2026-06-30', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '같은 소득대의 6월 소비' })).toBeVisible()
+  await expect(page.getByText('데모 저녁', { exact: true })).toBeVisible()
+  await expect(page.getByText('24명', { exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await page.screenshot({ path: `artifacts/spending-${testInfo.project.name}.png`, fullPage: true })
+  await page.getByLabel('기준일').fill('2026-08-31')
+  await expect(page.getByRole('status')).toContainText('자료가 없는 기간')
+  await expect(page.getByRole('table', { name: '거래 내역' })).toHaveCount(0)
+})
+
+test('서버 실패를 모의 금액으로 대체하지 않는다', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: '데모 시작' }).click()
+  await expect(page.getByRole('heading', { name: '내 소비 기록' })).toBeVisible()
+  await page.route('**/api/v1/me/overview*', route => route.fulfill({ status: 503, body: '{}' }))
+  await page.getByLabel('기준일').fill('2026-06-30')
+  await expect(page.getByRole('alert')).toContainText('불러오지 못했습니다')
+  await expect(page.getByRole('table', { name: '거래 내역' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '다시 불러오기' })).toBeVisible()
+})

@@ -1,19 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { api, ensureSession, isServerMode, type ServerOverview } from '../api/client'
+import { api, ensureSession, type ServerOverview } from '../api/client'
 import { DEMO_TODAY } from './demo'
 import { getBudget as mockBudget, getTopPurchases as mockTop } from './selectors'
 import type { Period, Transaction } from './types'
 
-/**
- * 화면이 읽는 값을 어디서 가져올지 한 곳에서 정한다.
- *
- * 두 소스를 남겨 둔 이유가 있다. 목 모드는 촬영 재현성 때문이다 —
- * 고정 날짜·고정 시드라 어느 날 촬영해도 화면이 같다. 그 요구사항은 사라지지 않았다.
- * 서버 모드는 `VITE_API_URL`이 있을 때만 켜진다.
- *
- * 컴포넌트는 어느 쪽인지 몰라도 되게 같은 모양을 돌려준다.
- * 그래서 이 파일이 두 세계의 유일한 접점이고, 늘어나야 할 곳도 여기뿐이다.
- */
+/** 기존 시연은 명시적으로 prototype을 선택한다. 서버 모드는 오류를 화면에 표시한다. */
 
 interface BudgetView {
   limit: number
@@ -49,12 +40,12 @@ function parseDate(key: string): Date {
   return new Date(y, m - 1, d)
 }
 
-export function DataSourceProvider({ children }: { children: ReactNode }) {
+export function DataSourceProvider({ children, prototype = false }: { children: ReactNode; prototype?: boolean }) {
   const [loaded, setLoaded] = useState<Record<string, ServerOverview> | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isServerMode()) return
+    if (prototype) return
     let cancelled = false
     void (async () => {
       try {
@@ -70,17 +61,24 @@ export function DataSourceProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [prototype])
 
-  const server = isServerMode() && loaded !== null
+  if (!prototype && error) return <div role="alert">데이터를 불러오지 못했습니다. 서버 연결을 확인한 뒤 새로고침해 주세요.</div>
+  if (!prototype && loaded === null) return <div role="status">데이터를 불러오는 중입니다.</div>
+  const server = !prototype && loaded !== null
 
   const value: DataSource = {
     // 목 모드는 동기라 언제나 준비돼 있다. 서버 모드만 기다린다.
-    ready: !isServerMode() || loaded !== null || error !== null,
+    ready: prototype || loaded !== null || error !== null,
     server,
     error,
     today: server ? parseDate(loaded.daily.referenceDate) : DEMO_TODAY,
-    budget: (period) => (server ? loaded[period].budget : mockBudget(period)),
+    budget: (period) => {
+      if (!server) return mockBudget(period)
+      const budget = loaded[period].budget
+      if (!budget) throw new Error('자료가 없는 기간입니다')
+      return budget
+    },
     topPurchases: (period, n = 5) =>
       server
         ? loaded[period].topSpends.slice(0, n).map((s, i) => ({
