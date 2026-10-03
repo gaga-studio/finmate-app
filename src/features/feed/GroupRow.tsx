@@ -2,6 +2,8 @@ import { EmojiIcon } from '../../shared/ui/EmojiIcon'
 import { ChevronRight } from 'lucide-react'
 import { FEED_GROUPS } from '../../data/social'
 import { useMouseScroll } from '../../shared/ui/useMouseScroll'
+import { useState } from 'react'
+import { PeerComparisonSheet } from './PeerComparisonSheet'
 
 interface Props {
   selected: string[]
@@ -11,11 +13,12 @@ interface Props {
 /** "그룹 보기" 가로 카드: 여러 개 토글 가능, 고른 그룹 전부(AND) 기준으로 스토리가 필터된다 */
 export function GroupRow({ selected, onToggle }: Props) {
   const scrollRef = useMouseScroll()
+  const [comparisonOpen, setComparisonOpen] = useState(false)
   return (
     <section className="mt-4">
       <div className="flex items-center justify-between px-5">
         <h2 className="text-section font-bold text-ink">그룹 보기</h2>
-        <button type="button" className="flex items-center text-body font-semibold text-ink-soft">
+        <button type="button" onClick={() => setComparisonOpen(true)} className="flex items-center text-body font-semibold text-ink-soft">
           더보기
           <ChevronRight size={14} />
         </button>
@@ -53,6 +56,7 @@ export function GroupRow({ selected, onToggle }: Props) {
           )
         })}
       </div>
+      {comparisonOpen && <PeerComparisonSheet onClose={() => setComparisonOpen(false)} />}
     </section>
   )
 }
