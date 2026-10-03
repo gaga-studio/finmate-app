@@ -13,7 +13,7 @@ test('실제 서버 소비를 기존 예산 카드와 소비 탑 5에서 조회�
   await expect(page.locator('#phone-frame')).toBeVisible()
   await expect(page.getByRole('navigation').getByRole('link')).toHaveCount(5)
 
-  // 기존 화면에 없는 임의 날짜 조회·또래 비교는 API 계약으로 검증한다.
+  // 화면에서 사용하는 기간과 값도 API 계약으로 대조한다.
   const token = await page.evaluate(() => sessionStorage.getItem('finmate-token'))
   const headers = { Authorization: `Bearer ${token}` }
   const overview = await page.request.get('/api/v1/me/overview?period=monthly&date=2026-06-30', { headers })
@@ -54,4 +54,94 @@ test('미적재 기간 응답은 소비 0원으로 바꾸지 않고 기존 카�
   await expect(page.getByText('데모 저녁', { exact: true })).toHaveCount(0)
   await expect(page.locator('#phone-frame')).toBeVisible()
   await expect(page.getByRole('navigation').getByRole('link')).toHaveCount(5)
+})
+
+test('기존 피드 더보기에서 실제 소득대 평균을 조회하고 빈 기간과 실패를 구분한다', async ({ page }) => {
+  await page.goto('/my')
+  await expect(page.getByText('씀 12,000원', { exact: true })).toBeVisible()
+  await page.getByRole('navigation').getByRole('link', { name: '피드', exact: true }).click()
+  await page.getByRole('main').last().getByRole('button', { name: '더보기', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: '소득대별 소비 비교' })
+  await expect(dialog).toBeVisible()
+  await dialog.getByLabel('비교할 월').fill('2026-06')
+  await expect(dialog.getByText('72,600원', { exact: true })).toBeVisible()
+  await expect(dialog.getByText('187,600원', { exact: true })).toBeVisible()
+  await expect(dialog.getByText('24명', { exact: true })).toBeVisible()
+  await expect(dialog).toContainText('합성 데이터')
+  await dialog.getByLabel('비교할 월').fill('2026-08')
+  await expect(dialog.getByRole('status')).toContainText('자료가 없는 기간')
+  await expect(dialog.getByText('187,600원', { exact: true })).toHaveCount(0)
+  await page.route('**/api/v1/me/peers*', route => route.fulfill({ status: 503, body: '{}' }))
+  await dialog.getByLabel('비교할 월').fill('2026-06')
+  await expect(dialog.getByRole('alert')).toContainText('불러오지 못했습니다')
+  await page.unroute('**/api/v1/me/peers*')
+  await dialog.getByRole('button', { name: '다시 불러오기' }).click()
+  await expect(dialog.getByText('187,600원', { exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByRole('main').last().getByRole('button', { name: '더보기', exact: true })).toBeFocused()
+})
+
+test('기록의 기존 월 이동과 날짜 카드가 실제 거래를 조회한다', async ({ page }) => {
+  await page.goto('/my')
+  await expect(page.getByText('씀 12,000원', { exact: true })).toBeVisible()
+  await page.getByRole('navigation').getByRole('link', { name: '기록', exact: true }).click()
+  const main = page.getByRole('main').last()
+  await expect(main.getByRole('heading', { name: '7월', exact: true })).toBeVisible()
+  await main.getByRole('button', { name: '이전 달' }).click()
+  await expect(main.getByRole('heading', { name: '6월', exact: true })).toBeVisible()
+  await expect(main.getByTestId('diary-summary')).toContainText('72,600원')
+  await main.getByRole('button', { name: '30일 거래 내역', exact: true }).click()
+  const detail = page.getByRole('dialog', { name: '6월 30일 내역' })
+  await expect(detail.getByText('데모 저녁', { exact: true })).toBeVisible()
+  await expect(detail.getByText('-12,000원', { exact: true })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await main.getByRole('button', { name: '다음 달' }).click()
+  await main.getByRole('button', { name: '다음 달' }).click()
+  await expect(main.getByRole('status')).toContainText('자료가 없는 기간')
+  await expect(main.getByTestId('diary-summary')).toHaveCount(0)
+  await expect(page.getByRole('navigation').getByRole('link')).toHaveCount(5)
+})
+
+test('기록은 다음 페이지 실패를 숨기지 않고 재조회 후 모든 거래와 무거래일을 구분한다', async ({ page }) => {
+  // 20건 페이지 경계는 HTTP 응답 대역으로 검증한다. 위 테스트들은 실제 데모 DB를 사용한다.
+  const entries = Array.from({ length: 21 }, (_, index) => ({
+    id: index + 1, date: '2026-06-13', merchant: `페이지 검증 ${index + 1}`,
+    amount: -100, category: '식비', flow: '소비',
+  }))
+  let failSecondPage = true
+  const pages: number[] = []
+  await page.route('**/api/v1/me/overview*', async route => {
+    const date = new URL(route.request().url()).searchParams.get('date')
+    if (date !== '2026-06-30') return route.continue()
+    const response = await route.fetch()
+    const body = await response.json()
+    await route.fulfill({ response, json: { ...body, earned: 0, budget: { ...body.budget, spent: 2100 } } })
+  })
+  await page.route('**/api/v1/me/transactions*', async route => {
+    const url = new URL(route.request().url())
+    if (url.searchParams.get('date') !== '2026-06-30') return route.continue()
+    const current = Number(url.searchParams.get('page'))
+    pages.push(current)
+    if (current === 1 && failSecondPage) return route.fulfill({ status: 503, body: '{}' })
+    await route.fulfill({ json: { items: entries.slice(current * 20, (current + 1) * 20), total: 21, page: current, size: 20, dataStatus: 'AVAILABLE', source: 'SYNTHETIC' } })
+  })
+  await page.goto('/my')
+  await expect(page.getByText('씀 12,000원', { exact: true })).toBeVisible()
+  await page.getByRole('navigation').getByRole('link', { name: '기록', exact: true }).click()
+  const main = page.getByRole('main').last()
+  await main.getByRole('button', { name: '이전 달' }).click()
+  await expect(main.getByRole('alert')).toContainText('기록을 불러오지 못했습니다')
+  await expect(main.getByTestId('diary-summary')).toHaveCount(0)
+  failSecondPage = false
+  await main.getByRole('button', { name: '다시 불러오기' }).click()
+  await expect(main.getByTestId('diary-summary')).toContainText('2,100원')
+  await main.getByRole('button', { name: '13일 거래 내역', exact: true }).click()
+  const detail = page.getByRole('dialog')
+  await expect(detail.getByText('페이지 검증 21', { exact: true })).toBeVisible()
+  await expect(detail.getByText(/^페이지 검증 \d+$/)).toHaveCount(21)
+  expect(pages).toEqual([0, 1, 0, 1])
+  await page.keyboard.press('Escape')
+  await main.getByRole('button', { name: '14일 거래 내역', exact: true }).click()
+  await expect(detail.getByRole('status')).toHaveText('거래가 없는 날입니다.')
 })

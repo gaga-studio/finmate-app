@@ -84,9 +84,9 @@ export interface ServerOverview {
   start: string
   end: string
   budget: ServerBudget | null
-  saved: number
-  invested: number
-  earned: number
+  saved: number | null
+  invested: number | null
+  earned: number | null
   topSpends: ServerSpend[]
   dataStatus: 'AVAILABLE' | 'NO_DATA'
   source: 'SYNTHETIC'
