@@ -1,0 +1,14 @@
+# 배포에 필요한 앱 소스와 public 자산만 전송한다.
+.git
+.github
+node_modules
+dist
+docs
+artifacts
+test-results
+playwright-report
+e2e
+scripts
+/*.txt
+/*.md
+.env*
