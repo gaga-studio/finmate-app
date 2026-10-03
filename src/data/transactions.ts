@@ -30,7 +30,7 @@ const SPEND_RANGE: Record<keyof typeof MERCHANTS, [number, number]> = {
   entertainment: [9000, 24000],
 }
 
-/** 저렴한 카테고리에 가중치 — 하루 평균 생성 지출 ~1.3만원을 목표로 한다 */
+/** 저렴한 카테고리에 가중치: 하루 평균 생성 지출 ~1.3만원을 목표로 한다 */
 const WEIGHTED_CATEGORIES: (keyof typeof MERCHANTS)[] = [
   'food', 'food', 'food',
   'cafe', 'cafe', 'cafe',
@@ -38,19 +38,19 @@ const WEIGHTED_CATEGORIES: (keyof typeof MERCHANTS)[] = [
   'shopping', 'subscription', 'entertainment',
 ]
 
-/** 시연 대사에 등장하는 거래 — 날짜·금액을 수기로 고정한다. */
+/** 시연 대사에 등장하는 거래: 날짜·금액을 수기로 고정한다. */
 const NARRATIVE: Transaction[] = [
   { id: 'n-shoes', date: '2026-07-21', merchant: '나이키 강남', amount: -120000, category: 'shopping', memo: '고민 중이던 운동화' },
   { id: 'n-macbook', date: '2026-07-06', merchant: '맥북 에어 할부', amount: -132500, category: 'shopping', memo: '할부 1/12회차' },
-  // 오늘 합계 13,900원 고정 — 커피가 오늘의 1위가 되도록 배분
+  // 오늘 합계 13,900원 고정: 커피가 오늘의 1위가 되도록 배분
   { id: 'n-coffee-today', date: '2026-07-23', merchant: '스타벅스', amount: -7200, category: 'cafe', memo: '아메리카노 외 1' },
   { id: 'n-lunch-today', date: '2026-07-23', merchant: '한솥도시락', amount: -5200, category: 'food' },
   { id: 'n-bus-today', date: '2026-07-23', merchant: '버스', amount: -1500, category: 'transport' },
   { id: 'n-save-today', date: '2026-07-23', merchant: '파리 통장', amount: -5000, category: 'saving', memo: '오늘의 미션 저축' },
-  // 7월 저축 다양화 — 월간 뷰의 "수입에서 한 전체 저축"의 근거
+  // 7월 저축 다양화: 월간 뷰의 "수입에서 한 전체 저축"의 근거
   { id: 'n-emergency', date: '2026-07-05', merchant: '비상금 통장', amount: -200000, category: 'saving', memo: '월급날 자동이체' },
   { id: 'n-housing', date: '2026-07-02', merchant: '청약 납입', amount: -100000, category: 'saving', memo: '13회차' },
-  // 소득 출처 다양화 — 월간 뷰 오른쪽 카드의 순위 근거
+  // 소득 출처 다양화: 월간 뷰 오른쪽 카드의 순위 근거
   { id: 'n-salary', date: '2026-07-10', merchant: '월급', amount: 2150000, category: 'income' },
   { id: 'n-allow', date: '2026-07-03', merchant: '알바비', amount: 380000, category: 'income' },
   { id: 'n-carrot', date: '2026-07-12', merchant: '당근마켓 판매', amount: 45000, category: 'income', memo: '안 입는 패딩' },
@@ -69,7 +69,7 @@ function generate(): Transaction[] {
   for (let i = 0; i < 90; i++) {
     const d = addDays(start, i)
     const key = toKey(d)
-    // 오늘은 내러티브 거래만 — "오늘의 예산 30%" 수치가 흔들리면 안 된다.
+    // 오늘은 내러티브 거래만: "오늘의 예산 30%" 수치가 흔들리면 안 된다.
     // 내러티브가 박힌 다른 날도 생성 물량을 줄여 그날의 이야기가 잘 보이게 한다.
     const count = key === todayKey ? 0 : narrativeDates.has(key) ? 1 : 1 + Math.floor(rng() * 2)
     for (let j = 0; j < count; j++) {
@@ -83,7 +83,7 @@ function generate(): Transaction[] {
         category: cat,
       })
     }
-    // 주 2회 정도 소액 저축, 격주 투자 — 오늘은 내러티브 거래만 (수치 고정 원칙)
+    // 주 2회 정도 소액 저축, 격주 투자: 오늘은 내러티브 거래만 (수치 고정 원칙)
     if ((d.getDay() === 1 || d.getDay() === 4) && key !== todayKey) {
       out.push({ id: `s-${key}`, date: key, merchant: '파리 통장', amount: -amountBetween(rng, 5000, 20000), category: 'saving' })
     }

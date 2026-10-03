@@ -1,6 +1,6 @@
 export type Period = 'daily' | 'weekly' | 'monthly'
 export type Metric = 'budget' | 'saving' | 'invest'
-/** 저축 지표 전용 세로축 — 기간이 아니라 뷰를 순환한다 */
+/** 저축 지표 전용 세로축: 기간이 아니라 뷰를 순환한다 */
 export type SavingView = 'goal' | 'monthly' | 'asset'
 /** 투자 지표 전용 세로축 */
 export type InvestView = 'status' | 'portfolio' | 'news'
@@ -68,7 +68,7 @@ export interface Mission {
   title: string
   /** 완료 보상 포인트 */
   reward: number
-  /** 진행률 파생 소스 — saving/daily-budget은 셀렉터 파생, quiz는 탭 완료형, simple은 추천에서 담은 미션 */
+  /** 진행률 파생 소스: saving/daily-budget은 셀렉터 파생, quiz는 탭 완료형, simple은 추천에서 담은 미션 */
   kind: 'saving' | 'daily-budget' | 'quiz' | 'simple'
 }
 
@@ -76,10 +76,10 @@ export interface RecommendedMission {
   id: string
   emoji: string
   title: string
-  /** 해체분석 기반 추천 근거 — 행동화 설득의 핵심 */
+  /** 해체분석 기반 추천 근거: 행동화 설득의 핵심 */
   reason: string
   reward: number
-  /** 담았을 때 진행 방식 — 생략 시 simple(내일부터 판정) */
+  /** 담았을 때 진행 방식: 생략 시 simple(내일부터 판정) */
   kind?: Mission['kind']
 }
 
@@ -118,7 +118,7 @@ export interface SimScenario {
   price: number
   /** 주 단위 자산 곡선 (기준선) */
   baseCurve: number[]
-  /** 구매 시 곡선 — baseCurve와 같은 길이, 분기 지점부터 낮아짐 */
+  /** 구매 시 곡선: baseCurve와 같은 길이, 분기 지점부터 낮아짐 */
   altCurve: number[]
   branchIndex: number
   lens: SimLens
@@ -153,7 +153,7 @@ export interface StoryRow {
   direction?: 'up' | 'down'
 }
 
-/** 오늘의 스토리 — 다른 유저가 공유한 카드 (익명 닉네임) */
+/** 오늘의 스토리: 다른 유저가 공유한 카드 (익명 닉네임) */
 export interface Story {
   id: string
   author: ProfileSummary
@@ -163,7 +163,7 @@ export interface Story {
   subline: string
   /** 카드 하단 탑3 */
   top3: StoryRow[]
-  /** 탑3 블록 제목 — 없으면 지표 기본값(소비 탑 3/위시 리스트/투자 종목) */
+  /** 탑3 블록 제목: 없으면 지표 기본값(소비 탑 3/위시 리스트/투자 종목) */
   top3Title?: string
   /** ART.stories 키 */
   artKey: string
@@ -173,7 +173,7 @@ export interface Story {
   postedAt: string
 }
 
-/** 아트 파일명과 1:1 대응하는 키 — art-manifest의 단일 키 체계 */
+/** 아트 파일명과 1:1 대응하는 키: art-manifest의 단일 키 체계 */
 export type WrappedArtKey = `${Metric}-${Period}`
 
 export interface WrappedContent {

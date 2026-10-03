@@ -96,7 +96,7 @@ export function DiaryPage() {
               />
             </div>
 
-            {/* 3열 그리드 — 오늘만 이미지·탭 가능 */}
+            {/* 3열 그리드: 오늘만 이미지·탭 가능 */}
             <div className="mt-3 grid grid-cols-3 gap-2.5 px-5">
               {days.map((d, i) => {
                 const isToday = d.day === DIARY_TODAY.day
@@ -165,7 +165,7 @@ export function DiaryPage() {
   )
 }
 
-/** 이미지 타일 금액 — 좌하단에 세로로 쌓임 (등락 색 계열(어두운 배경용 밝은 톤) — 수입 빨강·소비 파랑) */
+/** 이미지 타일 금액: 좌하단에 세로로 쌓임 (등락 색 계열(어두운 배경용 밝은 톤): 수입 빨강·소비 파랑) */
 function TileBadges({ income, spend }: { income: number; spend: number }) {
   return (
     <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">

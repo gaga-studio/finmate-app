@@ -5,7 +5,7 @@ import { snappy } from '../../shared/motion/springs'
 
 export function TabLayout() {
   const { pathname } = useLocation()
-  // 인사이트는 채팅 스레드만 내부 스크롤 — 페이지 자체는 고정
+  // 인사이트는 채팅 스레드만 내부 스크롤: 페이지 자체는 고정
   const fixedPage = pathname.startsWith('/insights')
 
   return (

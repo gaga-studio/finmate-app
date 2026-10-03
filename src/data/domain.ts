@@ -11,7 +11,7 @@ import type {
 } from './types'
 import { mulberry32 } from './seed'
 
-/** 자유예산 — 기간별로 사용자가 따로 설정한 값이라는 설정 */
+/** 자유예산: 기간별로 사용자가 따로 설정한 값이라는 설정 */
 export const BUDGET_LIMIT = { daily: 20000, weekly: 250000, monthly: 650000 } as const
 
 export const SAVING_GOAL: SavingGoal = {
@@ -32,7 +32,7 @@ export const SAVING_MONTHLY_HISTORY: { month: number; amount: number }[] = [
   { month: 6, amount: 610_000 },
 ]
 
-/** 총자산 구성 — 청년 현실형 (합계가 자산 뷰의 총자산) */
+/** 총자산 구성: 청년 현실형 (합계가 자산 뷰의 총자산) */
 export interface AssetItem {
   id: string
   title: string
@@ -40,7 +40,7 @@ export interface AssetItem {
   emoji: string
 }
 
-/** 대학생 페르소나 — 계좌·상품 위주, 합계 정확히 1,400만원 */
+/** 대학생 페르소나: 계좌·상품 위주, 합계 정확히 1,400만원 */
 export const MY_ASSETS: AssetItem[] = [
   { id: 'as-housing', title: '주택청약', value: 6_000_000, emoji: '🏠' },
   { id: 'as-deposit', title: '정기적금', value: 3_200_000, emoji: '💰' },
@@ -49,13 +49,13 @@ export const MY_ASSETS: AssetItem[] = [
   { id: 'as-parking', title: '파킹 통장', value: 1_224_000, emoji: '🏦' },
 ]
 
-/** 총자산 월별 추이(2~7월) — 끝값은 MY_ASSETS 합계(14,000,000)와 일치해야 한다 */
+/** 총자산 월별 추이(2~7월): 끝값은 MY_ASSETS 합계(14,000,000)와 일치해야 한다 */
 export const NET_WORTH_HISTORY: number[] = [
   12_650_000, 12_930_000, 13_180_000, 13_420_000, 13_660_000, 14_000_000,
 ]
 
 /**
- * 보유 종목 — 합계 1,326,000 = 평가액 정합.
+ * 보유 종목: 합계 1,326,000 = 평가액 정합.
  * 사용자는 아직 ETF를 직접 매수해본 적 없는 설정이라 개별주·비상장만 보유한다.
  */
 export const HOLDINGS: Holding[] = [
@@ -66,13 +66,13 @@ export const HOLDINGS: Holding[] = [
   { ticker: '373220', name: 'LG에너지솔루션', value: 150_000, returnPct: 2.4 },
 ]
 
-/** 투자 평가액 월별 추이(2~7월) — 6월 고점 후 7월 급락장 반영, 끝값 = HOLDINGS 합계 */
+/** 투자 평가액 월별 추이(2~7월): 6월 고점 후 7월 급락장 반영, 끝값 = HOLDINGS 합계 */
 export const INVEST_VALUE_HISTORY: number[] = [
   872_000, 942_000, 1_021_000, 1_176_500, 1_368_000, 1_326_000,
 ]
 
 /**
- * 누적 투입 원금(2~7월, 단조 증가) — 최종 1,176,500이라 총 수익률이 정확히 +12.7%.
+ * 누적 투입 원금(2~7월, 단조 증가): 최종 1,176,500이라 총 수익률이 정확히 +12.7%.
  * 7월 신규 투입 +80,000 = 삼성전자 5만(7/20) + 카카오 3만 거래와 정합.
  */
 export const INVEST_PRINCIPAL_HISTORY: number[] = [
@@ -89,7 +89,7 @@ export interface MarketIndex {
 }
 
 /**
- * 뉴스 뷰 상단 지수 보드 — 2026-07-17(금) 실제 장 마감 기준.
+ * 뉴스 뷰 상단 지수 보드: 2026-07-17(금) 실제 장 마감 기준.
  * 중동 리스크 + 금리 인상으로 코스피 -9.95% 서킷브레이커(올해 7번째),
  * 원/달러 1,487.73(+0.53%) 실측. 코스닥은 코스피 동조 추정치.
  */
@@ -106,7 +106,7 @@ export interface StockNews {
   changePct: number
 }
 
-/** 뉴스 뷰 오른쪽 카드 — ETF 첫 시도 전, 사용자가 보유/관심 중인 개별주 중심 */
+/** 뉴스 뷰 오른쪽 카드: ETF 첫 시도 전, 사용자가 보유/관심 중인 개별주 중심 */
 export const STOCK_NEWS: StockNews[] = [
   { id: 'nw1', name: '삼성전자', summary: '2분기 실적 · HBM 주목', changePct: -7.8 },
   { id: 'nw2', name: 'NAVER', summary: 'AI 검색 서비스 개편 기대감', changePct: 1.6 },
@@ -114,7 +114,7 @@ export const STOCK_NEWS: StockNews[] = [
   { id: 'nw4', name: '카카오', summary: '플랫폼 규제 우려에 변동성 확대', changePct: -2.1 },
 ]
 
-/** 총자산 일별 곡선(90일) — 완만한 우상향 + 시드 노이즈 */
+/** 총자산 일별 곡선(90일): 완만한 우상향 + 시드 노이즈 */
 export const ASSET_SERIES: number[] = (() => {
   const rng = mulberry32(777)
   const out: number[] = []
@@ -127,7 +127,7 @@ export const ASSET_SERIES: number[] = (() => {
 })()
 
 /**
- * 위시 리스트 — 항목별 진행률 같은 건 없다(누가 항목마다 돈을 모으나).
+ * 위시 리스트: 항목별 진행률 같은 건 없다(누가 항목마다 돈을 모으나).
  * 파리 관련은 저축 목표가 담당하므로 넣지 않고,
  * 운동화·맥북 에어는 이미 구매해서 제외(맥북 프로가 다음 꿈).
  */
@@ -139,19 +139,19 @@ export const WISHLIST: WishItem[] = [
   { id: 'w5', title: '맥북 프로', price: 2_390_000, emoji: '💻' },
 ]
 
-/** 미션 탭 — 포인트 잔고 */
+/** 미션 탭: 포인트 잔고 */
 export const POINTS_BALANCE = 12_450
 
 /** 오늘 스트릭 체크 보상 */
 export const STREAK_CHECK_REWARD = 50
 
-/** 진행 중인 미션 — 진행률은 셀렉터 파생(getMissionProgress) */
+/** 진행 중인 미션: 진행률은 셀렉터 파생(getMissionProgress) */
 export const MISSIONS: Mission[] = [
   { id: 'm-save', emoji: '✈️', title: '이번 주 저축 5만원 추가', reward: 120, kind: 'saving' },
   { id: 'm-budget', emoji: '🎯', title: '일 소비 예산 5% 줄이기', reward: 80, kind: 'daily-budget' },
 ]
 
-/** 추천 미션 — 해체분석에서 나온 근거를 함께 보여준다 */
+/** 추천 미션: 해체분석에서 나온 근거를 함께 보여준다 */
 export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
   { id: 'r-etf', emoji: '📈', title: 'ETF 첫 시도 자금 30만원 모으기', reason: '월 10만원씩 3개월 플랜', reward: 150 },
   { id: 'r-quiz', emoji: '📉', title: 'ETF 시작 전 투자 퀴즈', reason: '첫 ETF 매수 전 기본기 체크', reward: 60, kind: 'quiz' },
@@ -159,7 +159,7 @@ export const RECOMMENDED_MISSIONS: RecommendedMission[] = [
   { id: 'r-parking', emoji: '🏦', title: '파킹 통장 자동이체 만들기', reason: '월급날 잔액이 그냥 잠들어요', reward: 100 },
 ]
 
-/** 지난 내역 탭 — 완료한 미션 기록 (절대일 고정, 촬영 재현성) */
+/** 지난 내역 탭: 완료한 미션 기록 (절대일 고정, 촬영 재현성) */
 export interface PastMission {
   id: string
   emoji: string
@@ -184,7 +184,7 @@ export const REWARD_ITEMS: RewardItem[] = [
   { id: 'rw-cgv', emoji: '🎬', title: 'CGV 영화 관람권', cost: 12_000 },
 ]
 
-/** 월별 수입·지출 원장(2~6월 수기) — 챌린지 월간 판정용. 4월은 과소비 달. 7월은 실측. */
+/** 월별 수입·지출 원장(2~6월 수기): 챌린지 월간 판정용. 4월은 과소비 달. 7월은 실측. */
 export const MONTHLY_LEDGER: MonthLedger[] = [
   { month: 2, income: 2_450_000, spend: 2_180_000 },
   { month: 3, income: 2_530_000, spend: 2_310_000 },

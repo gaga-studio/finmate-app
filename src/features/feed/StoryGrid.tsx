@@ -13,7 +13,7 @@ interface Props {
   onOpen: (id: string) => void
 }
 
-/** 오늘의 스토리 3열 그리드 — 카드 탭 시 layoutId 공유로 오버레이 확대 */
+/** 오늘의 스토리 3열 그리드: 카드 탭 시 layoutId 공유로 오버레이 확대 */
 export function StoryGrid({ stories, openId, onOpen }: Props) {
   return (
     <div className="mt-2.5 grid grid-cols-3 gap-2.5 px-5">
@@ -47,7 +47,7 @@ export function StoryGrid({ stories, openId, onOpen }: Props) {
                   palette={s.metric}
                   className="aspect-[3/4] w-full"
                 >
-                  {/* 좋아요 뱃지 — 작성자 줄의 폭을 닉네임에 양보하고 썸네일 위로 */}
+                  {/* 좋아요 뱃지: 작성자 줄의 폭을 닉네임에 양보하고 썸네일 위로 */}
                   <span className="absolute right-1.5 top-1.5 flex items-center gap-0.5 rounded-full bg-black/45 px-1.5 py-0.5 text-micro font-bold text-white backdrop-blur-sm">
                     <Heart size={10} strokeWidth={2.4} fill="currentColor" />
                     {s.likes}

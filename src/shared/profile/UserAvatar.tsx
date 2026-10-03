@@ -6,7 +6,7 @@ interface Props {
 }
 
 /**
- * 내 프로필 아바타 — 예산 팝아트(커피 마시는 여성)에서 얼굴 영역만
+ * 내 프로필 아바타: 예산 팝아트(커피 마시는 여성)에서 얼굴 영역만
  * CSS 크롭으로 프레이밍한다. 원본 이미지가 교체되면 origin/scale만 조정.
  */
 export function UserAvatar({ size = 44, className }: Props) {

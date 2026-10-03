@@ -37,7 +37,7 @@ interface ListItem {
   valueClass?: string
 }
 
-/** 메이트 프로필 — 마이 탭과 같은 화면 문법, 데이터는 카테고리·구간으로 필터링 */
+/** 메이트 프로필: 마이 탭과 같은 화면 문법, 데이터는 카테고리·구간으로 필터링 */
 export function MateProfilePage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -53,10 +53,10 @@ export function MateProfilePage() {
 
   if (!mate) return <Navigate to="/feed" replace />
 
-  // 지혜 쪽 LinkedListPanel과 대칭 — 지표+뷰 9가지를 함께 갈아입는다
+  // 지혜 쪽 LinkedListPanel과 대칭: 지표+뷰 9가지를 함께 갈아입는다
   const mateList = getMateListRows(mate, metric, period, savingView, investView)
 
-  // 마이 탭 하단 아트 카드 자리 — 이 메이트가 올린 스토리 이미지 재활용 (지표 일치 우선)
+  // 마이 탭 하단 아트 카드 자리: 이 메이트가 올린 스토리 이미지 재활용 (지표 일치 우선)
   const story =
     STORIES.find((s) => s.author.id === mate.id && s.metric === metric) ??
     STORIES.find((s) => s.author.id === mate.id)
@@ -85,7 +85,7 @@ export function MateProfilePage() {
 
       <ProfileCard profile={mate} className="px-5" compactName similarityRing />
 
-      {/* 지표 밑줄 탭 — 프로필/비교 공용 */}
+      {/* 지표 밑줄 탭: 프로필/비교 공용 */}
       <div className="mt-3">
         <MetricTabs metric={metric} onChange={setMetric} layoutId="mate-metric-tab" />
       </div>
@@ -99,7 +99,7 @@ export function MateProfilePage() {
             exit={{ opacity: 0, y: -14 }}
             transition={snappy}
           >
-            {/* 캐러셀 그대로 — 카드 슬롯에 좌 메이트/우 나 쌍이 함께 넘어간다 */}
+            {/* 캐러셀 그대로: 카드 슬롯에 좌 메이트/우 나 쌍이 함께 넘어간다 */}
             <div className="pt-2" data-metric={metric}>
               <MetricCarousel
                 metric={metric}
@@ -134,7 +134,7 @@ export function MateProfilePage() {
               />
             </div>
 
-            {/* 연동 리스트 2열 — 좌 메이트(카테고리·구간) / 우 나(실측, 뷰 따라 전환) */}
+            {/* 연동 리스트 2열: 좌 메이트(카테고리·구간) / 우 나(실측, 뷰 따라 전환) */}
             <section className="mt-4 px-5">
               <div className="mb-3 flex items-center gap-2">
                 <span className="h-px flex-1 bg-line/80" />
@@ -186,7 +186,7 @@ export function MateProfilePage() {
             exit={{ opacity: 0, y: -14 }}
             transition={snappy}
           >
-            {/* 마이 탭과 동일한 캐러셀 — 가로 스와이프=지표, 세로/휠=뷰 스택 */}
+            {/* 마이 탭과 동일한 캐러셀: 가로 스와이프=지표, 세로/휠=뷰 스택 */}
             <div className="pt-2" data-metric={metric}>
               <MetricCarousel
                 metric={metric}
@@ -221,7 +221,7 @@ export function MateProfilePage() {
               />
             </div>
 
-            {/* 하단 2열 — 마이 탭처럼 좌 이미지 카드, 우 리스트 카드 */}
+            {/* 하단 2열: 마이 탭처럼 좌 이미지 카드, 우 리스트 카드 */}
             <section className="mt-3 grid grid-cols-[1fr_1.15fr] gap-3 px-5">
               <div className="clay-card relative h-[232px] overflow-hidden rounded-card">
                 {story && (
@@ -248,7 +248,7 @@ export function MateProfilePage() {
         )}
       </AnimatePresence>
 
-      {/* 하단 중앙 버튼 — 콘텐츠 흐름 안이라 리스트를 가리지 않는다 */}
+      {/* 하단 중앙 버튼: 콘텐츠 흐름 안이라 리스트를 가리지 않는다 */}
       <div className="mt-5 flex items-center justify-center gap-2.5 px-5">
         <motion.button
           type="button"
@@ -259,7 +259,7 @@ export function MateProfilePage() {
               return
             }
             setComparing(true)
-            // 비교 모드는 캐러셀부터 다시 보이도록 — 스크롤 컨테이너(TabLayout <main>)를 맨 위로
+            // 비교 모드는 캐러셀부터 다시 보이도록: 스크롤 컨테이너(TabLayout <main>)를 맨 위로
             rootRef.current?.closest('main')?.scrollTo({ top: 0, behavior: 'smooth' })
           }}
           whileTap={{ scale: 0.96 }}

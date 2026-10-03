@@ -10,12 +10,12 @@ interface Props {
   savingView: SavingView
   investView: InvestView
   onMetricChange: (m: Metric) => void
-  /** 스택 전환(위로 밀기·휠 다운 = 다음 / 아래로·휠 업 = 이전) — 순환 대상은 MyPage가 결정 */
+  /** 스택 전환(위로 밀기·휠 다운 = 다음 / 아래로·휠 업 = 이전): 순환 대상은 MyPage가 결정 */
   onStackNext: () => void
   onStackPrev: () => void
-  /** 카드 렌더 주입 — 생략 시 마이 탭 기본 카드. 메이트 프로필이 같은 구조로 다른 카드를 꽂는다 */
+  /** 카드 렌더 주입: 생략 시 마이 탭 기본 카드. 메이트 프로필이 같은 구조로 다른 카드를 꽂는다 */
   renderCard?: (m: Metric, period: Period, savingView: SavingView, investView: InvestView) => React.ReactNode
-  /** 카드 높이 오버라이드 — 마이 탭이 더 크게 쓴다 */
+  /** 카드 높이 오버라이드: 마이 탭이 더 크게 쓴다 */
   cardH?: number
   /** 좌우 여백(고스트 카드 노출 폭) 오버라이드 */
   sideInset?: number
@@ -74,7 +74,7 @@ export function MetricCarousel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step])
 
-  // 외부 전환(지표 토글 등) — metric prop이 바뀌면 캐러셀도 따라 슬라이드
+  // 외부 전환(지표 토글 등): metric prop이 바뀌면 캐러셀도 따라 슬라이드
   useLayoutEffect(() => {
     const target = -METRICS.indexOf(metric) * step
     if (x.get() !== target) animate(x, target, snappy)
@@ -87,7 +87,7 @@ export function MetricCarousel({
     if (METRICS[clamped] !== metric) onMetricChange(METRICS[clamped])
   }
 
-  // 데스크톱 휠 지원 — 가로 휠 = 지표 전환, 세로 휠 = 스택(기간/뷰) 전환.
+  // 데스크톱 휠 지원: 가로 휠 = 지표 전환, 세로 휠 = 스택(기간/뷰) 전환.
   // 최신 idx/콜백은 ref로 참조한다.
   const wheelRef = useRef({ idx, snapTo, onStackNext, onStackPrev })
   wheelRef.current = { idx, snapTo, onStackNext, onStackPrev }
@@ -142,7 +142,7 @@ export function MetricCarousel({
       className="relative select-none"
       style={{ height: CARD_H + 34, touchAction: 'none' }}
     >
-      {/* 기간 고스트 스택 — 활성 카드 뒤 2장 */}
+      {/* 기간 고스트 스택: 활성 카드 뒤 2장 */}
       <GhostCard offset={-14} scale={0.955} opacity={0.5} lift={lift} liftFactor={0.16} cardW={cardW} cardH={CARD_H} vw={vw} />
       <GhostCard offset={-27} scale={0.912} opacity={0.28} lift={lift} liftFactor={0.3} cardW={cardW} cardH={CARD_H} vw={vw} />
 
@@ -161,7 +161,7 @@ export function MetricCarousel({
           if (axisRef.current === 'x') {
             const raw = baseXRef.current + info.offset.x
             const min = -(METRICS.length - 1) * step
-            // 가장자리 러버밴딩 — 오버슈트는 최대 70px로 하드 클램프 (화면 밖 이탈 방지)
+            // 가장자리 러버밴딩: 오버슈트는 최대 70px로 하드 클램프 (화면 밖 이탈 방지)
             const over = raw > 0 ? raw : raw < min ? raw - min : 0
             const damped = Math.sign(over) * Math.min(Math.abs(over) * 0.35, 70)
             x.set(over ? (raw > 0 ? damped : min + damped) : raw)

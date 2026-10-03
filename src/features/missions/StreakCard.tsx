@@ -13,7 +13,7 @@ interface Props {
   onCheckToday: () => void
 }
 
-/** "예산을 지켜라" 챌린지 — 일/주/월 판정은 전부 거래 파생 */
+/** "예산을 지켜라" 챌린지: 일/주/월 판정은 전부 거래 파생 */
 export function StreakCard({ todayChecked, onCheckToday }: Props) {
   const [period, setPeriod] = useState<Period>('daily')
 
@@ -62,7 +62,7 @@ export function StreakCard({ todayChecked, onCheckToday }: Props) {
 
       {period === 'daily' && !todayChecked && (
         <p className="mt-3 text-caption font-medium text-ink-soft">
-          오늘 예산 안에 있어요 — 도트를 눌러 오늘을 지켜내세요! <b className="text-point-ink">+50P</b>
+          오늘 예산 안에 있어요. 도트를 눌러 오늘을 지켜내세요! <b className="text-point-ink">+50P</b>
         </p>
       )}
     </section>

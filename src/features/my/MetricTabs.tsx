@@ -8,7 +8,7 @@ const ITEMS = [
   { value: 'invest', label: '투자', color: 'text-invest' },
 ] as const
 
-/** 지표 탭 — 지표색은 활성 상태에서만 쓰고, 비활성은 중립색으로 정리한다 */
+/** 지표 탭: 지표색은 활성 상태에서만 쓰고, 비활성은 중립색으로 정리한다 */
 export function MetricTabs({
   metric,
   onChange,

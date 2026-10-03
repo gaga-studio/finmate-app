@@ -9,7 +9,7 @@ interface Props {
   onAdopt: (item: RecommendedMission) => void
 }
 
-/** 추천 미션 — 해체분석 근거(reason)가 설득의 핵심. 담기 → 진행 중으로 이동 */
+/** 추천 미션: 해체분석 근거(reason)가 설득의 핵심. 담기 → 진행 중으로 이동 */
 export function RecommendedList({ items, onAdopt }: Props) {
   return (
     <section className="clay-card mx-5 mt-3 rounded-card p-5">

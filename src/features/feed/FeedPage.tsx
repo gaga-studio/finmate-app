@@ -18,7 +18,7 @@ export function FeedPage() {
     setSelectedGroups((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]))
 
   const stories = useMemo(() => {
-    // 다중 선택은 AND — 고른 그룹 전부에 속한 스토리만 남긴다
+    // 다중 선택은 AND: 고른 그룹 전부에 속한 스토리만 남긴다
     const filtered = STORIES.filter((s) => selectedGroups.every((id) => s.groupIds.includes(id)))
     return [...filtered].sort((a, b) =>
       sort === 'popular' ? b.likes - a.likes : b.postedAt.localeCompare(a.postedAt),

@@ -13,7 +13,7 @@ interface Props {
   onOpen: () => void
 }
 
-/** Wrapped 공유 카드의 썸네일 — layoutId로 오버레이 확대의 출발점이 된다 */
+/** Wrapped 공유 카드의 썸네일: layoutId로 오버레이 확대의 출발점이 된다 */
 export function ArtCardThumb({ period, metric, savingView, investView, onOpen }: Props) {
   // 저축·투자는 뷰별 카드로 갈아입는다
   const content =

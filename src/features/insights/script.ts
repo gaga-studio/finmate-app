@@ -2,10 +2,10 @@ import type { InsightMsg } from '../../data/insights'
 import { SAVING_SLIDER, SUGGESTION_CHIPS } from '../../data/insights'
 import { SIM_SCENARIO } from '../../data/domain'
 
-/** id 없는 메시지 — 훅이 push할 때 id를 부여한다 */
+/** id 없는 메시지: 훅이 push할 때 id를 부여한다 */
 export type Reply = Omit<InsightMsg, 'id'>
 
-/** 첫 진입 시 AI가 자동으로 발화하는 시퀀스 — 총평 + 추천옵션 */
+/** 첫 진입 시 AI가 자동으로 발화하는 시퀀스: 총평 + 추천옵션 */
 export const INITIAL_REPLIES: Reply[] = [
   { role: 'ai', text: '지혜님, 지금까지의 하루요약입니다 👋' },
   { role: 'ai', widget: { type: 'summary' } },
@@ -19,7 +19,7 @@ export const INITIAL_REPLIES: Reply[] = [
   },
 ]
 
-/** 비교 시트에서 대상을 고르면 발화하는 완성 멘트 — useInsightChat.completeCompare가 사용 */
+/** 비교 시트에서 대상을 고르면 발화하는 완성 멘트: useInsightChat.completeCompare가 사용 */
 export function compareDoneReplies(targetId: string): Reply[] {
   return [
     { role: 'ai', text: '시뮬레이션이 생성되었어요! ✨', chart: { kind: 'compare', targetId } },
@@ -34,7 +34,7 @@ interface Scenario {
 }
 
 /**
- * 키워드 매칭 스크립트 — 위에서부터 첫 매칭을 사용한다.
+ * 키워드 매칭 스크립트: 위에서부터 첫 매칭을 사용한다.
  * 응답 버블에 chart를 실으면 그 버블이 등장할 때 상단 그래프가 전환된다.
  */
 const SCENARIOS: Scenario[] = [
@@ -67,13 +67,13 @@ const SCENARIOS: Scenario[] = [
       { role: 'ai', text: '추가 소비/저축 계획이 있으신가요?' },
     ],
   },
-  // 시연 6-2 추천 행동 — 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
+  // 시연 6-2 추천 행동: 카드/혜택은 상세 카드, 절약 미션이 시뮬로 잇는다
   // 시연 6-2 순차 가이드: 1️⃣저축 관리 → 2️⃣소비 관리(카드 한 줄) → 3️⃣미션(+하나증권 한 줄)
   {
     id: 'etf-step-saving',
     match: /^좋아, 보여줘$/,
     replies: [
-      { role: 'ai', text: '1️⃣ 저축은 쪼개면 쉬워요 —\n하루 단위로 볼까요?' },
+      { role: 'ai', text: '1️⃣ 저축은 쪼개면 쉬워요.\n하루 단위로 볼까요?' },
       { role: 'ai', widget: { type: 'detail-card', variant: 'saving' } },
       { role: 'ai', widget: { type: 'options', options: ['다음 팁도 보여줘'] } },
     ],
@@ -93,7 +93,7 @@ const SCENARIOS: Scenario[] = [
     replies: [
       {
         role: 'ai',
-        text: '3️⃣ 제일 중요한 실천 —\n30만원 모으기, 미션으로 준비해뒀어요.\n미션 탭에서 담아주세요!',
+        text: '3️⃣ 제일 중요한 실천이에요.\n30만원 모으기, 미션으로 준비해뒀어요.\n미션 탭에서 담아주세요!',
         widget: { type: 'mission', missionId: 'r-etf' },
       },
       {
@@ -120,7 +120,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
-  // 시연 핵심: 맥북 200만 — 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다
+  // 시연 핵심: 맥북 200만: 그래프가 실시간으로 꺾이고 습관 시뮬 → 예상 리포트로 이어진다
   {
     id: 'macbook',
     match: /맥북|m5|노트북/i,
@@ -138,7 +138,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
-  // 습관 따라하기 — 내 선이 메이트 기울기를 따라가고, 습관 미션 제안으로 잇는다
+  // 습관 따라하기: 내 선이 메이트 기울기를 따라가고, 습관 미션 제안으로 잇는다
   {
     id: 'apply-habit',
     match: /^시뮬레이션 적용해보기$/,
@@ -206,7 +206,7 @@ const SCENARIOS: Scenario[] = [
       },
     ],
   },
-  // 초기 옵션 — 질문하기는 자유 입력 유도, 추세 확인하기는 차트 공개 후 비교로 잇는다
+  // 초기 옵션: 질문하기는 자유 입력 유도, 추세 확인하기는 차트 공개 후 비교로 잇는다
   {
     id: 'ask-free',
     match: /^질문하기$/,
@@ -247,7 +247,7 @@ const SCENARIOS: Scenario[] = [
     id: 'mission',
     match: /미션|추천|뭐하/,
     replies: [
-      { role: 'ai', text: '이번 달 카페 8회 · 34,400원 — 여기가 기회예요' },
+      { role: 'ai', text: '이번 달 카페 8회 · 34,400원, 여기가 기회예요' },
       { role: 'ai', widget: { type: 'mission', missionId: 'r-cafe' } },
     ],
   },

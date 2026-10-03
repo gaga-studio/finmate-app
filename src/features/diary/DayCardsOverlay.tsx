@@ -23,7 +23,7 @@ const SLIDE_VARIANTS = {
   exit: (dir: number) => ({ opacity: 0, x: -60 * dir }),
 }
 
-/** 오늘 하루의 자동 기록 카드 3장 — 그날 최대 활동 카드가 맨 앞, 가로 스와이프/화살표로 넘긴다 */
+/** 오늘 하루의 자동 기록 카드 3장: 그날 최대 활동 카드가 맨 앞, 가로 스와이프/화살표로 넘긴다 */
 export function DayCardsOverlay({ onClose }: Props) {
   const [{ slide, dir }, setPos] = useState({ slide: 0, dir: 1 })
   const cards = buildCards(getDayDominant(DIARY_TODAY.dateKey))
@@ -74,7 +74,7 @@ export function DayCardsOverlay({ onClose }: Props) {
             </motion.div>
           </AnimatePresence>
 
-          {/* 좌우 화살표 — 넘길 수 있음을 알려준다 */}
+          {/* 좌우 화살표: 넘길 수 있음을 알려준다 */}
           {slide > 0 && (
             <button
               type="button"

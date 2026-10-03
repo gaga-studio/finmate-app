@@ -23,7 +23,7 @@ export const ART = {
     'invest-portfolio': '/art/wrapped/invest-portfolio.png',
     'invest-news': '/art/wrapped/invest-news.png',
   } satisfies Record<WrappedArtKey | SavingArtKey | InvestArtKey, string>,
-  /** 피드 스토리 아트 — 12장 전원 전용 세트(서로 다른 그림체) */
+  /** 피드 스토리 아트: 12장 전원 전용 세트(서로 다른 그림체) */
   stories: Object.fromEntries(
     [
       'coffee', 'brunch', 'grocery', 'shopping', 'concert', 'interior',

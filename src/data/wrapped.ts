@@ -1,6 +1,6 @@
 import type { InvestView, Metric, Period, SavingView, WrappedContent } from './types'
 
-/** 마이 탭 뷰별 카드의 아트 슬롯 — 신규 슬롯은 팀 이미지 도착 전 그라디언트 폴백 */
+/** 마이 탭 뷰별 카드의 아트 슬롯: 신규 슬롯은 팀 이미지 도착 전 그라디언트 폴백 */
 export type SavingArtKey = 'saving-monthly' | 'saving-income' | 'saving-asset'
 export type InvestArtKey = 'invest-monthly' | 'invest-portfolio' | 'invest-news'
 
@@ -11,7 +11,7 @@ export interface ViewCardContent {
   artKey: SavingArtKey | InvestArtKey
 }
 
-/** 마이 탭 저축 지표의 뷰별 카드 — 하단 아트카드·오버레이가 뷰를 따라 갈아입는다 */
+/** 마이 탭 저축 지표의 뷰별 카드: 하단 아트카드·오버레이가 뷰를 따라 갈아입는다 */
 export const SAVING_CARDS: Record<SavingView, ViewCardContent> = {
   goal: {
     title: '나의 저축 목표',
@@ -56,7 +56,7 @@ export const INVEST_CARDS: Record<InvestView, ViewCardContent> = {
 }
 
 /**
- * Wrapped 카드 카피 — 지표 × 기간 9종. "AI 품질"은 곧 카피 품질이라 전량 수기.
+ * Wrapped 카드 카피: 지표 × 기간 9종. "AI 품질"은 곧 카피 품질이라 전량 수기.
  * 수치는 셀렉터 실측값과 일치해야 한다 (검증 스크립트로 확인 후 수정).
  */
 export const WRAPPED: Record<Metric, Record<Period, WrappedContent>> = {

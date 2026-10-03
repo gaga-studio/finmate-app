@@ -10,7 +10,7 @@ import { formatKrwCompact } from '../../shared/format/krw'
 import type { MateProfile } from '../../data/mates'
 import { USER } from '../../data/demo'
 
-/** 로딩 연출 시간 — AI가 분석을 "생성"하는 느낌 */
+/** 로딩 연출 시간: AI가 분석을 "생성"하는 느낌 */
 const LOADING_MS = 1100
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
   onClose: () => void
 }
 
-/** 스타일 비교 rows — 대결표와 같은 순서(좌 나 / 우 메이트) */
+/** 스타일 비교 rows: 대결표와 같은 순서(좌 나 / 우 메이트) */
 function styleRows(mate: MateProfile) {
   const myTop = getTopPurchases('monthly', 1)[0]
   const myDelta = getSavingProgress('monthly').delta
@@ -128,11 +128,11 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
                 </div>
               ))}
               <p className="mt-1 text-center text-caption font-bold text-ink-soft">
-                {wins >= 2 ? `3판 ${wins}승 — 내가 리드 중! 🏆` : `3판 ${3 - wins}패 — 배울 게 있는 상대!`}
+                {wins >= 2 ? `3판 ${wins}승: 내가 리드 중! 🏆` : `3판 ${3 - wins}패: 배울 게 있는 상대!`}
               </p>
             </div>
 
-            {/* 스타일 비교 — bearMode에선 핵심 차이 카드와 중복이라 생략(밀도 해소) */}
+            {/* 스타일 비교: bearMode에선 핵심 차이 카드와 중복이라 생략(밀도 해소) */}
             {!bearMode && (
               <div className="clay-card mt-3 rounded-card px-5 py-4">
                 <p className="text-caption font-bold text-ink-faint">스타일 비교</p>
@@ -173,13 +173,13 @@ export function MateAnalysisOverlay({ mate, onClose }: Props) {
               <p className="mt-1.5 text-body font-bold leading-relaxed text-ink">
                 {bearMode ? (
                   <>
-                    먼저 <b className="text-invest">30만원</b>을 모아 소액 자동이체로 시작해보세요 — 곰손재테크도 그렇게
+                    먼저 <b className="text-invest">30만원</b>을 모아 소액 자동이체로 시작해보세요. 곰손재테크도 그렇게
                     시작했어요.
                   </>
                 ) : mate.metrics.savingPct > my.saving ? (
-                  `${mate.nickname}의 저축 습관이 한 수 위 —\n인사이트에서 습관 시뮬레이션 어때요? ✨`
+                  `${mate.nickname}의 저축 습관이 한 수 위예요.\n인사이트에서 습관 시뮬레이션 어때요? ✨`
                 ) : (
-                  `소비 방어는 내가 우세 —\n이 페이스면 파리가 성큼! ✈️`
+                  `소비 방어는 내가 우세해요.\n이 페이스면 파리가 성큼! ✈️`
                 )}
               </p>
               {!bearMode && (
@@ -235,4 +235,3 @@ function MiniFact({ label, value, tone }: { label: string; value: string; tone: 
     </div>
   )
 }
-

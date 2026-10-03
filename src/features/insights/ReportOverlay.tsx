@@ -20,7 +20,7 @@ interface Props {
   onClose: () => void
 }
 
-/** AI가 생성한 7월 리포트 — 전 수치가 마이 탭과 같은 셀렉터에서 파생 */
+/** AI가 생성한 7월 리포트: 전 수치가 마이 탭과 같은 셀렉터에서 파생 */
 export function ReportOverlay({ variant, onClose }: Props) {
   const macbook = variant === 'macbook'
   const budget = getBudget('monthly')
@@ -151,7 +151,7 @@ export function ReportOverlay({ variant, onClose }: Props) {
           <p className="mt-1 text-body font-bold leading-relaxed text-ink">
             {macbook ? (
               <>
-                12개월 할부면 월 16.7만원 —
+                12개월 할부면 월 16.7만원.
                 <br />
                 비상금은 지키는 걸로! 🛡️
               </>

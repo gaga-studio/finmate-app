@@ -8,15 +8,15 @@ const LEGEND_H = 14
 interface Props {
   /** 평가액 (실선) */
   value: number[]
-  /** 누적 원금 (점선) — value와 같은 길이 */
+  /** 누적 원금 (점선): value와 같은 길이 */
   principal: number[]
   width?: number
   height?: number
   /** 하단 x축 라벨 (포인트 수와 동일 길이) */
   xLabels?: string[]
-  /** 범례 라벨 [실선, 점선] — 기본은 원금 vs 평가 용도 */
+  /** 범례 라벨 [실선, 점선]: 기본은 원금 vs 평가 용도 */
   labels?: [string, string]
-  /** 라인 색 [실선, 점선] — 지정하면 두 선이 다른 색으로 그려진다 (기본 currentColor 단색) */
+  /** 라인 색 [실선, 점선]: 지정하면 두 선이 다른 색으로 그려진다 (기본 currentColor 단색) */
   colors?: [string, string]
 }
 
@@ -25,13 +25,13 @@ function toLine(pts: Pt[]): string {
 }
 
 /**
- * 원금 vs 평가액 비교 차트 — 두 선이 벌어지는 틈이 곧 수익.
+ * 원금 vs 평가액 비교 차트: 두 선이 벌어지는 틈이 곧 수익.
  * 월 단위 직선 폴리라인(꺾임 = 월별 변화), 공용 스케일 + 범례·축 라벨.
  */
 export function CompareChart({ value, principal, width = 216, height = 110, xLabels, labels = ['평가액', '원금'], colors }: Props) {
   const valueColor = colors?.[0] ?? 'currentColor'
   const principalColor = colors?.[1] ?? 'currentColor'
-  // 색 구분 모드(비교)에서는 두 번째 선도 실선+도트로 — 사용자 선과 같은 문법
+  // 색 구분 모드(비교)에서는 두 번째 선도 실선+도트로: 사용자 선과 같은 문법
   const principalOpacity = colors ? 0.9 : 0.35
   const principalDash = colors ? undefined : '3 4'
   const pad = 8
@@ -50,7 +50,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
   const principalPts = pts(principal)
   const last = valuePts[valuePts.length - 1]
 
-  // 두 선 사이 채움 폴리곤 — 수익 영역
+  // 두 선 사이 채움 폴리곤: 수익 영역
   const gapArea =
     toLine(valuePts) +
     ' ' +
@@ -62,7 +62,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} aria-hidden>
-      {/* 범례 — 라벨 길이에 맞춰 두 번째 항목 위치를 계산 */}
+      {/* 범례: 라벨 길이에 맞춰 두 번째 항목 위치를 계산 */}
       <g fontSize={9} fontWeight={600} fill="currentColor">
         <line x1={0} y1={5} x2={16} y2={5} stroke={valueColor} strokeWidth={3} strokeLinecap="round" />
         <text x={20} y={8}>{labels[0]}</text>
@@ -99,7 +99,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         transition={{ delay: 0.55, duration: 0.5 }}
       />
 
-      {/* 두 번째 선 — 기본은 원금 점선, 색 구분 모드에선 메이트 실선 */}
+      {/* 두 번째 선: 기본은 원금 점선, 색 구분 모드에선 메이트 실선 */}
       <motion.path
         d={toLine(principalPts)}
         fill="none"
@@ -180,7 +180,7 @@ export function CompareChart({ value, principal, width = 216, height = 110, xLab
         transition={{ delay: 1, duration: 1.6, repeat: Infinity, repeatDelay: 1.2 }}
       />
 
-      {/* x축: 월 라벨 — 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
+      {/* x축: 월 라벨: 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
       {xLabels?.map((label, i) => {
         const raw = valuePts[i]?.x ?? 0
         const half = (label.length * 9) / 2

@@ -8,7 +8,7 @@ interface Props {
   onToggle: (id: string) => void
 }
 
-/** "그룹 보기" 가로 카드 — 여러 개 토글 가능, 고른 그룹 전부(AND) 기준으로 스토리가 필터된다 */
+/** "그룹 보기" 가로 카드: 여러 개 토글 가능, 고른 그룹 전부(AND) 기준으로 스토리가 필터된다 */
 export function GroupRow({ selected, onToggle }: Props) {
   const scrollRef = useMouseScroll()
   return (
@@ -21,7 +21,7 @@ export function GroupRow({ selected, onToggle }: Props) {
         </button>
       </div>
 
-      {/* pt/pb — 스크롤 컨테이너가 선택 링(box-shadow)을 자르지 않게 여백 확보 */}
+      {/* pt/pb: 스크롤 컨테이너가 선택 링(box-shadow)을 자르지 않게 여백 확보 */}
       <div
         ref={scrollRef}
         className="mt-1.5 flex cursor-grab gap-2.5 overflow-x-auto px-5 pb-1.5 pt-1 [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"

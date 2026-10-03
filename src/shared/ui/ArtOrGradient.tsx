@@ -11,10 +11,10 @@ interface Props {
 
 /**
  * AI 아트 이미지가 있으면 이미지, 없거나 로드 실패하면
- * 지표 팔레트 그라디언트 폴백 — 에셋 도착 전에도 촬영 가능한 미감.
+ * 지표 팔레트 그라디언트 폴백: 에셋 도착 전에도 촬영 가능한 미감.
  */
 export function ArtOrGradient({ src, palette, className, children }: Props) {
-  // 실패를 src별로 기억 — 컴포넌트가 재사용되며 src가 바뀌면(지표 전환) 자동 리셋된다
+  // 실패를 src별로 기억: 컴포넌트가 재사용되며 src가 바뀌면(지표 전환) 자동 리셋된다
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const [from, to] = FALLBACK_GRADIENT[palette]
   const showImage = !!src && failedSrc !== src
@@ -34,7 +34,7 @@ export function ArtOrGradient({ src, palette, className, children }: Props) {
         />
       )}
       {!showImage && (
-        /* 폴백에 은은한 텍스처 — 단색 그라디언트의 밋밋함 방지 */
+        /* 폴백에 은은한 텍스처: 단색 그라디언트의 밋밋함 방지 */
         <div
           className="absolute inset-0 opacity-40 mix-blend-overlay"
           style={{

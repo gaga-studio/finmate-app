@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void
 }
 
-/** 포인트 상점 — 교환 가능 여부만 보여주는 정적 바텀시트 */
+/** 포인트 상점: 교환 가능 여부만 보여주는 정적 바텀시트 */
 export function RewardSheet({ points, onClose }: Props) {
   return createPortal(
     <div className="absolute inset-0 z-[60]">

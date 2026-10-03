@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 
 /**
- * 아이콘 슬롯 중앙 매핑 — 클레이 3D 에셋(public/icons) 우선,
+ * 아이콘 슬롯 중앙 매핑: 클레이 3D 에셋(public/icons) 우선,
  * 에셋이 없는 이모지는 lucide 폴백, 최후엔 텍스트.
  * 아바타는 이모지 충돌(☕️·🥐)이 있어 author id 기반 별도 매핑.
  */
@@ -120,7 +120,7 @@ interface Props {
   size?: number
   className?: string
   strokeWidth?: number
-  /** 아바타 컨텍스트 — author/비교 대상 id (이모지 충돌 회피용 우선 매핑) */
+  /** 아바타 컨텍스트: author/비교 대상 id (이모지 충돌 회피용 우선 매핑) */
   avatarId?: string
 }
 

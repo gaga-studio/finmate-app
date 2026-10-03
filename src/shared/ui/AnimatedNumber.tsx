@@ -8,7 +8,7 @@ interface Props {
   className?: string
 }
 
-/** 스프링으로 카운트업하는 숫자 — 게이지 애니메이션과 톤을 맞춘다 */
+/** 스프링으로 카운트업하는 숫자: 게이지 애니메이션과 톤을 맞춘다 */
 export function AnimatedNumber({ value, format = (v) => String(Math.round(v)), className }: Props) {
   const raw = useMotionValue(value)
   const spring = useSpring(raw, gentle)

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState, type ReactNode } from 'react'
 import { StatusBar } from '../../shared/ui/StatusBar'
 
-/** 프레임 비율 — 초기 프레임과 동일한 430×880 */
+/** 프레임 비율: 초기 프레임과 동일한 430×880 */
 const FRAME_W = 430
 const FRAME_H = 880
 
@@ -33,7 +33,7 @@ function useFrameScale(): number {
 /**
  * 모바일에서는 풀블리드, 데스크톱(≥sm)에서는 실제 아이폰 비율(430×932)의
  * 폰 프레임. 내부는 항상 430px 기준으로 레이아웃하고 프레임 전체를
- * transform scale로 축소한다 — 창 크기가 어떻든 내부 구성이 압축되지 않는다.
+ * transform scale로 축소한다. 창 크기가 어떻든 내부 구성이 압축되지 않는다.
  */
 export function PhoneFrame({ children }: { children: ReactNode }) {
   const scale = useFrameScale()

@@ -19,7 +19,7 @@ import { snappy } from '../../shared/motion/springs'
 
 const CHART_W = 330
 
-/** 비교 계열 라인 색 — 기존 총자산 선은 유지하고, 메이트/그룹 선만 빨간색으로 추가 */
+/** 비교 계열 라인 색: 기존 총자산 선은 유지하고, 메이트/그룹 선만 빨간색으로 추가 */
 const COMPARE_COLORS: [string, string] = ['var(--color-saving)', 'var(--color-rise)']
 
 /** 받침 유무에 따른 이/가 조사 */
@@ -115,7 +115,7 @@ function ChartCard({
 }
 
 /**
- * 그룹 비교 3카드 캐러셀 — 마이 탭 MetricCarousel의 가로축 문법을 그대로 이식.
+ * 그룹 비교 3카드 캐러셀: 마이 탭 MetricCarousel의 가로축 문법을 그대로 이식.
  * 팬 제스처 + 스프링 스냅, 옆 카드가 축소·반투명으로 살짝 보인다.
  */
 function ChartCarousel({ cards }: { cards: React.ReactNode[] }) {
@@ -144,7 +144,7 @@ function ChartCarousel({ cards }: { cards: React.ReactNode[] }) {
     animate(x, -clamped * step, snappy)
   }
 
-  // 데스크톱 트랙패드 가로 휠 지원 — MetricCarousel과 같은 누적·쿨다운 방식
+  // 데스크톱 트랙패드 가로 휠 지원: MetricCarousel과 같은 누적·쿨다운 방식
   const wheelRef = useRef({ idx, snapTo })
   wheelRef.current = { idx, snapTo }
   useLayoutEffect(() => {
@@ -205,7 +205,7 @@ function ChartCarousel({ cards }: { cards: React.ReactNode[] }) {
           ))}
         </motion.div>
       </div>
-      {/* 도트 인디케이터 — 스와이프 가능함을 암시 */}
+      {/* 도트 인디케이터: 스와이프 가능함을 암시 */}
       <div className="mt-1.5 flex justify-center gap-1.5">
         {cards.map((_, i) => (
           <button
@@ -254,7 +254,7 @@ function ChartCarouselSlot({
   )
 }
 
-/** 캐러셀 2·3번 카드 공용 셸 — ChartCard와 같은 규격(제목·172px 본문·캡션) */
+/** 캐러셀 2·3번 카드 공용 셸: ChartCard와 같은 규격(제목·172px 본문·캡션) */
 function GroupCarouselCard({
   title,
   eyebrow,
@@ -331,7 +331,7 @@ function PositionRail({ item }: { item: (typeof GROUP_POSITIONS)[number] }) {
     <div className={`grid grid-cols-[44px_minmax(0,1fr)] items-center gap-2.5 ${item.className}`}>
       <span className="rounded-lg bg-current/10 py-1 text-center text-caption font-extrabold">{item.label}</span>
       <div className="min-w-0">
-        {/* 트랙 + 위치까지 색 채움 — 마이 탭 잔량 바와 같은 문법 */}
+        {/* 트랙 + 위치까지 색 채움: 마이 탭 잔량 바와 같은 문법 */}
         <div className="relative h-4">
           <span className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 overflow-hidden rounded-full bg-ink/8">
             <motion.span
@@ -390,7 +390,7 @@ function GroupSavingProductsCard({ targetLabel }: { targetLabel: string }) {
   )
 }
 
-/** 상태 전환 애니메이션 키 — 슬라이더 이동은 같은 키(내부 재드로잉만), 비교는 대상별 재생 */
+/** 상태 전환 애니메이션 키: 슬라이더 이동은 같은 키(내부 재드로잉만), 비교는 대상별 재생 */
 function chartKey(state: InsightChartState): string {
   if (state.kind === 'compare') return `compare-${state.targetId}`
   if (state.kind === 'sim-macbook') return `macbook-${state.targetId ?? 'solo'}${state.habit ? '-habit' : ''}`
@@ -402,9 +402,9 @@ function renderState(state: InsightChartState) {
     const sim = getMacbookSim()
     const target = state.targetId ? COMPARE_TARGETS.find((t) => t.id === state.targetId) : undefined
 
-    // 비교 중이었다면 메이트 선을 유지 — 맥북을 사면 격차가 어떻게 변하는지가 포인트
+    // 비교 중이었다면 메이트 선을 유지: 맥북을 사면 격차가 어떻게 변하는지가 포인트
     if (target) {
-      // 습관 따라하기: 메이트 패턴 + 내 기존 흐름 시너지(HABIT_BOOST) — 10~11월 사이 역전
+      // 습관 따라하기: 메이트 패턴 + 내 기존 흐름 시너지(HABIT_BOOST): 10~11월 사이 역전
       const myCurve = state.habit
         ? target.curve.map((v) => sim.base[0] - MACBOOK.price + Math.round((v - target.curve[0]) * HABIT_BOOST))
         : sim.bought
@@ -419,7 +419,7 @@ function renderState(state: InsightChartState) {
           : `맥북 사면 12월 ${formatKrwCompact(end)}`,
         caption: state.habit
           ? crossIdx > 0
-            ? `${PROJECTION_MONTHS[crossIdx]}이면 ${target.label} 역전 — 12월 +${formatKrwCompact(diff)}!`
+            ? `${PROJECTION_MONTHS[crossIdx]}이면 ${target.label} 역전: 12월 +${formatKrwCompact(diff)}!`
             : `맥북 반영 대비 +${formatKrwCompact(end - sim.endBought)} 만회!`
           : diff >= 0
             ? `그래도 ${target.label}보다 +${formatKrwCompact(diff)} 앞서요`
@@ -526,7 +526,7 @@ function renderState(state: InsightChartState) {
     }
   }
 
-  // 기본: 평소 습관 기반 미래 6개월 투영 — 현재 → 12월 예상을 한 줄로
+  // 기본: 평소 습관 기반 미래 6개월 투영: 현재 → 12월 예상을 한 줄로
   return {
     title: '총자산',
     caption: `지금 습관대로면 6개월 뒤 +${formatKrwCompact(my.totalGain)}`,

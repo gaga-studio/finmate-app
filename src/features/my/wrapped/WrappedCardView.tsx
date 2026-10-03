@@ -28,7 +28,7 @@ export const TOP3_TITLE: Record<Metric, string> = {
 }
 
 /**
- * 카드 배경 — 지표색 계열의 세로 그라디언트 (위 = 이미지와 이어지는 밝은 톤,
+ * 카드 배경: 지표색 계열의 세로 그라디언트 (위 = 이미지와 이어지는 밝은 톤,
  * 아래로 갈수록 깊어짐). top은 이미지 하단 블렌딩에도 쓴다.
  */
 const CARD_BG: Record<Metric, { top: string; gradient: string }> = {
@@ -47,7 +47,7 @@ const CARD_BG: Record<Metric, { top: string; gradient: string }> = {
 }
 
 /**
- * 9:16 Wrapped 카드의 표시 전용 뷰 — 내 카드(WrappedCardNode)와
+ * 9:16 Wrapped 카드의 표시 전용 뷰: 내 카드(WrappedCardNode)와
  * 피드 스토리 오버레이가 공유한다. 캡처 재현성을 위해 무한 애니메이션은 없다.
  */
 export function WrappedCardView({ data }: { data: WrappedCardData }) {
@@ -58,7 +58,7 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
       className="relative flex aspect-[9/16] w-full flex-col overflow-hidden"
       style={{ background: bg.gradient }}
     >
-      {/* 상단 이미지 영역 — 정사각형, 스포티파이 Wrapped처럼 상단만 차지 */}
+      {/* 상단 이미지 영역: 정사각형, 스포티파이 Wrapped처럼 상단만 차지 */}
       <div className="relative aspect-square w-full">
         <ArtOrGradient src={data.artSrc} palette={data.metric} className="h-full w-full">
           {/* 배지 가독용 얕은 상단 스크림 */}
@@ -77,7 +77,7 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
         </ArtOrGradient>
       </div>
 
-      {/* 하단 플랫 컬러 영역 — 큰 타이포 */}
+      {/* 하단 플랫 컬러 영역: 큰 타이포 */}
       <div className="flex min-h-0 flex-1 flex-col px-5 pb-4 pt-3.5 text-white">
         <p className="whitespace-pre-line break-keep text-title font-extrabold leading-snug">
           {data.headline}
@@ -119,7 +119,7 @@ export function WrappedCardView({ data }: { data: WrappedCardData }) {
   )
 }
 
-/** "☕️ 카페" 형태 라벨 — 앞 이모지를 lucide 아이콘으로 */
+/** "☕️ 카페" 형태 라벨: 앞 이모지를 lucide 아이콘으로 */
 function LabelIcon({ label }: { label: string }) {
   const m = label.match(/^(\p{Extended_Pictographic}\uFE0F?)\s+(.*)$/u)
   if (!m) return <>{label}</>

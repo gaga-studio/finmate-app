@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * Wrapped 9:16 풀스크린 오버레이 — 썸네일과 layoutId="wrapped-card"를
+ * Wrapped 9:16 풀스크린 오버레이: 썸네일과 layoutId="wrapped-card"를
  * 공유해 위치/크기/radius가 자동 보간된다. 아래로 드래그해 닫는다.
  */
 export function WrappedOverlay({ metric, period, savingView, investView, onClose }: Props) {

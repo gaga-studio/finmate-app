@@ -59,7 +59,7 @@ export function BudgetCard({ period }: { period: Period }) {
       <p className="mt-1 text-display font-extrabold leading-none">
         <AnimatedNumber value={b.pct * 100} format={(v) => `${Math.round(v)}%`} />
       </p>
-      {/* 잔량 바 — 물잔·큰 숫자와 같은 기준(남은 만큼 파랗게) */}
+      {/* 잔량 바: 물잔·큰 숫자와 같은 기준(남은 만큼 파랗게) */}
       <div className="mt-2.5 w-full min-w-[200px] max-w-[230px]">
         <div className="h-2.5 overflow-hidden rounded-full bg-budget/15">
           <motion.div
@@ -184,7 +184,7 @@ export function InvestCard({ view }: { view: InvestView }) {
 
   return (
     <CardShell title="뉴스" metricClass={METRIC_TEXT.invest}>
-      {/* 증시 전광판처럼 3열 배치 — 열 사이 은은한 구분선 */}
+      {/* 증시 전광판처럼 3열 배치: 열 사이 은은한 구분선 */}
       <div className="grid w-full grid-cols-3 divide-x divide-line py-2 text-center">
         {MARKET_INDICES.map((m) => {
           const rise = m.changePct >= 0
@@ -218,7 +218,7 @@ function CardShell({
 }) {
   return (
     <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${metricClass}`}>
-      {/* 제목 밴드 — 지표 테마색 틴트 (bg-current가 metricClass 색을 따른다) */}
+      {/* 제목 밴드: 지표 테마색 틴트 (bg-current가 metricClass 색을 따른다) */}
       <div className="w-full px-5 pb-0 pt-2.5 text-center">
         <p className="text-title font-bold text-ink">{title}</p>
       </div>

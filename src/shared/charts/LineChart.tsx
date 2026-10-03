@@ -9,9 +9,9 @@ interface Props {
   points: number[]
   width?: number
   height?: number
-  /** 재드로잉 트리거용 — 기간 전환 시 바꿔주면 처음부터 다시 그린다 */
+  /** 재드로잉 트리거용: 기간 전환 시 바꿔주면 처음부터 다시 그린다 */
   drawKey?: string
-  /** 각 포인트에 도트 마커 — 구간(월)별 변화를 강조할 때 */
+  /** 각 포인트에 도트 마커: 구간(월)별 변화를 강조할 때 */
   markers?: boolean
   /** 하단 x축 라벨 (포인트 수와 같으면 포인트 정렬, 아니면 균등 분배) */
   xLabels?: string[]
@@ -77,7 +77,7 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
           animate={{ pathLength: 1 }}
           transition={{ duration: 0.9, ease: [0.3, 0, 0.2, 1] }}
         />
-        {/* 구간 마커 — 선 드로잉을 따라 순차 등장 */}
+        {/* 구간 마커: 선 드로잉을 따라 순차 등장 */}
         {markers &&
           pts.slice(0, -1).map((p, i) => (
             <motion.circle
@@ -116,7 +116,7 @@ export function LineChart({ points, width = 220, height = 120, drawKey, markers,
         />
       </g>
 
-      {/* x축: 월 라벨 — 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
+      {/* x축: 월 라벨: 가장자리에서 넘치면 안쪽 정렬로 바꿔 잘림을 막는다 */}
       {xLabels?.map((label, i) => {
         const raw =
           xLabels.length === pts.length ? pts[i].x : 8 + (i / (xLabels.length - 1)) * (width - 16)

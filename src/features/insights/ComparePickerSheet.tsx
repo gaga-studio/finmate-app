@@ -10,13 +10,13 @@ import { COMPARE_TARGETS } from '../../data/insights'
 interface Props {
   /** 현재 그래프에 겹쳐진 대상 (없으면 null) */
   selectedId: string | null
-  /** 채팅 선택지에서 진입 시 해당 종류만 노출 — 없으면 전체 */
+  /** 채팅 선택지에서 진입 시 해당 종류만 노출: 없으면 전체 */
   filter?: 'mate' | 'group'
   onSelect: (targetId: string | null) => void
   onClose: () => void
 }
 
-/** 비교 시트 — 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
+/** 비교 시트: 메이트/그룹을 골라 내 투영 위에 선으로 겹친다 */
 export function ComparePickerSheet({ selectedId, filter, onSelect, onClose }: Props) {
   const [localSelectedId, setLocalSelectedId] = useState<string | null>(selectedId)
   const closeTimer = useRef<number | null>(null)

@@ -17,7 +17,7 @@ import { TRANSACTIONS } from './transactions'
 import { WRAPPED } from './wrapped'
 import type { Metric, Period, Transaction, WrappedContent } from './types'
 
-/** 모든 화면이 의존하는 기간별 파생 집계 — 전부 동기 순수함수. */
+/** 모든 화면이 의존하는 기간별 파생 집계: 전부 동기 순수함수. */
 
 function inRange(period: Period): Transaction[] {
   const { startKey, endKey } = getPeriodRange(period)
@@ -28,7 +28,7 @@ export interface BudgetSummary {
   limit: number
   spent: number
   remaining: number
-  /** 남은 비율 0~1 — 물잔 수위 */
+  /** 남은 비율 0~1: 물잔 수위 */
   pct: number
 }
 
@@ -46,7 +46,7 @@ export interface SavingSummary {
   title: string
   target: number
   current: number
-  /** 전체 목표 진행률 0~1 — 링 게이지 */
+  /** 전체 목표 진행률 0~1: 링 게이지 */
   pct: number
   /** 이 기간에 새로 저축한 금액 */
   delta: number
@@ -78,7 +78,7 @@ function currentMonthSaving(): number {
     .reduce((sum, t) => sum + -t.amount, 0)
 }
 
-/** 월간 뷰: 월별 전체 저축 막대(수입에서 한 저축 전부) — 이번 달은 실측 */
+/** 월간 뷰: 월별 전체 저축 막대(수입에서 한 저축 전부): 이번 달은 실측 */
 export function getSavingMonthBars(): SavingBar[] {
   const bars: SavingBar[] = SAVING_MONTHLY_HISTORY.map((h) => ({
     label: `${h.month}월`,
@@ -113,7 +113,7 @@ export function getMonthlyIncome(): number {
   return getIncomeSources().reduce((sum, s) => sum + s.total, 0)
 }
 
-/** 자산 뷰: 총자산 — 구성 순위 + 월별 추이 곡선 */
+/** 자산 뷰: 총자산: 구성 순위 + 월별 추이 곡선 */
 export function getNetWorth(): { assets: AssetItem[]; total: number; points: number[]; monthGain: number } {
   const assets = [...MY_ASSETS].sort((a, b) => b.value - a.value)
   const total = assets.reduce((sum, a) => sum + a.value, 0)
@@ -142,7 +142,7 @@ export function getInvestSeries(period: Period): InvestSummary {
   }
 }
 
-/** 현황 뷰: 원금 vs 평가액 — 벌어지는 틈이 수익 */
+/** 현황 뷰: 원금 vs 평가액: 벌어지는 틈이 수익 */
 export function getInvestStatus(): {
   value: number[]
   principal: number[]
@@ -180,7 +180,7 @@ export function getPortfolio(): { slices: PortfolioSlice[]; total: number } {
   return { slices, total }
 }
 
-/** 소비 탑 N: 카테고리 합산이 아니라 개별 구매 상위 — 커피/운동화/맥북 같은 스토리가 행으로 보인다 */
+/** 소비 탑 N: 카테고리 합산이 아니라 개별 구매 상위: 커피/운동화/맥북 같은 스토리가 행으로 보인다 */
 export function getTopPurchases(period: Period, n = 5): Transaction[] {
   return inRange(period)
     .filter((t) => t.amount < 0 && t.category !== 'saving' && t.category !== 'invest')
@@ -222,7 +222,7 @@ export function getDiaryDays(): { days: DiaryDay[]; totalIncome: number; totalSp
   }
 }
 
-/** 그날 가장 컸던 활동(소비/저축/투자 금액 비교) — 다이어리 대표 이미지·첫 카드 결정 */
+/** 그날 가장 컸던 활동(소비/저축/투자 금액 비교): 다이어리 대표 이미지·첫 카드 결정 */
 export function getDayDominant(dateKey: string): Metric {
   const txs = TRANSACTIONS.filter((t) => t.date === dateKey && t.amount < 0)
   const sums: Record<Metric, number> = { budget: 0, saving: 0, invest: 0 }
@@ -274,7 +274,7 @@ function weekOfMonth(d: Date): number {
 const WEEKDAY_LABEL = ['일', '월', '화', '수', '목', '금', '토']
 
 /**
- * 판정 규칙 — 일: 하루 지출 ≤ 일 예산 / 주: 주 지출 ≤ 월 예산의 ¼ /
+ * 판정 규칙: 일: 하루 지출 ≤ 일 예산 / 주: 주 지출 ≤ 월 예산의 ¼ /
  * 월: 지출 ≤ 수입 (2~6월 원장 수기, 7월 실측)
  */
 export function getKeepStreak(period: Period): StreakDot[] {
@@ -327,7 +327,7 @@ export function getKeepStreak(period: Period): StreakDot[] {
   return dots
 }
 
-/** current 직전까지의 연속 pass 수 — 🔥 뱃지 */
+/** current 직전까지의 연속 pass 수: 🔥 뱃지 */
 export function getStreakFlame(dots: StreakDot[]): number {
   const currentIdx = dots.findIndex((d) => d.status === 'current')
   let flame = 0
@@ -348,7 +348,7 @@ export interface MissionProgress {
   inverted?: boolean
 }
 
-/** 진행형 미션의 파생 진행률 — 촬영 재현성: 전부 거래에서 계산 */
+/** 진행형 미션의 파생 진행률: 촬영 재현성: 전부 거래에서 계산 */
 export function getMissionProgress(kind: Mission['kind']): MissionProgress {
   if (kind === 'saving') {
     const current = getSavingProgress('weekly').delta
@@ -359,7 +359,7 @@ export function getMissionProgress(kind: Mission['kind']): MissionProgress {
     const current = getBudget('daily').spent
     return { current, target, pct: Math.min(1, current / target), unit: 'krw', inverted: true }
   }
-  // quiz — 추천에서 새로 담는 미션이라 0부터 시작
+  // quiz: 추천에서 새로 담는 미션이라 0부터 시작
   return { current: 0, target: 3, pct: 0, unit: 'count' }
 }
 
@@ -399,7 +399,7 @@ export interface DailySummary {
   investReturnPct: number
 }
 
-/** 오늘의 총평 카드 근거 수치 — 마이 탭과 같은 셀렉터에서 파생해 정합을 유지한다 */
+/** 오늘의 총평 카드 근거 수치: 마이 탭과 같은 셀렉터에서 파생해 정합을 유지한다 */
 export function getDailySummary(): DailySummary {
   const b = getBudget('daily')
   const s = getSavingProgress('daily')

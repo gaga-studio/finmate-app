@@ -57,7 +57,7 @@ export function prevInvestView(v: InvestView): InvestView {
   return INVEST_VIEWS[(INVEST_VIEWS.indexOf(v) + INVEST_VIEWS.length - 1) % INVEST_VIEWS.length]
 }
 
-/** 지표별 고유 색 클래스 — 카드가 활성이 아니어도 자기 색을 유지한다 */
+/** 지표별 고유 색 클래스: 카드가 활성이 아니어도 자기 색을 유지한다 */
 export const METRIC_TEXT: Record<Metric, string> = {
   budget: 'text-budget',
   saving: 'text-saving',

@@ -46,7 +46,7 @@ export function seriesToPts(
   }))
 }
 
-/** 물결 사인파 path — width의 2배 폭으로 만들어 수평 루프에 쓴다 */
+/** 물결 사인파 path: width의 2배 폭으로 만들어 수평 루프에 쓴다 */
 export function wavePath(width: number, amplitude: number, cycles = 2): string {
   const w2 = width * 2
   const step = w2 / (cycles * 2 * 8)

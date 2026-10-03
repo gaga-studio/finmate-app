@@ -5,7 +5,7 @@ import { dramatic } from '../../shared/motion/springs'
 
 interface Props {
   points: number
-  /** 최근 적립 연출 — seq가 바뀔 때마다 +N 플로팅 */
+  /** 최근 적립 연출: seq가 바뀔 때마다 +N 플로팅 */
   gain: { amount: number; seq: number } | null
   onOpenShop: () => void
 }
