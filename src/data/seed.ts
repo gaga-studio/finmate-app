@@ -1,4 +1,4 @@
-/** 고정 시드 PRNG — 빌드/새로고침마다 동일한 목 데이터를 보장한다. */
+/** 고정 시드 PRNG: 빌드/새로고침마다 동일한 목 데이터를 보장한다. */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0
   return () => {

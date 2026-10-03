@@ -10,7 +10,7 @@ import { formatKrwCompact } from '../../../shared/format/krw'
 import type { Transaction } from '../../../data/types'
 import type { InvestView, Metric, Period, SavingView } from '../myState'
 
-/** 메이트 쪽 getMateListRows와 같은 매핑 — 비교 2열의 좌우 제목이 전 뷰에서 일치한다 */
+/** 메이트 쪽 getMateListRows와 같은 매핑: 비교 2열의 좌우 제목이 전 뷰에서 일치한다 */
 const SAVING_PANEL_TITLE: Record<SavingView, string> = {
   goal: '저축 목표',
   monthly: '월간 저축',
@@ -97,7 +97,7 @@ function rank(i: number): React.ReactNode {
 }
 
 /**
- * 소비 탑5만 데이터 소스에서 받는다 — 목이든 서버든 같은 모양이 온다.
+ * 소비 탑5만 데이터 소스에서 받는다. 목이든 서버든 같은 모양이 온다.
  * 나머지(자산·포트폴리오·수입원)는 아직 목이다. 서버 API가 생기면 같은 방식으로 넘긴다.
  */
 function rows(
@@ -120,7 +120,7 @@ function rows(
     })
   }
   if (metric === 'saving') {
-    // 월간 저축 — 이번 달 수입에서 저축한 항목들 (거래 실측과 정합)
+    // 월간 저축: 이번 달 수입에서 저축한 항목들 (거래 실측과 정합)
     if (savingView === 'monthly') {
       const rowsData = [
         { id: 'ms-emergency', emoji: '🛡️', title: '비상금 통장', amount: 200_000 },
@@ -135,7 +135,7 @@ function rows(
         trailing: <span className="text-saving">월 {formatKrwCompact(r.amount)}</span>,
       }))
     }
-    // 소득 출처 — 메이트 쪽과 같은 슬롯(asset 뷰)
+    // 소득 출처: 메이트 쪽과 같은 슬롯(asset 뷰)
     if (savingView === 'asset') {
       return getIncomeSources().map((s, i) => ({
         key: s.merchant,
@@ -145,7 +145,7 @@ function rows(
         trailing: <span className="text-saving">{formatKrwCompact(s.total)}</span>,
       }))
     }
-    // 저축 목표 — 목표별 달성액 (자산 실측 기반)
+    // 저축 목표: 목표별 달성액 (자산 실측 기반)
     return getNetWorth()
       .assets.slice(0, 3)
       .map((a, i) => ({
@@ -178,7 +178,7 @@ function rows(
       ),
     }))
   }
-  // 현황: 수익률 내림차순 — 1위 종목이 아트카드의 주인공이 된다
+  // 현황: 수익률 내림차순: 1위 종목이 아트카드의 주인공이 된다
   return [...HOLDINGS]
     .sort((a, b) => b.returnPct - a.returnPct)
     .map((h, i) => ({

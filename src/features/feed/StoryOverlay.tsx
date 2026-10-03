@@ -18,7 +18,7 @@ interface Props {
 }
 
 /**
- * 스토리 9:16 오버레이 — 그리드 썸네일과 layoutId를 공유해 확대.
+ * 스토리 9:16 오버레이: 그리드 썸네일과 layoutId를 공유해 확대.
  * 닉네임을 누르면 아래에 [프로필] [팔로우] 버튼이 펼쳐진다.
  */
 export function StoryOverlay({ story, onClose }: Props) {

@@ -11,7 +11,7 @@ interface Props {
   onClose: () => void
 }
 
-/** 상세 프로필 바텀시트 — 팔로우는 정적 토글 */
+/** 상세 프로필 바텀시트: 팔로우는 정적 토글 */
 export function ProfileSheet({ profile, onClose }: Props) {
   const [following, setFollowing] = useState(false)
 

@@ -5,7 +5,7 @@ interface Props<T extends string> {
   items: { value: T; label: string }[]
   value: T
   onChange: (v: T) => void
-  /** layoutId 네임스페이스 — 화면에 여러 개 있을 때 구분 */
+  /** layoutId 네임스페이스: 화면에 여러 개 있을 때 구분 */
   id: string
   className?: string
 }

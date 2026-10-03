@@ -4,13 +4,13 @@ import { FEED_GROUPS } from './social'
 import { TRANSACTIONS } from './transactions'
 import { MY_ASSETS } from './domain'
 
-/** 인사이트 탭 — 스크립트 챗의 데이터·타입. 응답 진행 로직은 features/insights/script.ts. */
+/** 인사이트 탭: 스크립트 챗의 데이터·타입. 응답 진행 로직은 features/insights/script.ts. */
 
-/** 상단 차트 패널의 상태 — 채팅·비교 버튼에 따라 전환된다 */
+/** 상단 차트 패널의 상태: 채팅·비교 버튼에 따라 전환된다 */
 export type InsightChartState =
   | { kind: 'projection' }
   | { kind: 'compare'; targetId: string }
-  /** 맥북 반영 투영 — 비교 중이었다면 targetId를 이어받아 메이트 선을 유지한다.
+  /** 맥북 반영 투영: 비교 중이었다면 targetId를 이어받아 메이트 선을 유지한다.
    *  habit이 켜지면 내 선이 메이트의 저축 습관(기울기)을 따라간다 */
   | { kind: 'sim-macbook'; targetId?: string; habit?: boolean }
   | { kind: 'sim-saving'; monthly: number }
@@ -22,17 +22,17 @@ export type InsightWidget =
   | { type: 'quiz'; quizId: string }
   | { type: 'mission'; missionId: string }
   | { type: 'chips'; chips: string[] }
-  /** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송되는 1회용 버튼 */
+  /** 추천옵션: 탭하면 그 문장이 즉시 답변으로 전송되는 1회용 버튼 */
   | { type: 'options'; options: string[]; persist?: boolean }
-  /** 메이트/그룹 선택지 — 탭하면 비교 바텀시트가 열린다 */
+  /** 메이트/그룹 선택지: 탭하면 비교 바텀시트가 열린다 */
   | { type: 'compare-picker' }
-  /** 습관 미션 제안 — '미션 수락' 버튼이 다음 단계(예상 리포트)로 잇는다 */
+  /** 습관 미션 제안: '미션 수락' 버튼이 다음 단계(예상 리포트)로 잇는다 */
   | { type: 'mission-accept' }
-  /** 시나리오 3버튼 — 그대로/맥북 반영/습관 적용 그래프를 자유 전환 (전송 아님) */
+  /** 시나리오 3버튼: 그대로/맥북 반영/습관 적용 그래프를 자유 전환 (전송 아님) */
   | { type: 'scenario-switch' }
   /** 리포트 생성 버튼 → 리포트 오버레이 (macbook = 맥북 반영 예상 리포트) */
   | { type: 'report'; variant?: 'macbook' }
-  /** 조언 카드 — 저축/소비 관리 팁 응답 */
+  /** 조언 카드: 저축/소비 관리 팁 응답 */
   | { type: 'detail-card'; variant: 'saving' | 'spending' }
 
 export interface InsightMsg {
@@ -54,7 +54,7 @@ export interface SavedSession {
 /* ---------- 습관 기반 미래 투영 ---------- */
 
 export interface HabitProjection {
-  /** 7월(현재)~12월 총자산 투영 — 길이 6 */
+  /** 7월(현재)~12월 총자산 투영: 길이 6 */
   curve: number[]
   /** 월 순증(투영 기울기) */
   monthlyFlow: number
@@ -65,13 +65,13 @@ export interface HabitProjection {
 /**
  * 평소 금융 습관 → 미래 6개월 총자산 투영.
  *
- * ⚠️ 공식 교체 지점: 상세 공식·근거는 추후 제공 예정 — 그때 이 함수 내부만 바꾸면
+ * ⚠️ 공식 교체 지점: 상세 공식·근거는 추후 제공 예정: 그때 이 함수 내부만 바꾸면
  * 차트·리포트·카피가 전부 따라온다.
  *
  * 현재 플레이스홀더 근거: 이번 달 실측 현금 흐름(저축 39.39만 + 투자 적립 8만)에
  * 생활비·시장 변동을 섞은 월별 투영. 시작점은 현재 총자산 1,400만.
  */
-/** 월별 흐름의 출렁임 패턴 — 소폭 하락 뒤 회복하는 굴곡. 합이 정확히 5.00이라 6개월 총증가는 monthlyFlow×5로 보존된다 */
+/** 월별 흐름의 출렁임 패턴: 소폭 하락 뒤 회복하는 굴곡. 합이 정확히 5.00이라 6개월 총증가는 monthlyFlow×5로 보존된다 */
 const WOBBLE = [1.0, -0.25, 1.35, 1.25, 1.65]
 
 export function getHabitProjection(): HabitProjection {
@@ -82,24 +82,24 @@ export function getHabitProjection(): HabitProjection {
   ).reduce((s, t) => s + -t.amount, 0)
   const curve = [start]
   for (const w of WOBBLE) curve.push(curve[curve.length - 1] + Math.round(monthlyFlow * w))
-  // 반올림 오차 보정 — 끝값은 정확히 start + monthlyFlow×5 (12월 1,637만 고정)
+  // 반올림 오차 보정: 끝값은 정확히 start + monthlyFlow×5 (12월 1,637만 고정)
   curve[curve.length - 1] = start + monthlyFlow * 5
   return { curve, monthlyFlow, totalGain: monthlyFlow * 5 }
 }
 
-/** 투영 차트 x축 — 7월(지금)부터 6개월 */
+/** 투영 차트 x축: 7월(지금)부터 6개월 */
 export const PROJECTION_MONTHS = ['7월', '8월', '9월', '10월', '11월', '12월']
 
-/** 시연 시나리오의 구매 대상 — 이번 달 일시불 가정 */
+/** 시연 시나리오의 구매 대상: 이번 달 일시불 가정 */
 export const MACBOOK = { name: '맥북 M5 프로', price: 2_000_000 } as const
 
 /**
- * 습관 적용 시 내 기울기 부스트 — 메이트 습관에 내 기존 흐름이 얹히는 시너지.
+ * 습관 적용 시 내 기울기 부스트: 메이트 습관에 내 기존 흐름이 얹히는 시너지.
  * 파리지앤느 기준 10~11월 사이에 역전이 일어나도록 맞춘 값.
  */
 export const HABIT_BOOST = 1.35
 
-/** 습관 시뮬에서 파생되는 미션 제안 — 파리지앤느 월평균 90만 저축 */
+/** 습관 시뮬에서 파생되는 미션 제안: 파리지앤느 월평균 90만 저축 */
 export const HABIT_MISSION = {
   emoji: '🥐',
   title: '파리지앤느처럼 월 90만원 저축',
@@ -110,7 +110,7 @@ export const HABIT_MISSION = {
 export interface MacbookSim {
   /** 그대로 갔을 때 투영 */
   base: number[]
-  /** 이번 달 맥북 구매 시 투영 — 전 구간 -200만 */
+  /** 이번 달 맥북 구매 시 투영: 전 구간 -200만 */
   bought: number[]
   /** 12월 예상 격차 표시용 */
   endBase: number
@@ -140,18 +140,18 @@ export interface CompareTarget {
   sub: string
   /** 비교 상태 캡션 한 줄 */
   summary: string
-  /** 같은 7~12월 투영 — 길이 6 */
+  /** 같은 7~12월 투영: 길이 6 */
   curve: number[]
 }
 
-/** 시작값 + 월별 증가분으로 곡선 생성 — 증가폭이 달라 자연스러운 꺾임이 생긴다 */
+/** 시작값 + 월별 증가분으로 곡선 생성: 증가폭이 달라 자연스러운 꺾임이 생긴다 */
 const steps = (start: number, incs: number[]): number[] => {
   const curve = [start]
   for (const inc of incs) curve.push(curve[curve.length - 1] + inc)
   return curve
 }
 
-/** 그래프 우상단 '비교' 버튼의 선택지 — 메이트 3 + 그룹 4 (피드 데이터와 동일 인물·그룹) */
+/** 그래프 우상단 '비교' 버튼의 선택지: 메이트 3 + 그룹 4 (피드 데이터와 동일 인물·그룹) */
 export const COMPARE_TARGETS: CompareTarget[] = [
   {
     id: 'mate-paris',
@@ -159,8 +159,8 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     emoji: '🥐',
     label: '파리지앤느',
     sub: '저축 상위 9% · 유사도 86%',
-    summary: '기울기가 무섭다 — 저축 상위 9%의 속도',
-    // 나(월 ~47만)보다 확연히 가파른 월 70만~110만 — 낮게 출발해 크게 추월
+    summary: '기울기가 무섭다. 저축 상위 9%의 속도',
+    // 나(월 ~47만)보다 확연히 가파른 월 70만~110만: 낮게 출발해 크게 추월
     curve: steps(13_000_000, [700_000, 1_050_000, 800_000, 1_100_000, 850_000]),
   },
   {
@@ -169,7 +169,7 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     emoji: '🐟',
     label: '절약왕참치',
     sub: '소비방어 상위 12% · 유사도 91%',
-    summary: '월급 200으로 이 기울기 — 소비방어의 힘',
+    summary: '월급 200으로 이 기울기, 소비방어의 힘',
     curve: steps(9_800_000, [300_000, 430_000, 340_000, 460_000, 370_000]),
   },
   {
@@ -189,7 +189,7 @@ export const COMPARE_TARGETS: CompareTarget[] = [
     sub: `${g.desc} · ${g.members.toLocaleString('ko-KR')}명`,
     summary:
       g.id === 'g-follow'
-        ? '팔로잉 평균과 접전 — 좋은 자극!'
+        ? '팔로잉 평균과 접전, 좋은 자극!'
         : `${g.label} 평균보다 내 기울기가 가팔라요`,
     curve:
       g.id === 'g-income'
@@ -202,7 +202,7 @@ export const COMPARE_TARGETS: CompareTarget[] = [
   })),
 ]
 
-/** 저축 슬라이더 범위 — 월 10만~50만, 기본 30만 */
+/** 저축 슬라이더 범위: 월 10만~50만, 기본 30만 */
 export const SAVING_SLIDER = { min: 100_000, max: 500_000, step: 50_000, initial: 300_000 } as const
 
 export const ETF_GOAL = {
@@ -230,7 +230,7 @@ export function makeEtfProjection(monthly: number = ETF_GOAL.monthly): EtfProjec
 }
 
 export interface SavingProjection {
-  /** 지금(225만)부터 월 저축액씩 쌓여 500만에 닿는 곡선 — 길이 = months + 1 */
+  /** 지금(225만)부터 월 저축액씩 쌓여 500만에 닿는 곡선: 길이 = months + 1 */
   curve: number[]
   /** 목표 도달까지 걸리는 개월 수 */
   months: number
@@ -263,7 +263,7 @@ export const SUGGESTION_CHIPS = [
   '금융 퀴즈 내줘',
 ] as const
 
-/** 햄버거 메뉴의 프리시드 저장 대화 — 운동화 고민(7/21) */
+/** 햄버거 메뉴의 프리시드 저장 대화: 운동화 고민(7/21) */
 export const PRESET_SESSIONS: SavedSession[] = [
   {
     id: 'ps-shoes',
@@ -291,11 +291,11 @@ export interface DetailCardContent {
   title: string
   sub: string
   rows: { emoji: string; text: string }[]
-  /** 생략 시 버튼 미표시 — 조언 카드는 CTA 없음 */
+  /** 생략 시 버튼 미표시: 조언 카드는 CTA 없음 */
   cta?: string
 }
 
-/** 돈관리 조언 카드 — 상품은 정면 추천 대신 소비 관리에 한 줄만 은근히 */
+/** 돈관리 조언 카드: 상품은 정면 추천 대신 소비 관리에 한 줄만 은근히 */
 export const DETAIL_CARDS: Record<'saving' | 'spending', DetailCardContent> = {
   saving: {
     tag: '저축 관리',
@@ -304,7 +304,7 @@ export const DETAIL_CARDS: Record<'saving' | 'spending', DetailCardContent> = {
     rows: [
       { emoji: '☕️', text: '하루 3,400원 = 커피 한 잔 값' },
       { emoji: '📅', text: '월급날 자동이체 10만원 예약' },
-      { emoji: '🏦', text: '모으는 돈은 파킹 통장에 — 하루만 둬도 이자' },
+      { emoji: '🏦', text: '모으는 돈은 파킹 통장에, 하루만 둬도 이자' },
     ],
   },
   spending: {
@@ -313,8 +313,8 @@ export const DETAIL_CARDS: Record<'saving' | 'spending', DetailCardContent> = {
     sub: '이번 달 소비에서 찾은 절약 포인트',
     rows: [
       { emoji: '☕️', text: '카페 8회 34,400원 → 주 2회면 월 +3만' },
-      { emoji: '🍱', text: '배달 대신 도시락 — 주 1회만 바꿔도 +2만' },
-      { emoji: '💳', text: '지출은 체크카드 한 장으로 — 하나카드처럼 모으면 관리 쉬워요' },
+      { emoji: '🍱', text: '배달 대신 도시락, 주 1회만 바꿔도 +2만' },
+      { emoji: '💳', text: '지출은 체크카드 한 장으로, 하나카드처럼 모으면 관리 쉬워요' },
     ],
   },
 }

@@ -10,7 +10,7 @@ interface Props {
 }
 
 const SWEEP = 240
-const START = 150 // SVG 각도(도) — 좌하단에서 시작해 시계방향 240°
+const START = 150 // SVG 각도(도): 좌하단에서 시작해 시계방향 240°
 
 function polar(c: { x: number; y: number }, r: number, deg: number) {
   const rad = (deg * Math.PI) / 180
@@ -18,21 +18,21 @@ function polar(c: { x: number; y: number }, r: number, deg: number) {
 }
 
 /**
- * 속도계형 게이지 — 240° 아크 트랙 + 진행 아크(pathLength 드로잉) +
+ * 속도계형 게이지: 240° 아크 트랙 + 진행 아크(pathLength 드로잉) +
  * 바늘(오버슈트 스프링 회전). transform/opacity만, 무한 루프 없음.
  */
 export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
   const c = { x: 100, y: 92 }
   const r = 72
   const thickness = 12
-  // 작게 렌더되면(비교 미니 카드 등) 얇은 보조 눈금이 서브픽셀로 깨진다 — 주요 눈금만
+  // 작게 렌더되면(비교 미니 카드 등) 얇은 보조 눈금이 서브픽셀로 깨진다. 주요 눈금만
   const mini = width < 130
 
   const a0 = polar(c, r, START)
   const a1 = polar(c, r, START + SWEEP)
   const arcPath = `M ${a0.x} ${a0.y} A ${r} ${r} 0 1 1 ${a1.x} ${a1.y}`
 
-  // 바늘 각도 — CSS transform 대신 좌표를 직접 계산해 그린다.
+  // 바늘 각도: CSS transform 대신 좌표를 직접 계산해 그린다.
   // (transform-box 기반 회전은 축소 렌더·일부 브라우저에서 원점이 어긋난다)
   const needleDeg = -120 + SWEEP * Math.max(0, Math.min(1, pct))
   const angle = useMotionValue(-120)
@@ -56,7 +56,7 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
         strokeWidth={thickness}
         strokeLinecap="round"
       />
-      {/* 진행 아크 — RingGauge와 같은 드로잉 스프링 */}
+      {/* 진행 아크: RingGauge와 같은 드로잉 스프링 */}
       <motion.path
         d={arcPath}
         fill="none"
@@ -68,7 +68,7 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
         transition={{ type: 'spring', stiffness: 60, damping: 18 }}
       />
 
-      {/* 눈금 — 20° 간격 13개(미니에선 주요 5개만), 0/25/50/75/100% 지점 강조 */}
+      {/* 눈금: 20° 간격 13개(미니에선 주요 5개만), 0/25/50/75/100% 지점 강조 */}
       {Array.from({ length: 13 }, (_, i) => {
         const major = i % 3 === 0
         if (mini && !major) return null
@@ -90,7 +90,7 @@ export function SpeedGauge({ pct, width = 200, height = 152 }: Props) {
         )
       })}
 
-      {/* 바늘 — 0%에서 목표치까지 오버슈트 스프링, 좌표 보간이라 어떤 크기에서도 정확 */}
+      {/* 바늘: 0%에서 목표치까지 오버슈트 스프링, 좌표 보간이라 어떤 크기에서도 정확 */}
       <motion.line
         x1={tailX}
         y1={tailY}

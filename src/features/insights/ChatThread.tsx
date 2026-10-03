@@ -31,7 +31,7 @@ interface Props {
   onComparePick: (kind: 'mate' | 'group') => void
   /** 시나리오 버튼 → 그래프만 전환 */
   onScenario: (kind: 'base' | 'macbook' | 'habit') => void
-  /** 읽기 전용(저장된 대화 다시보기) — 위젯 조작 비활성 */
+  /** 읽기 전용(저장된 대화 다시보기): 위젯 조작 비활성 */
   readOnly?: boolean
 }
 
@@ -208,7 +208,7 @@ function Widget({
   )
 }
 
-/** 카드/혜택 상세 카드 — 태그 + 제목 + 조건 불릿 + CTA (시연 6-2 응답) */
+/** 카드/혜택 상세 카드: 태그 + 제목 + 조건 불릿 + CTA (시연 6-2 응답) */
 function DetailCardWidget({ variant }: { variant: 'saving' | 'spending' }) {
   const c = DETAIL_CARDS[variant]
   return (
@@ -239,7 +239,7 @@ function DetailCardWidget({ variant }: { variant: 'saving' | 'spending' }) {
   )
 }
 
-/** 추천옵션 — 탭하면 그 문장이 즉시 답변으로 전송, 한 번 고르면 잠긴다 */
+/** 추천옵션: 탭하면 그 문장이 즉시 답변으로 전송, 한 번 고르면 잠긴다 */
 function OptionsWidget({
   options,
   persist,
@@ -247,7 +247,7 @@ function OptionsWidget({
   readOnly,
 }: {
   options: string[]
-  /** true면 골라도 잠기지 않는다 — 초기 옵션처럼 반복 사용 가능한 버튼 */
+  /** true면 골라도 잠기지 않는다. 초기 옵션처럼 반복 사용 가능한 버튼 */
   persist?: boolean
   onOption: (text: string) => void
   readOnly?: boolean
@@ -278,7 +278,7 @@ function OptionsWidget({
   )
 }
 
-/** 메이트/그룹 선택지 — 고른 종류만 담긴 비교 바텀시트를 연다 */
+/** 메이트/그룹 선택지: 고른 종류만 담긴 비교 바텀시트를 연다 */
 function ComparePickerWidget({
   onComparePick,
   readOnly,
@@ -307,7 +307,7 @@ function ComparePickerWidget({
   )
 }
 
-/** 리포트 생성 — 리포트 오버레이 화면을 연다 */
+/** 리포트 생성: 리포트 오버레이 화면을 연다 */
 function ReportWidget({
   variant,
   onReport,
@@ -342,7 +342,7 @@ function ReportWidget({
   )
 }
 
-/** 오늘의 총평 — 마이 탭과 동일 셀렉터 수치, '자세히'로 근거 펼침 */
+/** 오늘의 총평: 마이 탭과 동일 셀렉터 수치, '자세히'로 근거 펼침 */
 function SummaryCard() {
   const [open, setOpen] = useState(false)
   const s = getDailySummary()
@@ -350,7 +350,7 @@ function SummaryCard() {
     {
       emoji: '☕️',
       text: `지출 ${formatKrw(s.spent)} · 예산 ${s.budgetLeftPct}% 여유`,
-      detail: `오늘 1위 ${s.top.merchant} ${formatKrw(s.top.amount)} — 한도 안 방어 성공!`,
+      detail: `오늘 1위 ${s.top.merchant} ${formatKrw(s.top.amount)}: 한도 안 방어 성공!`,
     },
     {
       emoji: '✈️',
@@ -366,7 +366,7 @@ function SummaryCard() {
 
   return (
     <div className="clay-card w-full rounded-2xl rounded-tl-md px-4 py-3.5" data-testid="daily-summary">
-      {/* 번호 타임라인 — 점선이 번호 원들을 세로로 잇는다 */}
+      {/* 번호 타임라인: 점선이 번호 원들을 세로로 잇는다 */}
       <div className="relative flex flex-col gap-3">
         <span className="absolute bottom-4 left-[10px] top-4 w-px border-l border-dashed border-saving/25" />
         {lines.map((l, i) => (
@@ -405,7 +405,7 @@ function SummaryCard() {
   )
 }
 
-/** 월 저축액 슬라이더 — 움직이면 상단 투영 차트·도달 문구가 실시간 변화 */
+/** 월 저축액 슬라이더: 움직이면 상단 투영 차트·도달 문구가 실시간 변화 */
 function SliderWidget({ onSlider, readOnly }: { onSlider: (v: number) => void; readOnly?: boolean }) {
   const [monthly, setMonthly] = useState<number>(SAVING_SLIDER.initial)
   const p = makeSavingProjection(monthly)
@@ -442,7 +442,7 @@ function SliderWidget({ onSlider, readOnly }: { onSlider: (v: number) => void; r
   )
 }
 
-/** OX 퀴즈 — 답하면 해설 + 포인트 */
+/** OX 퀴즈: 답하면 해설 + 포인트 */
 function QuizWidget({ quizId, readOnly }: { quizId: string; readOnly?: boolean }) {
   const quiz = QUIZ.find((q) => q.id === quizId) ?? QUIZ[0]
   const [picked, setPicked] = useState<boolean | null>(null)
@@ -487,7 +487,7 @@ function QuizWidget({ quizId, readOnly }: { quizId: string; readOnly?: boolean }
   )
 }
 
-/** 시나리오 3버튼 — 그래프만 전환하는 토글, 몇 번이고 다시 볼 수 있다 */
+/** 시나리오 3버튼: 그래프만 전환하는 토글, 몇 번이고 다시 볼 수 있다 */
 function ScenarioSwitchWidget({
   onScenario,
   readOnly,
@@ -525,7 +525,7 @@ function ScenarioSwitchWidget({
   )
 }
 
-/** 습관 미션 제안 — 수락하면 예상 리포트 단계로 이어진다 */
+/** 습관 미션 제안: 수락하면 예상 리포트 단계로 이어진다 */
 function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) => void; readOnly?: boolean }) {
   const [accepted, setAccepted] = useState(false)
 
@@ -559,7 +559,7 @@ function MissionAcceptWidget({ onAccept, readOnly }: { onAccept: (text: string) 
   )
 }
 
-/** 추천 미션 카드 — 미션 탭으로 이동 */
+/** 추천 미션 카드: 미션 탭으로 이동 */
 function MissionWidget({ missionId, readOnly }: { missionId: string; readOnly?: boolean }) {
   const navigate = useNavigate()
   const m = RECOMMENDED_MISSIONS.find((r) => r.id === missionId) ?? RECOMMENDED_MISSIONS[0]

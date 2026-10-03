@@ -11,7 +11,7 @@ interface Props {
   onClose: () => void
 }
 
-/** 햄버거 메뉴 — 저장된 대화 목록, 탭하면 다시보기로 로드 */
+/** 햄버거 메뉴: 저장된 대화 목록, 탭하면 다시보기로 로드 */
 export function SavedChatsPanel({ sessions, onOpen, onClose }: Props) {
   return createPortal(
     <div className="absolute inset-0 z-[60]">

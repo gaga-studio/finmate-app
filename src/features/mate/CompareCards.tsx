@@ -10,7 +10,7 @@ import type { InvestView, Metric, Period, SavingView } from '../my/myState'
 const METRIC_TEXT: Record<Metric, string> = { budget: 'text-budget', saving: 'text-saving', invest: 'text-invest' }
 const BUDGET_TITLE: Record<Period, string> = { daily: '오늘의 예산', weekly: '이번 주 예산', monthly: '7월 예산' }
 
-/** 비교 모드 캐러셀 카드 — 한 카드 안에서 좌 나/우 메이트가 정상 크기로 대결한다 */
+/** 비교 모드 캐러셀 카드: 한 카드 안에서 좌 나/우 메이트가 정상 크기로 대결한다 */
 export function makeCompareCardRenderer(mate: MateProfile) {
   return function renderCompareCard(m: Metric, period: Period, savingView: SavingView, investView: InvestView) {
     if (m === 'budget') return <CompareBudget mate={mate} period={period} />
@@ -40,7 +40,7 @@ function CompareShell({
       <div className="w-full px-5 pb-1 pt-4 text-center">
         <p className="text-section font-bold text-ink">{title}</p>
       </div>
-      {/* 열 라벨 — 좌 나 / 우 메이트 */}
+      {/* 열 라벨: 좌 나 / 우 메이트 */}
       <div className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pt-3 text-center">
         <p className="flex min-w-0 items-center justify-center gap-1 text-[17px] font-extrabold leading-snug text-ink">
           <EmojiIcon emoji="🙋‍♀️" size={16} /> <span className="truncate">지혜</span>
@@ -157,7 +157,7 @@ function CompareSaving({ mate, view }: { mate: MateProfile; view: SavingView }) 
 
   const nw = getNetWorth()
   return (
-    <CompareShell title="나의 자산" metricClass={METRIC_TEXT.saving} mate={mate} verdict="구간 vs 실측 — 꾸준함의 대결">
+    <CompareShell title="나의 자산" metricClass={METRIC_TEXT.saving} mate={mate} verdict="구간 vs 실측: 꾸준함의 대결">
       <Col>
         <p className="text-[22px] font-extrabold leading-tight">{formatKrwCompact(nw.total)}</p>
         <p className="text-caption font-medium text-ink-soft">이번 달 +{formatKrwCompact(nw.monthGain)}</p>
@@ -225,7 +225,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
     )
   }
 
-  // 뉴스 — 시장은 공용 정보라 비교 대신 공용 보드
+  // 뉴스: 시장은 공용 정보라 비교 대신 공용 보드
   return (
     <div className={`clay-card flex h-full flex-col items-center overflow-hidden rounded-card ${METRIC_TEXT.invest}`}>
       <div className="w-full px-5 pb-1 pt-4 text-center">
@@ -252,7 +252,7 @@ function CompareInvest({ mate, view }: { mate: MateProfile; view: InvestView }) 
           })}
         </div>
       </div>
-      <p className="pb-3 text-body font-medium text-ink-soft">같은 시장, 다른 선택 — 2026. 7. 22. 기준</p>
+      <p className="pb-3 text-body font-medium text-ink-soft">같은 시장, 다른 선택: 2026. 7. 22. 기준</p>
     </div>
   )
 }

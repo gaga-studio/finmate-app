@@ -39,7 +39,7 @@ function layout(items: TreemapItem[], x: number, y: number, w: number, h: number
   return [{ ...first, x, y, w, h: fh, rank }, ...layout(rest, x, y + fh, w, h - fh, rank + 1)]
 }
 
-/** 지표색 계열 명도 단계 — 비중이 클수록 진하다 */
+/** 지표색 계열 명도 단계: 비중이 클수록 진하다 */
 const CELL_L = [0.52, 0.6, 0.68, 0.76, 0.83]
 
 /** 대략적 텍스트 폭 추정 (10.5px 기준, 한글은 폭이 넓다) */
@@ -67,7 +67,7 @@ function fitLabel(label: string, w: number, h: number): FittedLabel | null {
   return null
 }
 
-/** 보유 종목 트리맵 — 면적 = 비중. 라벨은 렉트 위 레이어 + 셀 클립으로 잘림 방지. */
+/** 보유 종목 트리맵: 면적 = 비중. 라벨은 렉트 위 레이어 + 셀 클립으로 잘림 방지. */
 export function Treemap({ items, width = 216, height = 148 }: Props) {
   const uid = useId()
   const sorted = [...items].sort((a, b) => b.value - a.value)

@@ -13,7 +13,7 @@ const BUDGET_TITLE: Record<Period, string> = { daily: '오늘의 예산', weekly
 const MONTH_LABELS = ['2월', '3월', '4월', '5월', '6월', '7월']
 const BAR_LABELS = ['3월', '4월', '5월', '6월', '7월']
 
-/** MetricCarousel의 renderCard로 꽂는 메이트 카드 9종 — 전부 %·구간·상대값만 */
+/** MetricCarousel의 renderCard로 꽂는 메이트 카드 9종: 전부 %·구간·상대값만 */
 export function makeMateCardRenderer(mate: MateProfile) {
   return function renderMateCard(m: Metric, period: Period, savingView: SavingView, investView: InvestView) {
     if (m === 'budget') return <MateBudgetCard mate={mate} period={period} />
@@ -135,7 +135,7 @@ function MateInvestCard({ mate, view }: { mate: MateProfile; view: InvestView })
     )
   }
 
-  // 뉴스 — 시장 지수는 공용 정보라 마이와 동일
+  // 뉴스: 시장 지수는 공용 정보라 마이와 동일
   return (
     <MateShell title="뉴스" metricClass={METRIC_TEXT.invest}>
       <div className="grid w-full grid-cols-3 divide-x divide-line py-2 text-center">

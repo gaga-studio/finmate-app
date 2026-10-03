@@ -69,7 +69,7 @@ export function MyPage() {
 
   const openCard = parseCardParam(params.get('card'))
 
-  // 저축·투자는 뷰 축 — 현재 뷰의 카드가 열린다
+  // 저축·투자는 뷰 축: 현재 뷰의 카드가 열린다
   const openWrapped = () =>
     setParams({
       card:
@@ -95,7 +95,7 @@ export function MyPage() {
 
   return (
     <div className="relative min-h-full bg-surface" data-metric={metric}>
-      {/* 지표별 배경 틴트 — 그라디언트 3장 크로스페이드 */}
+      {/* 지표별 배경 틴트: 그라디언트 3장 크로스페이드 */}
       {(Object.keys(TINT) as Metric[]).map((m) => (
         <motion.div
           key={m}
@@ -119,7 +119,7 @@ export function MyPage() {
         <UserAvatar size={44} />
       </header>
 
-      {/* 지표 밑줄 탭 — 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 */}
+      {/* 지표 밑줄 탭: 큰 구분은 탭, 기간/뷰 필터는 카드 아래 칩 */}
       <MetricTabs metric={metric} onChange={setMetric} layoutId="my-metric-tab" />
 
       <div className="pt-1" />

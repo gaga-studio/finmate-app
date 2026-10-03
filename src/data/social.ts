@@ -1,7 +1,7 @@
 import type { FeedGroup, ProfileSummary, Story } from './types'
 
 /**
- * 피드 목 데이터 — 작성자는 전부 익명 닉네임(실명 노출 금지).
+ * 피드 목 데이터: 작성자는 전부 익명 닉네임(실명 노출 금지).
  * 스토리 12장은 전부 실제 이미지 기반(ART.stories), 카피는 이미지 장면과 1:1.
  * 인기순(likes)과 최신순(postedAt)이 실제로 다른 순서가 되도록 값을 배치했다.
  */

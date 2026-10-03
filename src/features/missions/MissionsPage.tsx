@@ -81,7 +81,7 @@ export function MissionsPage() {
         </button>
       </header>
 
-      {/* 당근식 상단 탭 — 활동미션 / 지난 내역 */}
+      {/* 당근식 상단 탭: 활동미션 / 지난 내역 */}
       <div className="mx-5 flex rounded-full border border-line bg-white p-1 shadow-soft">
         {(
           [
@@ -260,7 +260,7 @@ function QuizSheet({ onClose, onComplete }: { onClose: () => void; onComplete: (
   )
 }
 
-/** 지난 내역 — 완료한 미션과 누적 획득 포인트 */
+/** 지난 내역: 완료한 미션과 누적 획득 포인트 */
 function MissionHistory() {
   const total = PAST_MISSIONS.reduce((sum, m) => sum + m.reward, 0)
   return (

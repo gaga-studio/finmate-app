@@ -15,7 +15,7 @@ interface Props {
 
 const LABEL_H = 18
 
-/** 라벨 있는 미니 막대 차트 — scaleY 드로잉, 현재 항목 강조 */
+/** 라벨 있는 미니 막대 차트: scaleY 드로잉, 현재 항목 강조 */
 export function MiniBars({ bars, width = 216, height = 120 }: Props) {
   const max = Math.max(...bars.map((b) => b.amount), 1)
   const gap = 14

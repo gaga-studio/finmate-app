@@ -3,19 +3,19 @@ import { mulberry32 } from './seed'
 import type { Metric, ProfileSummary } from './types'
 
 /**
- * 메이트 프로필 — my 탭과 같은 구조지만 프라이버시 필터링이 걸린 데이터.
+ * 메이트 프로필: my 탭과 같은 구조지만 프라이버시 필터링이 걸린 데이터.
  * 상호명 대신 카테고리, 정확한 금액 대신 구간(밴드)만 노출한다.
  */
 
 export interface MateCategoryRow {
   emoji: string
-  /** 카테고리명 — 구체 상호명 금지 */
+  /** 카테고리명: 구체 상호명 금지 */
   label: string
   /** 금액 구간 표기 */
   band: string
 }
 
-/** 마이 탭 9뷰에 대응하는 필터링 데이터 — 전부 %·구간·상대값 */
+/** 마이 탭 9뷰에 대응하는 필터링 데이터: 전부 %·구간·상대값 */
 export interface MateViews {
   budget: Record<'daily' | 'weekly' | 'monthly', { leftPct: number; band: string }>
   saving: {
@@ -23,7 +23,7 @@ export interface MateViews {
     goalLabel: string
     /** 월 저축 페이스 구간 */
     paceBand: string
-    /** 월별 저축 상대 막대(금액 비공개) — 마지막이 이번 달 */
+    /** 월별 저축 상대 막대(금액 비공개): 마지막이 이번 달 */
     monthlyBars: number[]
     /** 총자산 구간 */
     assetBand: string
@@ -34,7 +34,7 @@ export interface MateViews {
     returnPct: number
     /** 평가액 추이 정규화 곡선 */
     trend: number[]
-    /** 카테고리 비중 — 합 1 */
+    /** 카테고리 비중: 합 1 */
     portfolio: { label: string; weight: number }[]
   }
 }
@@ -52,7 +52,7 @@ export interface MateProfile extends ProfileSummary {
     /** 총 수익률 % */
     investReturnPct: number
   }
-  /** 지표별 탑3 — 카테고리 + 구간만 */
+  /** 지표별 탑3: 카테고리 + 구간만 */
   topCategories: Record<Metric, MateCategoryRow[]>
   /** 마이 탭 9뷰 대응 데이터 */
   views: MateViews
@@ -98,7 +98,7 @@ function paceBandOf(goalPct: number): string {
   return goalPct >= 70 ? '월 50만원 이상' : goalPct >= 45 ? '월 30~50만원' : '월 10~30만원'
 }
 
-/** 완만한 우상향 정규화 곡선(0~1) — 시드 기반 굴곡 */
+/** 완만한 우상향 정규화 곡선(0~1): 시드 기반 굴곡 */
 function trendOf(rng: () => number, points = 6): number[] {
   const out: number[] = []
   let v = 0.15 + rng() * 0.2
@@ -109,7 +109,7 @@ function trendOf(rng: () => number, points = 6): number[] {
   return out
 }
 
-/** id 시드 기반 제너릭 프로필 — 같은 메이트는 언제나 같은 수치(촬영 재현성) */
+/** id 시드 기반 제너릭 프로필: 같은 메이트는 언제나 같은 수치(촬영 재현성) */
 function generate(author: ProfileSummary): MateProfile {
   let seed = 0
   for (const ch of author.id) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0
@@ -166,7 +166,7 @@ function generate(author: ProfileSummary): MateProfile {
   }
 }
 
-/** 시연 핵심 메이트는 수기 오버라이드 — 인사이트 비교(COMPARE_TARGETS) 서사와 정합 */
+/** 시연 핵심 메이트는 수기 오버라이드: 인사이트 비교(COMPARE_TARGETS) 서사와 정합 */
 const OVERRIDES: Record<string, Partial<MateProfile['metrics']> & { similarity?: number; topCategories?: Partial<Record<Metric, MateCategoryRow[]>>; assetBand?: string; portfolio?: { label: string; weight: number }[] }> = {
   'a-paris': {
     similarity: 0.86,
@@ -224,7 +224,7 @@ export const MATE_PROFILES: MateProfile[] = Object.values(AUTHORS).map((author) 
     metrics: { ...base.metrics, ...metrics },
     topCategories: { ...base.topCategories, ...topCategories },
   }
-  // 수기 오버라이드를 9뷰 데이터에도 동기화 — 비교/캐러셀 수치가 항상 일치
+  // 수기 오버라이드를 9뷰 데이터에도 동기화: 비교/캐러셀 수치가 항상 일치
   merged.views = {
     ...base.views,
     budget: {
@@ -258,9 +258,9 @@ export function getMateProfile(id: string): MateProfile | undefined {
   return MATE_PROFILES.find((m) => m.id === id)
 }
 
-/* ---------- 9뷰 연동 리스트 — 지혜 쪽 LinkedListPanel과 대칭 ---------- */
+/* ---------- 9뷰 연동 리스트: 지혜 쪽 LinkedListPanel과 대칭 ---------- */
 
-/** 소비 카테고리별 기간 밴드 — SPEND_POOL 라벨과 1:1 (수기 매핑, 월 기준을 일/주로 스케일) */
+/** 소비 카테고리별 기간 밴드: SPEND_POOL 라벨과 1:1 (수기 매핑, 월 기준을 일/주로 스케일) */
 const SPEND_PERIOD_BANDS: Record<string, { daily: string; weekly: string; monthly: string }> = {
   카페: { daily: '3~5천원', weekly: '1~2만원', monthly: '3~5만원' },
   외식: { daily: '1~2만원', weekly: '3~5만원', monthly: '10~15만원' },
@@ -300,7 +300,7 @@ const INTEREST_POOL: MateCategoryRow[] = [
   { emoji: '🥇', label: '금·원자재', band: '관망' },
 ]
 
-/** 메이트별 오버라이드 — 시연 핵심 인물의 서사 정합 */
+/** 메이트별 오버라이드: 시연 핵심 인물의 서사 정합 */
 const LIST_OVERRIDES: Record<string, Partial<Record<'income' | 'savingGoal' | 'monthlySaving', MateCategoryRow[]>>> = {
   'a-paris': {
     income: [
@@ -349,7 +349,7 @@ export interface MateListView {
   items: MateCategoryRow[]
 }
 
-/** 지표+뷰 → 메이트 리스트 — 카테고리·구간만, 시드 고정(촬영 재현성) */
+/** 지표+뷰 → 메이트 리스트: 카테고리·구간만, 시드 고정(촬영 재현성) */
 export function getMateListRows(
   mate: MateProfile,
   metric: Metric,

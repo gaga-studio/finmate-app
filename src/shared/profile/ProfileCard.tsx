@@ -8,7 +8,7 @@ interface Props {
   similarityRing?: boolean
 }
 
-/** 프로필 공용 컴포넌트 — 피드 프로필 시트, (예정) 메이트/그룹 화면이 공유한다 */
+/** 프로필 공용 컴포넌트: 피드 프로필 시트, (예정) 메이트/그룹 화면이 공유한다 */
 export function ProfileCard({ profile, className, compactName, similarityRing }: Props) {
   const similarityPct = profile.similarity === undefined ? undefined : Math.round(profile.similarity * 100)
   const ringRadius = 40

@@ -38,7 +38,7 @@ const INCOME_EMOJI: Record<string, string> = {
   '예금 이자': '🏦',
 }
 
-/** 내 Wrapped 카드 — 셀렉터 데이터를 조립해 WrappedCardView에 위임한다. 캡처 대상. */
+/** 내 Wrapped 카드: 셀렉터 데이터를 조립해 WrappedCardView에 위임한다. 캡처 대상. */
 const INVEST_TOP3_TITLE: Record<InvestView, string> = {
   status: '투자 종목',
   portfolio: '포트폴리오 비중',

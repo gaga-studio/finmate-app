@@ -12,7 +12,7 @@ import {
   type SavingView,
 } from './myState'
 
-/** 지표별 기간/뷰 칩 스위처 — 마이/메이트가 공유한다 */
+/** 지표별 기간/뷰 칩 스위처: 마이/메이트가 공유한다 */
 export function ViewChips({
   id,
   metric,

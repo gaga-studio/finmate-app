@@ -42,7 +42,7 @@ export function InsightsPage() {
   const viewing = chat.viewing !== null
 
   return (
-    // 페이지는 고정(TabLayout이 overflow-hidden) — 입력바가 말랑한 탭바 바로 위에 붙는다
+    // 페이지는 고정(TabLayout이 overflow-hidden): 입력바가 말랑한 탭바 바로 위에 붙는다
     <div className="relative flex h-full flex-col pb-[calc(78px+env(safe-area-inset-bottom,0px))]">
       <header className="relative flex items-center justify-between px-5 pb-1 pt-14">
         <img src="/finmate-logo.png" alt="FinMate" className="h-7 w-auto" />
@@ -55,7 +55,7 @@ export function InsightsPage() {
         </button>
       </header>
 
-      {/* 시뮬레이션 차트 — 첫 진입엔 숨김, '추세 확인하기'가 열면 채팅이 아래로 밀리며 등장 */}
+      {/* 시뮬레이션 차트: 첫 진입엔 숨김, '추세 확인하기'가 열면 채팅이 아래로 밀리며 등장 */}
       <AnimatePresence initial={false}>
         {chat.chartVisible && (
           <motion.div
@@ -71,9 +71,9 @@ export function InsightsPage() {
         )}
       </AnimatePresence>
 
-      {/* AI 채팅 카드 — 시뮬 카드와 구분되는 옅은 틴트의 두 번째 카드 */}
+      {/* AI 채팅 카드: 시뮬 카드와 구분되는 옅은 틴트의 두 번째 카드 */}
       <div className="clay-card mx-5 mb-2 mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-card">
-        {/* 총평 헤더 — 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
+        {/* 총평 헤더: 좌 햄버거(저장된 대화) · 우 저장/새 대화 */}
         <div className="flex items-center justify-between px-3.5 pb-1 pt-3">
           <button
             type="button"

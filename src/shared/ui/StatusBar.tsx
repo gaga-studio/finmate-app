@@ -1,10 +1,10 @@
 import { Signal, Wifi } from 'lucide-react'
 import { DEMO_TODAY } from '../../data/demo'
 
-/** 데모 고정 시각 — 촬영 재현성을 위해 실제 시계를 쓰지 않는다 */
+/** 데모 고정 시각: 촬영 재현성을 위해 실제 시계를 쓰지 않는다 */
 const TIME = `${DEMO_TODAY.getHours()}:${String(DEMO_TODAY.getMinutes()).padStart(2, '0')}`
 
-/** 폰 프레임 상단의 iOS풍 상태바 — 시간 · 셀룰러 · 와이파이 · 배터리 */
+/** 폰 프레임 상단의 iOS풍 상태바: 시간 · 셀룰러 · 와이파이 · 배터리 */
 export function StatusBar() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-50 flex h-12 items-center justify-between bg-gradient-to-b from-surface/95 via-surface/70 to-transparent px-7 pt-2 backdrop-blur-sm">
@@ -18,7 +18,7 @@ export function StatusBar() {
   )
 }
 
-/** iOS풍 배터리 — 본체 + 꼭지 + 잔량 */
+/** iOS풍 배터리: 본체 + 꼭지 + 잔량 */
 function Battery() {
   return (
     <div className="flex items-center">
